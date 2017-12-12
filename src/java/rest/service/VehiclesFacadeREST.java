@@ -42,15 +42,22 @@ public class VehiclesFacadeREST extends AbstractFacade<Vehicles> {
         super.create(entity);
     }
 
-    @PUT
-    @Path("{id}")
+  
+      @PUT
+    @Path("/name/{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") Integer id, Vehicles entity) {
-        super.edit(entity);
+    public void changeName(@PathParam("id") Integer id, String vname) {
+        super.find(id).setVname(vname);
         
     }
     
-    
+    @PUT
+    @Path("/location/{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public void changeLocation(@PathParam("id") Integer id, String vlocation) {
+        super.find(id).setVlocation(vlocation);
+        
+    }
 
     @DELETE
     @Path("{id}")
