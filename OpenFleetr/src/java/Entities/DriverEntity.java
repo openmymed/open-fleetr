@@ -14,7 +14,7 @@ import com.tna.entities.BasicEntity;
  */
 public class DriverEntity extends BasicEntity {
     
-    public String userId;
+    public long userId;
     public String firstName;
     public String lastName;
     public String birthDate;

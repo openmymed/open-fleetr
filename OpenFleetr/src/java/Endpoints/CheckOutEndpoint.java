@@ -50,7 +50,8 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
         obj.put("checkInDate","");
         obj.put("checkOutDate",new Date().toString());
         obj.put("status",2);
-        obj.put("driverId",Persistence.getUser(UserEntity.class, token));
+        long did = (long) Persistence.readUser(UserEntity.class, token).get("id");
+        obj.put("driverId",did);
         return Persistence.update(CurrentStatusEntity.class, (long)readByProperties.get("id"), obj);
         }
     }

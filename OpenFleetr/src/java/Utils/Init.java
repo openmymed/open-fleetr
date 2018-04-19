@@ -5,6 +5,7 @@
  */
 package Utils;
 
+import com.tna.data.Access;
 import com.tna.utils.Initialization;
 import javax.servlet.annotation.WebListener;
 
@@ -17,7 +18,12 @@ public class Init extends Initialization {
 
     @Override
     public void onInit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Access.host = "localhost";
+       Access.database = "OpenFleetr";
+       Access.username = "api_user";
+       Access.password = "pass1234";
+       Access.getInstance();
+       Access.pool.initialize(5);
     }
 
     @Override
