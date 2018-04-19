@@ -44,14 +44,13 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
             throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
 
         } else {
-            Persistence.create(HistoricalStatusEntity.class, readByProperties);
-            obj.remove("vehicleId");
-            obj.put("checkInDate", "");
-            obj.put("checkOutDate", new Date().toString());
-            obj.put("status", 2);
+
+            JSONObject query = new JSONObject();
+            query.put("checkOutDate", new Date().toString());
+            query.put("status", 2);
             long did = (long) Persistence.readUser(UserEntity.class, token).get("id");
-            obj.put("driverId", did);
-            return Persistence.update(CurrentStatusEntity.class, (int) readByProperties.get("id"), obj);
+            query.put("driverId", did);
+            return Persistence.update(CurrentStatusEntity.class, (int) readByProperties.get("id"), query);
         }
     }
 

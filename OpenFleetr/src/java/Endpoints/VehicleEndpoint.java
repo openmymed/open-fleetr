@@ -5,6 +5,7 @@
  */
 package Endpoints;
 
+import Entities.CurrentLocationEntity;
 import Entities.UserEntity;
 import Entities.VehicleEntity;
 import Entities.CurrentStatusEntity;
@@ -12,6 +13,7 @@ import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
@@ -40,6 +42,12 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
         obj2.put("status",1);
         obj2.put("notes","");
         Persistence.create(CurrentStatusEntity.class, obj2);
+        JSONObject obj3 = new JSONObject();
+        obj3.put("vehicleId",(long)obj.get("key"));
+        obj3.put("longitude", 0.0);
+        obj3.put("latitude", 0.0);
+        obj3.put("timeStamp",new Date().toString());
+        Persistence.create(CurrentLocationEntity.class,obj3);
         return obj;
         
     }

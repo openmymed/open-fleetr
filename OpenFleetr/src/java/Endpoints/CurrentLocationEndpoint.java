@@ -11,6 +11,7 @@ import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
@@ -36,17 +37,38 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
+        UserAccessControl.authOperation(UserEntity.class, token, 1);
+        
+       
+        json.remove("vehicleId");
+        json.put("timeStamp",new Date().toString());
+        
+        JSONObject query1 = new JSONObject();
+        query1.put("driverId",(long)Persistence.readUser(UserEntity.class,token).get("id"));
+        
+        JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class,query1);
+        System.out.println(read.toString());
+        if(read.containsKey("vehicleId")){
+        
+        
+        JSONObject query2 = new JSONObject();
+        
+        query2.put("vehicleId",(int)read.get("vehicleId"));
+        System.out.println(query2.toString());
+        JSONObject read2 = Persistence.readByProperties(CurrentLocationEntity.class,query2);     
+        
+        Persistence.create(HistoricalLocationEntity.class, read2);
+        
+        return  Persistence.update(CurrentLocationEntity.class,(int)read2.get("id"),json);
+        }else{
+            throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
+        }
+        
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 1);
-        JSONObject obj = new JSONObject();
-        obj.put("vehicleId",resource);
-        JSONObject obj2 = Persistence.readByProperties(CurrentLocationEntity.class,obj);
-        Persistence.create(HistoricalLocationEntity.class, obj);
-        return  Persistence.update(CurrentLocationEntity.class,(long)obj2.get("id"),json);
+        throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override

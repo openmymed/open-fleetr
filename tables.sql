@@ -33,17 +33,8 @@ CREATE TABLE `CurrentLocationEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_CurrentLocationEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_CurrentLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CurrentLocationEntity`
---
-
-LOCK TABLES `CurrentLocationEntity` WRITE;
-/*!40000 ALTER TABLE `CurrentLocationEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CurrentLocationEntity` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `CurrentStatusEntity`
@@ -63,18 +54,8 @@ CREATE TABLE `CurrentStatusEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_CurrentStatusEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_CurrentStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CurrentStatusEntity`
---
-
-LOCK TABLES `CurrentStatusEntity` WRITE;
-/*!40000 ALTER TABLE `CurrentStatusEntity` DISABLE KEYS */;
-INSERT INTO `CurrentStatusEntity` VALUES (4,NULL,-1,'none','none',1,''),(5,NULL,-1,'none','none',1,''),(6,NULL,-1,'none','none',1,''),(7,7,1,'Thu Apr 19 15:27:18 EEST 2018','',2,'');
-/*!40000 ALTER TABLE `CurrentStatusEntity` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `DriverEntity`
@@ -97,15 +78,6 @@ CREATE TABLE `DriverEntity` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DriverEntity`
---
-
-LOCK TABLES `DriverEntity` WRITE;
-/*!40000 ALTER TABLE `DriverEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DriverEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `HistoricalLocationEntity`
 --
 
@@ -121,17 +93,8 @@ CREATE TABLE `HistoricalLocationEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_HistoricalLocationEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_HistoricalLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `HistoricalLocationEntity`
---
-
-LOCK TABLES `HistoricalLocationEntity` WRITE;
-/*!40000 ALTER TABLE `HistoricalLocationEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `HistoricalLocationEntity` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `HistoricalStatusEntity`
@@ -151,18 +114,8 @@ CREATE TABLE `HistoricalStatusEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_HistoricalStatusEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_HistoricalStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `HistoricalStatusEntity`
---
-
-LOCK TABLES `HistoricalStatusEntity` WRITE;
-/*!40000 ALTER TABLE `HistoricalStatusEntity` DISABLE KEYS */;
-INSERT INTO `HistoricalStatusEntity` VALUES (3,7,-1,'none','none',1,''),(4,7,NULL,NULL,NULL,NULL,NULL),(5,7,NULL,NULL,NULL,NULL,NULL),(6,7,NULL,NULL,NULL,NULL,NULL),(7,7,NULL,NULL,NULL,NULL,NULL),(8,7,NULL,NULL,NULL,NULL,NULL),(9,7,NULL,NULL,NULL,NULL,NULL),(10,7,NULL,NULL,NULL,NULL,NULL),(11,7,-1,'none','Thu Apr 19 15:22:00 EEST 2018',1,''),(12,7,-1,'Thu Apr 19 15:22:09 EEST 2018','Thu Apr 19 15:23:32 EEST 2018',1,''),(13,7,1,'Thu Apr 19 15:24:33 EEST 2018','Thu Apr 19 15:26:49 EEST 2018',1,'');
-/*!40000 ALTER TABLE `HistoricalStatusEntity` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `UserEntity`
@@ -182,16 +135,6 @@ CREATE TABLE `UserEntity` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `UserEntity`
---
-
-LOCK TABLES `UserEntity` WRITE;
-/*!40000 ALTER TABLE `UserEntity` DISABLE KEYS */;
-INSERT INTO `UserEntity` VALUES (1,'tareq','tareq','ed572a00-7efe-4193-b718-faf61e7410c6',4);
-/*!40000 ALTER TABLE `UserEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `VehicleEntity`
 --
 
@@ -202,18 +145,8 @@ CREATE TABLE `VehicleEntity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vehicleType` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `VehicleEntity`
---
-
-LOCK TABLES `VehicleEntity` WRITE;
-/*!40000 ALTER TABLE `VehicleEntity` DISABLE KEYS */;
-INSERT INTO `VehicleEntity` VALUES (3,'test Vehicle'),(4,'test Vehicle'),(5,'test Vehicle'),(6,'test Vehicle'),(7,'test Vehicle');
-/*!40000 ALTER TABLE `VehicleEntity` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -224,4 +157,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-19 15:28:48
+-- Dump completed on 2018-04-19 16:10:20

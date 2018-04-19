@@ -40,13 +40,21 @@ public class CheckInEndpoint extends AuthorisedEndpoint{
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
         JSONObject readByProperties = Persistence.readByProperties(CurrentStatusEntity.class,obj);
+        
         if(readByProperties.get("status") == null||(int)readByProperties.get("status")!=2){
             throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
         }
-        obj.remove("vehicleId");
-        obj.put("checkInDate",new Date().toString());
-        obj.put("status",1);
-        return Persistence.update(CurrentStatusEntity.class, (int)readByProperties.get("id"), obj);
+        
+        readByProperties.put("checkInDate",new Date().toString());
+        readByProperties.put("status",1);
+        Persistence.create(HistoricalStatusEntity.class,readByProperties);
+        
+        JSONObject query = new JSONObject();
+        query.put("status", 1);
+        query.put("checkOutDate","");
+        query.put("checkInDate", "");
+        query.put("notes","");
+        return Persistence.update(CurrentStatusEntity.class, (int)readByProperties.get("id"), query);
       
     }
 
