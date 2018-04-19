@@ -5,17 +5,15 @@
  */
 package Entities;
 
-import com.tna.entities.BasicEntity;
+import com.tna.entities.AuthenticationEntity;
+import org.json.simple.JSONObject;
+
 
 /**
  *
  * @author tareq
  */
-public class HistoricalLocationEntity extends BasicEntity{
-    
-    public long vehicleId;
-    public double latitude;
-    public double longitude;
-    public String timestamp;
+public class UserEntity extends AuthenticationEntity {
+
     
 }

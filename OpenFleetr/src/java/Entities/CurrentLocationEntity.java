@@ -14,8 +14,8 @@ import com.tna.entities.BasicEntity;
 public class CurrentLocationEntity extends BasicEntity {
     
     public long vehicleId;
-    public double x;
-    public double y;
+    public double longitude;
+    public double latitude;
     public String timestamp;
     
 }

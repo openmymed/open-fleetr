@@ -5,12 +5,14 @@
  */
 package Endpoints;
 
-import Entities.DriverEntity;
+import Entities.HistoricalLocationEntity;
+import Entities.HistoricalStatusEntity;
 import Entities.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import com.tna.endpoints.BasicEndpoint;
 import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
@@ -18,38 +20,38 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
+@WebServlet("/statushistory/*")
+public class HistoricalStatusEndpoint  extends AuthorisedEndpoint {
 
-@WebServlet("/driver/*")
-public class DriverEndpoint extends AuthorisedEndpoint{
-
-    @Override
+   @Override
     public JSONObject doList(String token) throws AccessError {
        UserAccessControl.authOperation(UserEntity.class, token, 2);
-       return Persistence.list(DriverEntity.class);
+       return Persistence.list(HistoricalStatusEntity.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
-       return Persistence.create(DriverEntity.class,json);
+        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
-         UserAccessControl.authOperation(UserEntity.class, token, 3);
-       return Persistence.update(DriverEntity.class,resource,json);
+        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
-       return Persistence.read(DriverEntity.class,resource);
-    }
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        JSONObject obj = new JSONObject();
+        obj.put("vehicleId",resource);
+        return Persistence.listByProperties(HistoricalStatusEntity.class, obj);
+        
+      }
 
     @Override
     public JSONObject doDelete(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
-       return Persistence.delete(DriverEntity.class,resource);
+        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
+    
     
 }

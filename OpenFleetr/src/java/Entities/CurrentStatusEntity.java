@@ -11,11 +11,13 @@ import com.tna.entities.BasicEntity;
  *
  * @author tareq
  */
-public class VehicleStatusEntity extends BasicEntity{
+public class CurrentStatusEntity extends BasicEntity{
     
     public long vehicleId;
     public long driverId;
     public String checkOutDate;
     public String checkInDate;
+    public long status;
+    public String notes;
     
 }

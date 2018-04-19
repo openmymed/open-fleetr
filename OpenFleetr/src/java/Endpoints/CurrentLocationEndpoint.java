@@ -3,7 +3,9 @@ package Endpoints;
 import Entities.CurrentLocationEntity;
 import Entities.DriverEntity;
 import Entities.HistoricalLocationEntity;
-import Entities.User;
+import Entities.UserEntity;
+import Entities.CurrentStatusEntity;
+import Entities.HistoricalStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -28,7 +30,7 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
      @Override
     public JSONObject doList(String token) throws AccessError {
-       UserAccessControl.authOperation(User.class, token, 2);
+       UserAccessControl.authOperation(UserEntity.class, token, 2);
        return Persistence.list(CurrentLocationEntity.class);
     }
 
@@ -39,15 +41,19 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
-       UserAccessControl.authOperation(User.class, token, 1);
-       Persistence.create(HistoricalLocationEntity.class, Persistence.read(CurrentLocationEntity.class,resource));
-       return Persistence.update(CurrentLocationEntity.class,resource,json);
+        UserAccessControl.authOperation(UserEntity.class, token, 1);
+        JSONObject obj = new JSONObject();
+        obj.put("vehicleId",resource);
+        JSONObject obj2 = Persistence.readByProperties(CurrentLocationEntity.class,obj);
+        Persistence.create(HistoricalLocationEntity.class, obj);
+        return  Persistence.update(CurrentLocationEntity.class,(long)obj2.get("id"),json);
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 2);
-       return Persistence.read(CurrentLocationEntity.class,resource);
+        JSONObject obj = new JSONObject();
+        obj.put("vehicleId",resource);
+        return Persistence.readByProperties(CurrentLocationEntity.class,obj);
     }
 
     @Override

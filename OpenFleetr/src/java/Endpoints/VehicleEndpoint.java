@@ -5,9 +5,9 @@
  */
 package Endpoints;
 
-import Entities.User;
+import Entities.UserEntity;
 import Entities.VehicleEntity;
-import Entities.VehicleStatusEntity;
+import Entities.CurrentStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
@@ -24,43 +24,43 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-      UserAccessControl.authOperation(User.class,token,2);
+      UserAccessControl.authOperation(UserEntity.class,token,2);
       return Persistence.list(VehicleEntity.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class,token,3);
+        UserAccessControl.authOperation(UserEntity.class,token,3);
         JSONObject obj = Persistence.create(VehicleEntity.class,json);
         JSONObject obj2 = new JSONObject();
         obj2.put("vehicleId",obj.get("id"));
         obj2.put("driverId",-1);
         obj2.put("checkInDate","none");
         obj2.put("checkOutDate","none");
-        Persistence.create(VehicleStatusEntity.class, obj2);
+        Persistence.create(CurrentStatusEntity.class, obj2);
         return obj;
         
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
-         UserAccessControl.authOperation(User.class,token,3);
+        UserAccessControl.authOperation(UserEntity.class,token,3);
         return Persistence.update(VehicleEntity.class,resource,json);
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class,token,2);
+        UserAccessControl.authOperation(UserEntity.class,token,2);
         return Persistence.read(VehicleEntity.class,resource);
     }
 
     @Override
     public JSONObject doDelete(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class,token,3);
+        UserAccessControl.authOperation(UserEntity.class,token,3);
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
-        JSONObject obj2 = Persistence.readByProperties(VehicleStatusEntity.class, obj);
-        Persistence.delete(VehicleStatusEntity.class, (long) obj2.get("id"));
+        JSONObject obj2 = Persistence.readByProperties(CurrentStatusEntity.class, obj);
+        Persistence.delete(CurrentStatusEntity.class, (long) obj2.get("id"));
         return Persistence.delete(VehicleEntity.class,resource);
         
     }

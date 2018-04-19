@@ -5,8 +5,9 @@
  */
 package Endpoints;
 
-import Entities.User;
-import Entities.VehicleStatusEntity;
+import Entities.UserEntity;
+import Entities.CurrentStatusEntity;
+import Entities.HistoricalStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
@@ -19,12 +20,12 @@ import org.json.simple.JSONObject;
  * @author tareq
  */
 @WebServlet("/status/*")
-public class VehicleStatusEndpoint extends AuthorisedEndpoint {
+public class CurrentStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 2);
-        return Persistence.list(VehicleStatusEntity.class);
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        return Persistence.list(CurrentStatusEntity.class);
     }
 
     @Override
@@ -34,13 +35,20 @@ public class VehicleStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
-        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
+        UserAccessControl.authOperation(UserEntity.class, token, 1);
+        JSONObject obj = new JSONObject();
+        obj.put("vehicleId",resource);
+        JSONObject obj2 = Persistence.readByProperties(CurrentStatusEntity.class,obj);
+        Persistence.create(HistoricalStatusEntity.class, obj);
+        return  Persistence.update(CurrentStatusEntity.class,(long)obj2.get("id"),json);
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 2);
-        return Persistence.read(VehicleStatusEntity.class,resource);
+        UserAccessControl.authOperation(UserEntity.class, token,2);
+        JSONObject obj = new JSONObject();
+        obj.put("vehicleId",resource);
+        return Persistence.readByProperties(CurrentStatusEntity.class,obj);
     }
 
     @Override

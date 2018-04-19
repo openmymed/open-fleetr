@@ -5,15 +5,17 @@
  */
 package Entities;
 
-import com.tna.entities.AuthenticationEntity;
-import org.json.simple.JSONObject;
-
-
 /**
  *
  * @author tareq
  */
-public class User extends AuthenticationEntity {
-
+public class HistoricalStatusEntity {
+    
+    public long vehicleId;
+    public long driverId;
+    public String checkOutDate;
+    public String checkInDate;
+    public long status;
+    public String notes;
     
 }
