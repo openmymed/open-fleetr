@@ -33,10 +33,12 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
         UserAccessControl.authOperation(UserEntity.class,token,3);
         JSONObject obj = Persistence.create(VehicleEntity.class,json);
         JSONObject obj2 = new JSONObject();
-        obj2.put("vehicleId",obj.get("id"));
+        obj2.put("vehicleId",(long)obj.get("key"));
         obj2.put("driverId",-1);
         obj2.put("checkInDate","none");
         obj2.put("checkOutDate","none");
+        obj2.put("status",1);
+        obj2.put("notes","");
         Persistence.create(CurrentStatusEntity.class, obj2);
         return obj;
         

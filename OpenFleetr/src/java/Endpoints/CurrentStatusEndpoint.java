@@ -40,7 +40,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
         obj.put("vehicleId",resource);
         JSONObject obj2 = Persistence.readByProperties(CurrentStatusEntity.class,obj);
         Persistence.create(HistoricalStatusEntity.class, obj);
-        return  Persistence.update(CurrentStatusEntity.class,(long)obj2.get("id"),json);
+        return  Persistence.update(CurrentStatusEntity.class,(int)obj2.get("id"),json);
     }
 
     @Override

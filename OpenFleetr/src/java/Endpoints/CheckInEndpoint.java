@@ -9,6 +9,7 @@ import Entities.CurrentStatusEntity;
 import Entities.HistoricalStatusEntity;
 import Entities.UserEntity;
 import com.tna.common.AccessError;
+import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
@@ -39,12 +40,13 @@ public class CheckInEndpoint extends AuthorisedEndpoint{
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
         JSONObject readByProperties = Persistence.readByProperties(CurrentStatusEntity.class,obj);
+        if(readByProperties.get("status") == null||(int)readByProperties.get("status")!=2){
+            throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
+        }
         obj.remove("vehicleId");
         obj.put("checkInDate",new Date().toString());
-        obj.put("driverId", -1);
         obj.put("status",1);
-        obj.put("notes","");
-        return Persistence.update(CurrentStatusEntity.class, (long)readByProperties.get("id"), obj);
+        return Persistence.update(CurrentStatusEntity.class, (int)readByProperties.get("id"), obj);
       
     }
 

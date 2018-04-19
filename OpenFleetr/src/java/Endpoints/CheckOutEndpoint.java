@@ -38,33 +38,32 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 1);
         JSONObject obj = new JSONObject();
-        obj.put("vehicleId",resource);
-        JSONObject readByProperties = Persistence.readByProperties(CurrentStatusEntity.class,obj);
-        if(readByProperties.get("status")==null ||(long)readByProperties.get("status")!=1 ){
-            JSONObject resp = new JSONObject();
-            resp.put("Error","Vehicle out of service or already checked out");
-            return resp;
-        }else{
-        Persistence.create(HistoricalStatusEntity.class, readByProperties);
-        obj.remove("vehicleId");
-        obj.put("checkInDate","");
-        obj.put("checkOutDate",new Date().toString());
-        obj.put("status",2);
-        long did = (long) Persistence.readUser(UserEntity.class, token).get("id");
-        obj.put("driverId",did);
-        return Persistence.update(CurrentStatusEntity.class, (long)readByProperties.get("id"), obj);
+        obj.put("vehicleId", resource);
+        JSONObject readByProperties = Persistence.readByProperties(CurrentStatusEntity.class, obj);
+        if (readByProperties.get("status") == null || (int) readByProperties.get("status") != 1) {
+            throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
+
+        } else {
+            Persistence.create(HistoricalStatusEntity.class, readByProperties);
+            obj.remove("vehicleId");
+            obj.put("checkInDate", "");
+            obj.put("checkOutDate", new Date().toString());
+            obj.put("status", 2);
+            long did = (long) Persistence.readUser(UserEntity.class, token).get("id");
+            obj.put("driverId", did);
+            return Persistence.update(CurrentStatusEntity.class, (int) readByProperties.get("id"), obj);
         }
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 2);
-        return Persistence.read(CurrentStatusEntity.class,resource);
+        return Persistence.read(CurrentStatusEntity.class, resource);
     }
 
     @Override
     public JSONObject doDelete(int resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
-    
+
 }

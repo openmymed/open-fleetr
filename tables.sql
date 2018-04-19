@@ -62,10 +62,8 @@ CREATE TABLE `CurrentStatusEntity` (
   `notes` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_CurrentStatusEntity_1_idx` (`vehicleId`),
-  KEY `fk_CurrentStatusEntity_2_idx` (`driverId`),
-  CONSTRAINT `fk_CurrentStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_CurrentStatusEntity_2` FOREIGN KEY (`driverId`) REFERENCES `UserEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_CurrentStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,6 +72,7 @@ CREATE TABLE `CurrentStatusEntity` (
 
 LOCK TABLES `CurrentStatusEntity` WRITE;
 /*!40000 ALTER TABLE `CurrentStatusEntity` DISABLE KEYS */;
+INSERT INTO `CurrentStatusEntity` VALUES (4,NULL,-1,'none','none',1,''),(5,NULL,-1,'none','none',1,''),(6,NULL,-1,'none','none',1,''),(7,7,1,'Thu Apr 19 15:27:18 EEST 2018','',2,'');
 /*!40000 ALTER TABLE `CurrentStatusEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,10 +150,8 @@ CREATE TABLE `HistoricalStatusEntity` (
   `notes` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_HistoricalStatusEntity_1_idx` (`vehicleId`),
-  KEY `fk_HistoricalStatusEntity_2_idx` (`driverId`),
-  CONSTRAINT `fk_HistoricalStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_HistoricalStatusEntity_2` FOREIGN KEY (`driverId`) REFERENCES `UserEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_HistoricalStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,6 +160,7 @@ CREATE TABLE `HistoricalStatusEntity` (
 
 LOCK TABLES `HistoricalStatusEntity` WRITE;
 /*!40000 ALTER TABLE `HistoricalStatusEntity` DISABLE KEYS */;
+INSERT INTO `HistoricalStatusEntity` VALUES (3,7,-1,'none','none',1,''),(4,7,NULL,NULL,NULL,NULL,NULL),(5,7,NULL,NULL,NULL,NULL,NULL),(6,7,NULL,NULL,NULL,NULL,NULL),(7,7,NULL,NULL,NULL,NULL,NULL),(8,7,NULL,NULL,NULL,NULL,NULL),(9,7,NULL,NULL,NULL,NULL,NULL),(10,7,NULL,NULL,NULL,NULL,NULL),(11,7,-1,'none','Thu Apr 19 15:22:00 EEST 2018',1,''),(12,7,-1,'Thu Apr 19 15:22:09 EEST 2018','Thu Apr 19 15:23:32 EEST 2018',1,''),(13,7,1,'Thu Apr 19 15:24:33 EEST 2018','Thu Apr 19 15:26:49 EEST 2018',1,'');
 /*!40000 ALTER TABLE `HistoricalStatusEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +202,7 @@ CREATE TABLE `VehicleEntity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vehicleType` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -213,6 +211,7 @@ CREATE TABLE `VehicleEntity` (
 
 LOCK TABLES `VehicleEntity` WRITE;
 /*!40000 ALTER TABLE `VehicleEntity` DISABLE KEYS */;
+INSERT INTO `VehicleEntity` VALUES (3,'test Vehicle'),(4,'test Vehicle'),(5,'test Vehicle'),(6,'test Vehicle'),(7,'test Vehicle');
 /*!40000 ALTER TABLE `VehicleEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -225,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-19 14:50:48
+-- Dump completed on 2018-04-19 15:28:48
