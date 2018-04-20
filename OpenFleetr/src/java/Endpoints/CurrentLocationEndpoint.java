@@ -37,9 +37,7 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 1);
-        
-       
+        UserAccessControl.authOperation(UserEntity.class, token, 1);    
         json.remove("vehicleId");
         json.put("timeStamp",new Date().toString());
         
@@ -47,18 +45,14 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
         query1.put("driverId",(long)Persistence.readUser(UserEntity.class,token).get("id"));
         
         JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class,query1);
-        System.out.println(read.toString());
+
         if(read.containsKey("vehicleId")){
-        
-        
-        JSONObject query2 = new JSONObject();
-        
+         
+        JSONObject query2 = new JSONObject();        
         query2.put("vehicleId",(int)read.get("vehicleId"));
-        System.out.println(query2.toString());
         JSONObject read2 = Persistence.readByProperties(CurrentLocationEntity.class,query2);     
         
-        Persistence.create(HistoricalLocationEntity.class, read2);
-        
+        Persistence.create(HistoricalLocationEntity.class, read2);  
         return  Persistence.update(CurrentLocationEntity.class,(int)read2.get("id"),json);
         }else{
             throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);

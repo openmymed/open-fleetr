@@ -46,10 +46,10 @@ public class CheckInEndpoint extends AuthorisedEndpoint{
         }
         
         readByProperties.put("checkInDate",new Date().toString());
-        readByProperties.put("status",1);
         Persistence.create(HistoricalStatusEntity.class,readByProperties);
         
         JSONObject query = new JSONObject();
+        query.put("driverId",-1);
         query.put("status", 1);
         query.put("checkOutDate","");
         query.put("checkInDate", "");

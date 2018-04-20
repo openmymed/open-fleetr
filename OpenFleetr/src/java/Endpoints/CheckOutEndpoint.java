@@ -37,6 +37,14 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 1);
+        long did = (long) Persistence.readUser(UserEntity.class, token).get("id");
+        JSONObject query1 = new JSONObject();
+        query1.put("driverId",did);
+        JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class, query1);
+        if(read!=null){
+            throw new AccessError(ERROR_TYPE.USER_NOT_ALLOWED);
+        }
+
         JSONObject obj = new JSONObject();
         obj.put("vehicleId", resource);
         JSONObject readByProperties = Persistence.readByProperties(CurrentStatusEntity.class, obj);
@@ -48,7 +56,6 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
             JSONObject query = new JSONObject();
             query.put("checkOutDate", new Date().toString());
             query.put("status", 2);
-            long did = (long) Persistence.readUser(UserEntity.class, token).get("id");
             query.put("driverId", did);
             return Persistence.update(CurrentStatusEntity.class, (int) readByProperties.get("id"), query);
         }
