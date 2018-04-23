@@ -31,19 +31,22 @@ public class DriverEndpoint extends AuthorisedEndpoint{
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
+        
        return Persistence.create(DriverEntity.class,json);
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
-         UserAccessControl.authOperation(UserEntity.class, token, 3);
+       UserAccessControl.authOperation(UserEntity.class, token, 3);
        return Persistence.update(DriverEntity.class,resource,json);
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
-       return Persistence.read(DriverEntity.class,resource);
+        JSONObject query = new JSONObject();
+        query.put("userId", resource);
+        return Persistence.readByProperties(DriverEntity.class,query);
     }
 
     @Override
