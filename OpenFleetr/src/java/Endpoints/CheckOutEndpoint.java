@@ -7,6 +7,7 @@ package Endpoints;
 
 import Entities.UserEntity;
 import Entities.CurrentStatusEntity;
+import Entities.DriverEntity;
 import Entities.HistoricalStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
@@ -41,6 +42,7 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
         JSONObject query1 = new JSONObject();
         query1.put("driverId",did);
         JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class, query1);
+        
         if(read!=null){
             throw new AccessError(ERROR_TYPE.USER_NOT_ALLOWED);
         }
@@ -56,14 +58,18 @@ public class CheckOutEndpoint extends AuthorisedEndpoint {
             JSONObject query = new JSONObject();
             query.put("checkOutDate", new Date().toString());
             query.put("status", 2);
-            query.put("driverId", did);
+            
+            JSONObject query2 = new JSONObject();
+            query2.put("userId",did);
+            query.put("driverId", Persistence.readByProperties(DriverEntity.class, query2).get("id"));
+            
             return Persistence.update(CurrentStatusEntity.class, (int) readByProperties.get("id"), query);
         }
     }
 
     @Override
     public JSONObject doRead(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        UserAccessControl.authOperation(UserEntity.class, token, 3);
         return Persistence.read(CurrentStatusEntity.class, resource);
     }
 

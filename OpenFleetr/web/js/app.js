@@ -10,6 +10,7 @@ $(document).ready(function () {
     loadMap();
     updateLocationsInterval();//start refreshing the vehicle locations
     updateStatusesInterval();
+    
 
 
 
@@ -36,7 +37,7 @@ function updateLocationsSuccess(data) {
         if (vehicles[array.vehicleId.toString()] === undefined) {
             vehicles[array.vehicleId.toString()] = L.marker([array.latitude, array.longitude]).addTo(vehicleMap);
         } else {
-            vehicles[array.vehicleId.toString()].setLatLng([array.latitude, array.longitude]).update;
+            vehicles[array.vehicleId.toString()].setLatLng([array.latitude, array.longitude]).update();
         }
     }
     $("#locationsList").html(html);//set the output
@@ -131,11 +132,9 @@ function geolocationError() {
 }
 
 function loadMap() {
-    if ("geolocator" in navigator) {
+
         navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {timeout: 1000});
-    } else {
-        geolocationError();
-    }
+
 
 }
 

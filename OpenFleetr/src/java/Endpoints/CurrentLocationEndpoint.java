@@ -42,15 +42,19 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
         json.put("timeStamp",new Date().toString());
         
         JSONObject query1 = new JSONObject();
-        query1.put("driverId",(long)Persistence.readUser(UserEntity.class,token).get("id"));
+        query1.put("userId",(long)Persistence.readUser(UserEntity.class,token).get("id"));
+        JSONObject readDriver = Persistence.readByProperties(DriverEntity.class, query1);
         
-        JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class,query1);
+        
+        JSONObject query2 = new JSONObject();
+        query2.put("driverId",readDriver.get("id"));
+        JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class,query2);
 
-        if(read.containsKey("vehicleId")){
+        if(read!=null && read.containsKey("vehicleId")){
          
-        JSONObject query2 = new JSONObject();        
-        query2.put("vehicleId",(int)read.get("vehicleId"));
-        JSONObject read2 = Persistence.readByProperties(CurrentLocationEntity.class,query2);     
+        JSONObject query3 = new JSONObject();        
+        query3.put("vehicleId",(int)read.get("vehicleId"));
+        JSONObject read2 = Persistence.readByProperties(CurrentLocationEntity.class,query3);     
         
         Persistence.create(HistoricalLocationEntity.class, read2);  
         return  Persistence.update(CurrentLocationEntity.class,(int)read2.get("id"),json);
