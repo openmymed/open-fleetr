@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Utils;
+package com.amt.utils;
 
 import com.tna.data.Access;
 import com.tna.utils.Initialization;

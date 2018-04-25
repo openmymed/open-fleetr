@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Endpoints;
+package com.amt.endpoints;
 
-import Entities.CurrentLocationEntity;
-import Entities.UserEntity;
-import Entities.VehicleEntity;
-import Entities.CurrentStatusEntity;
+import com.amt.entities.CurrentLocationEntity;
+import com.amt.entities.UserEntity;
+import com.amt.entities.VehicleEntity;
+import com.amt.entities.CurrentStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;

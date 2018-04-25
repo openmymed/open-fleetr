@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entities;
+package com.amt.entities;
 
 import com.tna.entities.BasicEntity;
 
@@ -11,13 +11,11 @@ import com.tna.entities.BasicEntity;
  *
  * @author tareq
  */
-public class CurrentStatusEntity extends BasicEntity{
+public class CurrentLocationEntity extends BasicEntity {
     
     public long vehicleId;
-    public long driverId;
-    public String checkOutDate;
-    public String checkInDate;
-    public long status;
-    public String notes;
+    public double longitude;
+    public double latitude;
+    public String timeStamp;
     
 }

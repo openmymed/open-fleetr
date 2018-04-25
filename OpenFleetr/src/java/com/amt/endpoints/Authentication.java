@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Endpoints;
+package com.amt.endpoints;
 
-import Entities.UserEntity;
+import com.amt.entities.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.endpoints.AuthenticationEndpoint;

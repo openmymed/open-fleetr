@@ -3,19 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entities;
+package com.amt.entities;
 
 import com.tna.entities.BasicEntity;
-
 /**
  *
  * @author tareq
  */
-public class CurrentLocationEntity extends BasicEntity {
+public class VehicleEntity extends BasicEntity{
     
-    public long vehicleId;
-    public double longitude;
-    public double latitude;
-    public String timeStamp;
+    public String vehicleType;
     
 }

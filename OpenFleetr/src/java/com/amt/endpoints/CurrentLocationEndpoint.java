@@ -1,11 +1,10 @@
-package Endpoints;
+package com.amt.endpoints;
 
-import Entities.CurrentLocationEntity;
-import Entities.DriverEntity;
-import Entities.HistoricalLocationEntity;
-import Entities.UserEntity;
-import Entities.CurrentStatusEntity;
-import Entities.HistoricalStatusEntity;
+import com.amt.entities.CurrentLocationEntity;
+import com.amt.entities.DriverEntity;
+import com.amt.entities.HistoricalLocationEntity;
+import com.amt.entities.UserEntity;
+import com.amt.entities.CurrentStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;

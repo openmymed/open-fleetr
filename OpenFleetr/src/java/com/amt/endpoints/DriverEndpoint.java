@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Endpoints;
+package com.amt.endpoints;
 
-import Entities.DriverEntity;
-import Entities.UserEntity;
+import com.amt.entities.DriverEntity;
+import com.amt.entities.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
@@ -26,15 +24,19 @@ public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        UserAccessControl.authOperation(UserEntity.class, token, 3);
         JSONObject drivers = Persistence.list(DriverEntity.class);
-
+        JSONObject userPrivelege = UserAccessControl.fetchUserByToken(UserEntity.class, token);
         for (Object key : drivers.keySet()) {
             JSONObject entry = (JSONObject) drivers.get(key);
-            JSONObject user = Persistence.read(UserEntity.class, (int) entry.get("userId"));
-            entry.put("userName", user.get("userName"));
-            entry.put("password", user.get("password"));
+
+            if ((long) userPrivelege.get("id") >= 4) {
+                JSONObject user = Persistence.read(UserEntity.class, (int) entry.get("userId"));
+                entry.put("userName", user.get("userName"));
+                entry.put("password", user.get("password"));
+            }
             drivers.put(key, entry);
+
         }
         return drivers;
 
@@ -42,7 +44,7 @@ public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
+        UserAccessControl.authOperation(UserEntity.class, token, 4);
         JSONObject userQuery = new JSONObject();
         userQuery.put("userName", getRandom(8));
         userQuery.put("password", getRandom(16));
@@ -80,12 +82,12 @@ public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doDelete(int resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
+        UserAccessControl.authOperation(UserEntity.class, token, 4);
         JSONObject json = new JSONObject();
         JSONObject driver = Persistence.read(DriverEntity.class, resource);
-        Persistence.delete(UserEntity.class,(int)driver.get("userId"));
-        return Persistence.delete(DriverEntity.class,resource);
-        
+        Persistence.delete(UserEntity.class, (int) driver.get("userId"));
+        return Persistence.delete(DriverEntity.class, resource);
+
     }
 
     private String getRandom(int length) {

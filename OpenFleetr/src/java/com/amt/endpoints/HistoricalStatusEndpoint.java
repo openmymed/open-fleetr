@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Endpoints;
+package com.amt.endpoints;
 
-import Entities.HistoricalLocationEntity;
-import Entities.HistoricalStatusEntity;
-import Entities.UserEntity;
+import com.amt.entities.HistoricalStatusEntity;
+import com.amt.entities.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
-import com.tna.endpoints.BasicEndpoint;
 import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
