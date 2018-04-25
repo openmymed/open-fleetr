@@ -30,7 +30,7 @@ public class DriverEndpoint extends AuthorisedEndpoint {
         for (Object key : drivers.keySet()) {
             JSONObject entry = (JSONObject) drivers.get(key);
 
-            if ((long) userPrivelege.get("id") >= 4) {
+            if ((long) userPrivelege.get("level") >= 4) {
                 JSONObject user = Persistence.read(UserEntity.class, (int) entry.get("userId"));
                 entry.put("userName", user.get("userName"));
                 entry.put("password", user.get("password"));
