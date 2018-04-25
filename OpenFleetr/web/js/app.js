@@ -1,22 +1,22 @@
 /*
  * 
- * the Main application page 
+ * The main application page 
  * 
  */
 var vehicles = [];
 var vehicleMap;
-$(document).ready(function () {
+$(document).ready(main);
+
+function main() {
 
     loadMap();
     updateLocationsInterval();//start refreshing the vehicle locations
     updateStatusesInterval();
-    
 
-
-
-});
+}
 
 function updateLocations() {
+    
     $.ajax({//new ajax request
         url: "/OpenFleetr/location?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
@@ -29,6 +29,7 @@ function updateLocations() {
 }
 
 function updateLocationsSuccess(data) {
+    
     var html = "";
     var gpsLocation;
     for (gpsLocation in data) {//iterate over the JSON data from a successful json request
@@ -45,6 +46,7 @@ function updateLocationsSuccess(data) {
 }
 
 function updateLocationsError(jqHXR, textStatus, errorThrown) {
+    
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
         alert("Please log in !");//alert for a login
         localStorage.removeItem("token");//delete the user token from storage
@@ -55,11 +57,13 @@ function updateLocationsError(jqHXR, textStatus, errorThrown) {
 }
 
 function updateLocationsInterval() {
+    
     setTimeout(updateLocations, 1000);//every 1000ms, update the location
+    
 }
 
-
 function updateStatuses() {
+    
     $.ajax({//new ajax request
         url: "/OpenFleetr/status?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
@@ -72,10 +76,11 @@ function updateStatuses() {
 }
 
 function updateStatusesSuccess(data) {
+    
     var html = "";
-    var gpsLocation;
-    for (gpsLocation in data) {
-        var array = data[gpsLocation];
+    var status;
+    for (status in data) {
+        var array = data[status];
         html += "<li>" + JSON.stringify(array) + "</li>";//formate it into an ordered list
         if (vehicles[array.vehicleId.toString()] === undefined) {
         } else {
@@ -85,13 +90,13 @@ function updateStatusesSuccess(data) {
                     statusText = "Available";
                     break;
                 case 2 :
-                    statusText = "In Use by:" + fetchDriver(array.driverId);
+                    statusText = "In Use by "+ fetchDriver(array.driverId);
                     break;
                 default :
                     statusText = "Unavailable";
                     break;
             }
-            vehicles[array.vehicleId.toString()].bindPopup("<b>CurrentStatus</b><br>" + statusText)
+            vehicles[array.vehicleId.toString()].bindPopup("<b>CurrentStatus</b><br>" + statusText);
         }
     }
 
@@ -100,6 +105,7 @@ function updateStatusesSuccess(data) {
 }
 
 function updateStatusesError(jqHXR, textStatus, errorThrown) {
+    
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
         alert("Please log in !");//alert for a login
         localStorage.removeItem("token");//delete the user token from storage
@@ -107,10 +113,13 @@ function updateStatusesError(jqHXR, textStatus, errorThrown) {
     } else {
         $("#statusesList").text("No Statuses found");//if it is a not found error, simply say there are no locations
     }
+    
 }
 
 function updateStatusesInterval() {
+    
     setTimeout(updateStatuses, 1000);//every 1000ms, update the location
+    
 }
 
 function geolocationSuccess(position) {
@@ -132,29 +141,38 @@ function geolocationError() {
 }
 
 function loadMap() {
-
-        navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {timeout: 1000});
-
-
+    
+    navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {timeout: 1000});
+    
 }
 
 function fetchDriver(driverId) {
-
+    
+    var returnValue;
     $.ajax({//new ajax request
-        url: "/OpenFleetr/status/" + driverId + "?token=" + localStorage.getItem("token") + "", //to this url
+        url: "/OpenFleetr/driver/" + driverId + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
         dataType: "json", //expected return data type json
-        success: fetchDriverSuccess, //on success, call updateLocationsSuccess
-        error: fetchDriverError //on failure, call updateLocationsFailure
+        success: function(data){        
+            returnValue = fetchDriverSuccess(data);
+        },
+        error: fetchDriverError, //on failure, call updateLocationsFailure
+        async:false,
     });
 
+    return returnValue;
+    
 }
 
 function fetchDriverSuccess(data) {
-    return data.firstname + " " + data.lastName;
+    var name = (""+data.firstName + " " + data.lastName);
+    console.log(name);
+    return  name;
+    
 }
 
 function fetchDriverError(jqHXR, textStatus, errorThrown) {
+    
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
         alert("Please log in !");//alert for a login
         localStorage.removeItem("token");//delete the user token from storage
@@ -162,4 +180,5 @@ function fetchDriverError(jqHXR, textStatus, errorThrown) {
         alert("Something wrong seems to have happend. Please contact your system administrator");
     }
     $(location).attr('href', '/OpenFleetr');//go to the home page
+    
 }
