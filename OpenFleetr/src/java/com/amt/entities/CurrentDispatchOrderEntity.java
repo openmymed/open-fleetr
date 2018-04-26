@@ -11,14 +11,13 @@ import com.tna.entities.BasicEntity;
  *
  * @author tareq
  */
-public class DispatchOrderEntity extends BasicEntity {
+public class CurrentDispatchOrderEntity extends BasicEntity {
   
   double startLatitude;
   double startLongitude;
   double destinationLatitude;
   double destinationLongitude;
   String creationDate;
-  String completionDate;
   long vehicleId;
   long status;
 

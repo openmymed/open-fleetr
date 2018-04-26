@@ -15,6 +15,7 @@ public class HistoricalStatusEntity {
     public long driverId;
     public String checkOutDate;
     public String checkInDate;
+    public String timeStamp;
     public long status;
     public String notes;
     

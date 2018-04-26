@@ -12,6 +12,7 @@ import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
@@ -36,11 +37,12 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 1);
-        JSONObject obj = new JSONObject();
-        obj.put("vehicleId",resource);
-        JSONObject obj2 = Persistence.readByProperties(CurrentStatusEntity.class,obj);
-        Persistence.create(HistoricalStatusEntity.class, obj);
-        return  Persistence.update(CurrentStatusEntity.class,(int)obj2.get("id"),json);
+        JSONObject query1 = new JSONObject();
+        query1.put("vehicleId",resource);
+        JSONObject query2 = Persistence.readByProperties(CurrentStatusEntity.class,query1);
+        query2.put("timeStamp", new Date().toString());
+        Persistence.create(HistoricalStatusEntity.class, query2);
+        return  Persistence.update(CurrentStatusEntity.class,(int)query2.get("id"),json);
     }
 
     @Override

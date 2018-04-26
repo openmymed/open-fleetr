@@ -73,10 +73,14 @@ public class DriverEndpoint extends AuthorisedEndpoint {
     public JSONObject doRead(int resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
         JSONObject query = new JSONObject();
-        JSONObject driver = Persistence.read(DriverEntity.class, resource);
-        JSONObject user = Persistence.read(UserEntity.class, (int) driver.get("userId"));
-        driver.put("userName", user.get("userName"));
-        driver.put("password", user.get("password"));
+        JSONObject driver = Persistence.read(DriverEntity.class, resource);    
+        JSONObject userPrivelege = UserAccessControl.fetchUserByToken(UserEntity.class, token);
+
+        if ((long) userPrivelege.get("level") >=4) {
+                JSONObject user = Persistence.read(UserEntity.class, (int) driver.get("userId"));
+                driver.put("userName", user.get("userName"));
+                driver.put("password", user.get("password"));
+        }
         return driver;
     }
 
