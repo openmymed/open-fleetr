@@ -19,7 +19,7 @@ function main() {
 
 function updateDrivers() {
     $.ajax({
-        url: "/OpenFleetr/location?token=" + localStorage.getItem("token") + "",
+        url: "/OpenFleetr/driver?token=" + localStorage.getItem("token") + "",
         type: "GET",
         dataType: "json",
         success: updateDriversSuccess,
@@ -34,7 +34,7 @@ function updateDriversSuccess(data) {
     var driver;
     for (driver in data) {//iterate over the JSON data from a successful json request
         var array = data[driver];
-        driversCache[array.id.toString()] = "" + data.firstName + " " + data.lastName;
+        driversCache[array.id.toString()] = "" + array.firstName + " " + array.lastName;
     }
 }
 
@@ -125,7 +125,7 @@ function updateStatusesSuccess(data) {
                     statusText = "Available";
                     break;
                 case 2 :
-                    if(driversCache[array.driverId.toString()]===undefined){
+                    if(driversCache[array.driverId.toString()]=== undefined){
                         clearTimeout(updateDriversTimeout);
                         updateDrivers();
                         
@@ -136,7 +136,7 @@ function updateStatusesSuccess(data) {
                     statusText = "Unavailable";
                     break;
             }
-            vehicles[array.vehicleId.toString()].bindPopup("<b>CurrentStatus</b><br>" + statusText);
+            vehicles[array.vehicleId.toString()].bindPopup("" + statusText);
         }
     }
 
