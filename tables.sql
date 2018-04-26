@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `OpenFleetr` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `OpenFleetr`;
--- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: OpenFleetr
 -- ------------------------------------------------------
--- Server version	5.7.21-0ubuntu0.16.04.1
+-- Server version	5.7.22-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -33,7 +33,7 @@ CREATE TABLE `CurrentLocationEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_CurrentLocationEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_CurrentLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +54,28 @@ CREATE TABLE `CurrentStatusEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_CurrentStatusEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_CurrentStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `DispatchOrderEntity`
+--
+
+DROP TABLE IF EXISTS `DispatchOrderEntity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DispatchOrderEntity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `startLatitude` double DEFAULT NULL,
+  `startLongitude` double DEFAULT NULL,
+  `destinationLatitude` double DEFAULT NULL,
+  `destinationLongitude` double DEFAULT NULL,
+  `vehicleId` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `creationDate` varchar(45) DEFAULT NULL,
+  `completionDate` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,6 +95,27 @@ CREATE TABLE `DriverEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_DriverEntity_1_idx` (`userId`),
   CONSTRAINT `fk_DriverEntity_1` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `HistoricalDispatchOrderEntity`
+--
+
+DROP TABLE IF EXISTS `HistoricalDispatchOrderEntity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `HistoricalDispatchOrderEntity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `startLatitude` double DEFAULT NULL,
+  `startLongitude` double DEFAULT NULL,
+  `destinationLatitude` double DEFAULT NULL,
+  `destinationLongitude` double DEFAULT NULL,
+  `vehicleId` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `creationDate` varchar(45) DEFAULT NULL,
+  `completionDate` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -93,7 +135,7 @@ CREATE TABLE `HistoricalLocationEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_HistoricalLocationEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_HistoricalLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,7 +156,7 @@ CREATE TABLE `HistoricalStatusEntity` (
   PRIMARY KEY (`id`),
   KEY `fk_HistoricalStatusEntity_1_idx` (`vehicleId`),
   CONSTRAINT `fk_HistoricalStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +173,7 @@ CREATE TABLE `UserEntity` (
   `token` varchar(45) DEFAULT NULL,
   `level` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -145,7 +187,7 @@ CREATE TABLE `VehicleEntity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vehicleType` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -157,4 +199,4 @@ CREATE TABLE `VehicleEntity` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-19 16:10:20
+-- Dump completed on 2018-04-26 12:05:28
