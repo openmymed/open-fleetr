@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
  * @author tareq
  */
 
-@WebServlet("/location/*")
+@WebServlet("vehicle/location/*")
 public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
      @Override
@@ -37,26 +37,20 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 1);    
-        json.remove("vehicleId");
         json.put("timeStamp",new Date().toString());
-        
         JSONObject query1 = new JSONObject();
-        query1.put("userId",(long)Persistence.readUser(UserEntity.class,token).get("id"));
+        query1.put("userId",(long)UserAccessControl.fetchUserByToken(UserEntity.class,token).get("id"));
         JSONObject readDriver = Persistence.readByProperties(DriverEntity.class, query1);
         
         
         JSONObject query2 = new JSONObject();
         query2.put("driverId",readDriver.get("id"));
-        JSONObject read = Persistence.readByProperties(CurrentStatusEntity.class,query2);
+        JSONObject readStatus = Persistence.readByProperties(CurrentStatusEntity.class,query2);
 
-        if(read!=null && read.containsKey("vehicleId")){
-         
-        JSONObject query3 = new JSONObject();        
-        query3.put("vehicleId",(int)read.get("vehicleId"));
-        JSONObject read2 = Persistence.readByProperties(CurrentLocationEntity.class,query3);     
+        if(readStatus!=null && readStatus.containsKey("vehicleId")){   
         
-        Persistence.create(HistoricalLocationEntity.class, read2);  
-        return  Persistence.update(CurrentLocationEntity.class,(int)read2.get("id"),json);
+        Persistence.create(HistoricalLocationEntity.class, json);  
+        return  Persistence.update(CurrentLocationEntity.class,(int)readStatus.get("vehicleId"),json);
         }else{
             throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
         }
@@ -64,19 +58,19 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
         return Persistence.readByProperties(CurrentLocationEntity.class,obj);
     }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
     

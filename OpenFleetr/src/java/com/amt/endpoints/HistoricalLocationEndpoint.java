@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/locationhistory/*")
+@WebServlet("vehicle/location/history/*")
 public class HistoricalLocationEndpoint extends AuthorisedEndpoint {
 
     @Override
@@ -34,12 +34,12 @@ public class HistoricalLocationEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 2);
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
@@ -48,7 +48,7 @@ public class HistoricalLocationEndpoint extends AuthorisedEndpoint {
       }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
     

@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/driver/*")
+@WebServlet("user/driver/*")
 public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override
@@ -64,13 +64,13 @@ public class DriverEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
         return Persistence.update(DriverEntity.class, resource, json);
     }
 
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
         JSONObject query = new JSONObject();
         JSONObject driver = Persistence.read(DriverEntity.class, resource);    
@@ -85,7 +85,7 @@ public class DriverEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 4);
         JSONObject json = new JSONObject();
         JSONObject driver = Persistence.read(DriverEntity.class, resource);

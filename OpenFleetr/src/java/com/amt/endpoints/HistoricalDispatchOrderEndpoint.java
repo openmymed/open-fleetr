@@ -18,7 +18,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/dispatchhistory/*")
+@WebServlet("vehicle/dispatch/history*")
 public class HistoricalDispatchOrderEndpoint extends AuthorisedEndpoint{
 
     @Override
@@ -33,12 +33,12 @@ public class HistoricalDispatchOrderEndpoint extends AuthorisedEndpoint{
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
     
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
        UserAccessControl.authOperation(UserEntity.class, token, 3);
        JSONObject query = new JSONObject();
        query.put("vehicleId", resource);
@@ -46,7 +46,7 @@ public class HistoricalDispatchOrderEndpoint extends AuthorisedEndpoint{
     }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
     

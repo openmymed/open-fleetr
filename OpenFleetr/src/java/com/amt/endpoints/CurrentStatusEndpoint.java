@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/status/*")
+@WebServlet("vehicle/status/*")
 public class CurrentStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
@@ -35,7 +35,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 1);
         JSONObject query1 = new JSONObject();
         query1.put("vehicleId",resource);
@@ -46,7 +46,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token,2);
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
@@ -54,7 +54,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
     

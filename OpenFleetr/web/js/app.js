@@ -19,7 +19,7 @@ function main() {
 
 function updateDrivers() {
     $.ajax({
-        url: "/OpenFleetr/driver?token=" + localStorage.getItem("token") + "",
+        url: "/OpenFleetr/user/driver?token=" + localStorage.getItem("token") + "",
         type: "GET",
         dataType: "json",
         success: updateDriversSuccess,
@@ -53,7 +53,7 @@ function updateDriversError(jqHXR, textStatus, errorThrown) {
 function updateLocations() {
 
     $.ajax({//new ajax request
-        url: "/OpenFleetr/location?token=" + localStorage.getItem("token") + "", //to this url
+        url: "/OpenFleetr/vehicle/location?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
         dataType: "json", //expected return data type json
         success: updateLocationsSuccess, //on success, call updateLocationsSuccess
@@ -100,7 +100,7 @@ function updateLocationsInterval() {
 function updateStatuses() {
 
     $.ajax({//new ajax request
-        url: "/OpenFleetr/status?token=" + localStorage.getItem("token") + "", //to this url
+        url: "/OpenFleetr/vehicle/status?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
         dataType: "json", //expected return data type json
         success: updateStatusesSuccess, //on success, call updateLocationsSuccess

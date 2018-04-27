@@ -22,7 +22,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/checking/*")
+@WebServlet("vehicle/checking/*")
 public class CheckingEndpoint extends AuthorisedEndpoint {
 
     @Override
@@ -68,7 +68,7 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         
         UserAccessControl.authOperation(UserEntity.class, token, 2); 
         long DriverId = (long)UserAccessControl.fetchUserByToken(UserEntity.class, token).get("id");
@@ -101,13 +101,13 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 2);
         return Persistence.read(CurrentStatusEntity.class, resource);
     }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
 

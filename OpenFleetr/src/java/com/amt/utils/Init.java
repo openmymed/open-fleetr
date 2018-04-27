@@ -18,11 +18,10 @@ public class Init extends Initialization {
 
     @Override
     public void onInit() {
-       Access.host = "localhost";
-       Access.database = "OpenFleetr";
-       Access.username = "api_user";
-       Access.password = "pass1234";
-       Access.getInstance();
+       Access.setHost("localhost");
+       Access.setDatabase("OpenFleetr");
+       Access.setUsername("api_user");
+       Access.setPassword("pass1234");
        Access.pool.initialize(5);
     }
 

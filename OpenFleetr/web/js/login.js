@@ -22,7 +22,7 @@ function login() {
         alert("Please fill all fields...!!!!!!");//do some CSS stuff and alrert the user
     } else {
         $.ajax({//new ajax request
-            url: "/OpenFleetr/auth", //to this endpoint
+            url: "/OpenFleetr/user/auth", //to this endpoint
             type: "POST", //HTTP request type post
             data: JSON.stringify(postData), //data is the json arrray from the array above
             contentType: "application/json; charset=utf-8", //the content we want to send is of type json

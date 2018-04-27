@@ -53,19 +53,19 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
     }
 
     @Override
-    public JSONObject doUpdate(JSONObject json, int resource, String token) throws AccessError {
+    public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class,token,3);
         return Persistence.update(VehicleEntity.class,resource,json);
     }
 
     @Override
-    public JSONObject doRead(int resource, String token) throws AccessError {
+    public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class,token,2);
         return Persistence.read(VehicleEntity.class,resource);
     }
 
     @Override
-    public JSONObject doDelete(int resource, String token) throws AccessError {
+    public JSONObject doDelete(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class,token,3);
         JSONObject obj = new JSONObject();
         obj.put("vehicleId",resource);
