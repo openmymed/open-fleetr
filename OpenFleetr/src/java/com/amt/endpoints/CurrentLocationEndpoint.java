@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
  * @author tareq
  */
 
-@WebServlet("vehicle/location/*")
+@WebServlet("/vehicle/location/*")
 public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
      @Override

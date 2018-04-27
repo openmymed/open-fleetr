@@ -25,7 +25,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("vehicle/dispatch/*")
+@WebServlet("/vehicle/dispatch/*")
 public class DispatchOrderEndpoint extends AuthorisedEndpoint {
 
     @Override

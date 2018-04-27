@@ -21,7 +21,7 @@ public class Init extends Initialization {
        Access.setHost("localhost");
        Access.setDatabase("OpenFleetr");
        Access.setUsername("api_user");
-       Access.setPassword("pass1234");
+       Access.setPassword("pass1234");     
        Access.pool.initialize(5);
     }
 

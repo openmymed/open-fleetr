@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("vehicle/location/history/*")
+@WebServlet("/vehicle/location/history/*")
 public class HistoricalLocationEndpoint extends AuthorisedEndpoint {
 
     @Override

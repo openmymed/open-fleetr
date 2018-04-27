@@ -19,7 +19,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("user/driver/*")
+@WebServlet("/user/driver/*")
 public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override

@@ -16,7 +16,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("user/auth/*")
+@WebServlet("/user/auth/*")
 public class Authentication extends AuthenticationEndpoint {
 
     @Override

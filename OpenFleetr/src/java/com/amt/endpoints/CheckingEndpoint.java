@@ -22,7 +22,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("vehicle/checking/*")
+@WebServlet("/vehicle/checking/*")
 public class CheckingEndpoint extends AuthorisedEndpoint {
 
     @Override
