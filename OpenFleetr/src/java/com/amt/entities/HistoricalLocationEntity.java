@@ -16,6 +16,5 @@ public class HistoricalLocationEntity extends BasicEntity{
     public long vehicleId;
     public double latitude;
     public double longitude;
-    public String timeStamp;
     
 }

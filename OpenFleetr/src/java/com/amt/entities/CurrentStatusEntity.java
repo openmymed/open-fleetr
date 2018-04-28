@@ -6,6 +6,7 @@
 package com.amt.entities;
 
 import com.tna.entities.BasicEntity;
+import java.sql.Date;
 
 /**
  *
@@ -15,8 +16,8 @@ public class CurrentStatusEntity extends BasicEntity{
     
     public long vehicleId;
     public long driverId;
-    public String checkOutDate;
-    public String checkInDate;
+    public Date checkOutDate;
+    public Date checkInDate;
     public long status;
     public String notes;
     

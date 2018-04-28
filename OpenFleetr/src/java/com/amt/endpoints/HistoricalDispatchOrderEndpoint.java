@@ -18,7 +18,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/vehicle/dispatch/history*")
+@WebServlet("/vehicle/dispatch/history/*")
 public class HistoricalDispatchOrderEndpoint extends AuthorisedEndpoint{
 
     @Override

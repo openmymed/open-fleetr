@@ -5,6 +5,8 @@
  */
 package com.amt.endpoints;
 
+import com.amt.common.cache.CurrentDispatchOrderEntityCache;
+import com.amt.common.cache.CurrentStatusEntityCache;
 import com.amt.entities.CurrentLocationEntity;
 import com.amt.entities.CurrentStatusEntity;
 import com.amt.entities.CurrentDispatchOrderEntity;
@@ -87,7 +89,13 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
-        return Persistence.read(CurrentDispatchOrderEntity.class, resource);
+        JSONObject result = CurrentDispatchOrderEntityCache.cache.retreive((long) resource);
+        if (result == null) {
+            JSONObject obj = new JSONObject();
+            obj.put("vehicleId", resource);
+            result = Persistence.readByProperties(CurrentDispatchOrderEntity.class, obj);
+        }
+        return result;
     }
 
     @Override

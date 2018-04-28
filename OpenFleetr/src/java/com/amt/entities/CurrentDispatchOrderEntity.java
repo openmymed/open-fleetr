@@ -6,7 +6,7 @@
 package com.amt.entities;
 
 import com.tna.entities.BasicEntity;
-
+import java.sql.Date;
 /**
  *
  * @author tareq
@@ -17,7 +17,7 @@ public class CurrentDispatchOrderEntity extends BasicEntity {
   double startLongitude;
   double destinationLatitude;
   double destinationLongitude;
-  String creationDate;
+  Date creationDate;
   long vehicleId;
   long status;
 

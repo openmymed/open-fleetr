@@ -5,6 +5,8 @@
  */
 package com.amt.entities;
 
+import java.sql.Date;
+
 /**
  *
  * @author tareq
@@ -13,9 +15,8 @@ public class HistoricalStatusEntity {
     
     public long vehicleId;
     public long driverId;
-    public String checkOutDate;
-    public String checkInDate;
-    public String timeStamp;
+    public Date checkOutDate;
+    public Date checkInDate;
     public long status;
     public String notes;
     

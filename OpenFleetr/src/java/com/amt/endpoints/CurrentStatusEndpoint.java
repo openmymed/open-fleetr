@@ -5,6 +5,9 @@
  */
 package com.amt.endpoints;
 
+import com.amt.common.cache.CurrentLocationEntityCache;
+import com.amt.common.cache.CurrentStatusEntityCache;
+import com.amt.entities.CurrentLocationEntity;
 import com.amt.entities.UserEntity;
 import com.amt.entities.CurrentStatusEntity;
 import com.amt.entities.HistoricalStatusEntity;
@@ -36,7 +39,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 1);
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
         JSONObject query1 = new JSONObject();
         query1.put("vehicleId",resource);
         JSONObject query2 = Persistence.readByProperties(CurrentStatusEntity.class,query1);
@@ -47,10 +50,14 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token,2);
-        JSONObject obj = new JSONObject();
-        obj.put("vehicleId",resource);
-        return Persistence.readByProperties(CurrentStatusEntity.class,obj);
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        JSONObject result = CurrentStatusEntityCache.cache.retreive((long) resource);
+        if (result == null) {
+            JSONObject obj = new JSONObject();
+            obj.put("vehicleId", resource);
+            result = Persistence.readByProperties(CurrentStatusEntity.class, obj);
+        }
+        return result;
     }
 
     @Override

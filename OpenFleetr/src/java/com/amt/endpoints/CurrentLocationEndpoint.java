@@ -1,5 +1,6 @@
 package com.amt.endpoints;
 
+import com.amt.common.cache.CurrentLocationEntityCache;
 import com.amt.entities.CurrentLocationEntity;
 import com.amt.entities.DriverEntity;
 import com.amt.entities.HistoricalLocationEntity;
@@ -19,42 +20,38 @@ import org.json.simple.JSONObject;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author tareq
  */
-
 @WebServlet("/vehicle/location/*")
-public class CurrentLocationEndpoint extends AuthorisedEndpoint{
+public class CurrentLocationEndpoint extends AuthorisedEndpoint {
 
-     @Override
+    @Override
     public JSONObject doList(String token) throws AccessError {
-       UserAccessControl.authOperation(UserEntity.class, token, 2);
-       return Persistence.list(CurrentLocationEntity.class);
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        return Persistence.list(CurrentLocationEntity.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 1);    
-        json.put("timeStamp",new Date().toString());
+        UserAccessControl.authOperation(UserEntity.class, token, 1);
         JSONObject query1 = new JSONObject();
-        query1.put("userId",(long)UserAccessControl.fetchUserByToken(UserEntity.class,token).get("id"));
+        query1.put("userId", (long) UserAccessControl.fetchUserByToken(UserEntity.class, token).get("id"));
         JSONObject readDriver = Persistence.readByProperties(DriverEntity.class, query1);
-        
-        
-        JSONObject query2 = new JSONObject();
-        query2.put("driverId",readDriver.get("id"));
-        JSONObject readStatus = Persistence.readByProperties(CurrentStatusEntity.class,query2);
 
-        if(readStatus!=null && readStatus.containsKey("vehicleId")){   
-        
-        Persistence.create(HistoricalLocationEntity.class, json);  
-        return  Persistence.update(CurrentLocationEntity.class,(int)readStatus.get("vehicleId"),json);
-        }else{
+        JSONObject query2 = new JSONObject();
+        query2.put("driverId", readDriver.get("id"));
+        JSONObject readStatus = Persistence.readByProperties(CurrentStatusEntity.class, query2);
+
+        if (readStatus != null && readStatus.containsKey("vehicleId")) {
+
+            Persistence.create(HistoricalLocationEntity.class, json);
+            return Persistence.update(CurrentLocationEntity.class, (int) readStatus.get("vehicleId"), json);
+        } else {
             throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
         }
-        
+
     }
 
     @Override
@@ -64,14 +61,19 @@ public class CurrentLocationEndpoint extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        JSONObject obj = new JSONObject();
-        obj.put("vehicleId",resource);
-        return Persistence.readByProperties(CurrentLocationEntity.class,obj);
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        JSONObject result = CurrentLocationEntityCache.cache.retreive((long) resource);
+        if (result == null) {
+            JSONObject obj = new JSONObject();
+            obj.put("vehicleId", resource);
+            result = Persistence.readByProperties(CurrentLocationEntity.class, obj);
+        }
+        return result;
     }
 
     @Override
     public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
-    
+
 }
