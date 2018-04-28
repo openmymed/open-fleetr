@@ -12,6 +12,7 @@ import com.amt.common.cachemanager.CurrentStatusEntityCacheManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.servlet.annotation.WebListener;
 
 /**
@@ -20,35 +21,42 @@ import javax.servlet.annotation.WebListener;
  */
 @WebListener
 public class Init extends Initialization {
-    ArrayList<Thread> pollThreads;
+
+    Thread locationPoll;
+    Thread statusPoll;
+    Thread dispatchPoll;
+
     @Override
     public void onInit() {
-       pollThreads = new ArrayList();
-       Access.setHost("localhost");
-       Access.setDatabase("OpenFleetr");
-       Access.setUsername("api_user");
-       Access.setPassword("pass1234");     
-       Access.pool.initialize(5);
-       pollThreads.add(new Thread(new CurrentLocationEntityCacheManager()));
-       pollThreads.add(new Thread(new CurrentStatusEntityCacheManager()));
-       pollThreads.add(new Thread(new CurrentDispatchOrderEntityCacheManager()));
-       startThreads();
+        Access.setHost("localhost");
+        Access.setDatabase("OpenFleetr");
+        Access.setUsername("api_user");
+        Access.setPassword("pass1234");
+        Access.pool.initialize(5);
+        locationPoll = (new Thread(new CurrentLocationEntityCacheManager()));
+        statusPoll = (new Thread(new CurrentStatusEntityCacheManager()));
+        dispatchPoll = (new Thread(new CurrentDispatchOrderEntityCacheManager()));
+        NotificationSessions.getInstance();
+        startThreads();
     }
 
     @Override
     public void onDestroy() {
         stopThreads();
     }
-    
-    public void startThreads(){
-        pollThreads.forEach((thread) -> {
-            thread.start();
-        });
+
+    public void startThreads() {
+        locationPoll.start();
+        statusPoll.start();
+        dispatchPoll.start();
+
     }
-    
-    public void stopThreads(){
-        pollThreads.forEach((thread) -> {
-            thread.interrupt();
-        });
+
+    public void stopThreads() {
+
+        locationPoll.stop();
+        statusPoll.stop();
+        dispatchPoll.stop();
+
     }
 }
