@@ -51,7 +51,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 2);
-        JSONObject result = CurrentStatusEntityCache.cache.retreive((long) resource);
+        JSONObject result = CurrentStatusEntityCache.retreive((long) resource);
         if (result == null) {
             JSONObject obj = new JSONObject();
             obj.put("vehicleId", resource);

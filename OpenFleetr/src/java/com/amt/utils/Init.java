@@ -9,6 +9,7 @@ import com.amt.common.cache.CurrentLocationEntityCache;
 import com.amt.common.cachemanager.CurrentDispatchOrderEntityCacheManager;
 import com.amt.common.cachemanager.CurrentLocationEntityCacheManager;
 import com.amt.common.cachemanager.CurrentStatusEntityCacheManager;
+import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ public class Init extends Initialization {
         locationPoll = (new Thread(new CurrentLocationEntityCacheManager()));
         statusPoll = (new Thread(new CurrentStatusEntityCacheManager()));
         dispatchPoll = (new Thread(new CurrentDispatchOrderEntityCacheManager()));
-        NotificationSessions.getInstance();
         startThreads();
     }
 
@@ -54,9 +54,9 @@ public class Init extends Initialization {
 
     public void stopThreads() {
 
-        locationPoll.stop();
-        statusPoll.stop();
-        dispatchPoll.stop();
+        locationPoll.interrupt();
+        statusPoll.interrupt();
+        dispatchPoll.interrupt();
 
     }
 }

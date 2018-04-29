@@ -14,19 +14,35 @@ import org.json.simple.JSONObject;
  * @author tareq
  */
 public class CurrentStatusEntityCache {
-    public static CurrentStatusEntityCache statusCache = CurrentStatusEntityCache.getInstance();
-    public static ObjectCache<Long,JSONObject> cache;
-    
-    public static CurrentStatusEntityCache getInstance(){
-        if(statusCache == null){
-            return new CurrentStatusEntityCache();
-        }else{
-            return statusCache;
-        }
-    }
+    private static CurrentStatusEntityCache realTimeCache ;
+    private static ObjectCache<Long,JSONObject> cache;
     
     private CurrentStatusEntityCache(){
         cache = new ObjectCache();
-        cache.setTimeStamp(new Timestamp(0));
     }
+    
+    public static synchronized CurrentStatusEntityCache getInstance(){
+        if(realTimeCache==null){
+             realTimeCache = new CurrentStatusEntityCache();
+        }
+            return realTimeCache;
+
+    }
+    
+    public static void cache(Long key, JSONObject value){
+        CurrentStatusEntityCache.getInstance().cache.cache(key, value);
+    }
+    
+    public static JSONObject retreive(Long key){
+       return CurrentStatusEntityCache.getInstance().cache.retreive(key);
+    }
+    
+    public static void setTimeStamp(Timestamp time){
+        CurrentStatusEntityCache.getInstance().cache.setTimeStamp(time);
+    }
+    
+    public static Timestamp getTimeStamp(){
+        return CurrentStatusEntityCache.getInstance().cache.getTimeStamp();
+    }
+   
 }

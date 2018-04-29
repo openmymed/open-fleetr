@@ -89,7 +89,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, token, 3);
-        JSONObject result = CurrentDispatchOrderEntityCache.cache.retreive((long) resource);
+        JSONObject result = CurrentDispatchOrderEntityCache.retreive((long) resource);
         if (result == null) {
             JSONObject obj = new JSONObject();
             obj.put("vehicleId", resource);

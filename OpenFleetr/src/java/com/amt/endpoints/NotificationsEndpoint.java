@@ -6,10 +6,11 @@
 package com.amt.endpoints;
 
 import com.amt.entities.UserEntity;
-import com.amt.utils.NotificationSessions;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
+import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.common.UserAccessControl;
+import com.tna.utils.UserSession;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,8 @@ public class NotificationsEndpoint {
             user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
 
             if ((long) user.get("level") >= 2) {
-                NotificationSessions.sessions.put(session, session);
+                UserSession userSession = new UserSession(token,(long)user.get("id"),(long)user.get("level"),session);
+                AuthenticatedNotificationSessionManager.addUserSession(userSession, session);
             } else {
                 throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
             }
@@ -45,14 +47,15 @@ public class NotificationsEndpoint {
 
             }
         }
-
+                
     }
 
     @OnClose
     public void close(Session session) {
-        NotificationSessions.sessions.remove(session);
+        UserSession userSession = AuthenticatedNotificationSessionManager.get(session);
+        AuthenticatedNotificationSessionManager.removeUserSession(userSession);
         try {
-            session.close();
+            userSession.getUserSession().close();
         } catch (IOException ex) {
             Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
         }
