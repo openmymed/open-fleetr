@@ -35,32 +35,33 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentDispatchOrderEntity.class, cacheTime);
                 if (differentialList != null) {
                     Set keySet = differentialList.keySet();
-                                            Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
+                    Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
 
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
                         long vehicleId = (int) listItem.get("vehicleId");
                         for (Session userSession : userSessionSet) {
                             new Thread(() -> {
-                               AuthenticatedNotificationSessionManager.checkout(userSession);
+                                AuthenticatedNotificationSessionManager.checkout(userSession);
                                 try {
                                     userSession.getBasicRemote().sendText("{\"dispatchOrder\":" + vehicleId + "}");
                                 } catch (IOException ex) {
                                     Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
-                                }finally{
-                                AuthenticatedNotificationSessionManager.checkin(userSession);
+                                } finally {
+                                    AuthenticatedNotificationSessionManager.checkin(userSession);
                                 }
                             }).start();
-                       CurrentDispatchOrderEntityCache.cache(vehicleId, listItem);
+                            CurrentDispatchOrderEntityCache.cache(vehicleId, listItem);
 
+                        }
                     }
                 }
-            }} catch (AccessError ex) {
+            } catch (AccessError ex) {
                 handleError(ex);
             } finally {
                 CurrentDispatchOrderEntityCache.setTimeStamp(now);
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     break;
                 }
@@ -72,7 +73,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
 
     }
 
-    public   CurrentDispatchOrderEntityCacheManager() {
+    public CurrentDispatchOrderEntityCacheManager() {
         CurrentDispatchOrderEntityCache.getInstance();
     }
 }

@@ -60,7 +60,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
             } finally {
                 CurrentStatusEntityCache.setTimeStamp(now);
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     break;
                 }

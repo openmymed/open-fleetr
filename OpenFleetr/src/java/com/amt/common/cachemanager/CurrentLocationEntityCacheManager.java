@@ -34,6 +34,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentLocationEntity.class, cacheTime);
                 if (differentialList != null) {
                     Set keySet = differentialList.keySet();
+                    System.out.println("Detected "+ keySet.size()+" Changes to db");
                     Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
@@ -41,13 +42,13 @@ public class CurrentLocationEntityCacheManager implements Runnable {
                         CurrentLocationEntityCache.cache(vehicleId, listItem);
                         for (Session userSession : userSessionSet) {
                             new Thread(() -> {
-                               AuthenticatedNotificationSessionManager.checkout(userSession);
+                                AuthenticatedNotificationSessionManager.checkout(userSession);
                                 try {
                                     userSession.getBasicRemote().sendText("{\"location\":" + vehicleId + "}");
                                 } catch (IOException ex) {
                                     Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                                 }finally{
-                                AuthenticatedNotificationSessionManager.checkin(userSession);
+                                    AuthenticatedNotificationSessionManager.checkin(userSession);
                                 }
                             }).start();
                     }
@@ -57,7 +58,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
             } finally {
                 CurrentLocationEntityCache.setTimeStamp(now);
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     break;
                 }

@@ -35,7 +35,7 @@ public class NotificationsEndpoint {
             user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
 
             if ((long) user.get("level") >= 2) {
-                UserSession userSession = new UserSession(token,(long)user.get("id"),(long)user.get("level"),session);
+                UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 AuthenticatedNotificationSessionManager.addUserSession(userSession, session);
             } else {
                 throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
@@ -47,17 +47,23 @@ public class NotificationsEndpoint {
 
             }
         }
-                
+
     }
 
     @OnClose
     public void close(Session session) {
         UserSession userSession = AuthenticatedNotificationSessionManager.get(session);
+        while (userSession.lock.hasQueuedThreads() == true) {
+        }
+        userSession.lock.lock();
         AuthenticatedNotificationSessionManager.removeUserSession(userSession);
         try {
             userSession.getUserSession().close();
         } catch (IOException ex) {
             Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            userSession.lock.unlock();
+            userSession = null;
         }
     }
 

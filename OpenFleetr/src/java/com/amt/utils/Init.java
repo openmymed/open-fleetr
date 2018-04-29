@@ -5,15 +5,12 @@
  */
 package com.amt.utils;
 
-import com.amt.common.cache.CurrentLocationEntityCache;
 import com.amt.common.cachemanager.CurrentDispatchOrderEntityCacheManager;
 import com.amt.common.cachemanager.CurrentLocationEntityCacheManager;
 import com.amt.common.cachemanager.CurrentStatusEntityCacheManager;
 import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
-import java.util.ArrayList;
-import java.util.Arrays;
 import javax.servlet.annotation.WebListener;
 
 /**
@@ -43,6 +40,7 @@ public class Init extends Initialization {
     @Override
     public void onDestroy() {
         stopThreads();
+        AuthenticatedNotificationSessionManager.closeAllSessions();
     }
 
     public void startThreads() {
@@ -53,7 +51,6 @@ public class Init extends Initialization {
     }
 
     public void stopThreads() {
-
         locationPoll.interrupt();
         statusPoll.interrupt();
         dispatchPoll.interrupt();
