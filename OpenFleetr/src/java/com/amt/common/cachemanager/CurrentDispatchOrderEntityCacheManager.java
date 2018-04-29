@@ -12,6 +12,8 @@ import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.data.Persistence;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,26 +36,27 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentDispatchOrderEntity.class, cacheTime);
                 if (differentialList != null) {
+                    ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
                     Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
 
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
                         long vehicleId = (int) listItem.get("vehicleId");
-                        for (Session userSession : userSessionSet) {
-                            new Thread(() -> {
-                                AuthenticatedNotificationSessionManager.checkout(userSession);
-                                try {
-                                    userSession.getBasicRemote().sendText("{\"dispatchOrder\":" + vehicleId + "}");
-                                } catch (IOException ex) {
-                                    Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
-                                } finally {
-                                    AuthenticatedNotificationSessionManager.checkin(userSession);
-                                }
-                            }).start();
-                            CurrentDispatchOrderEntityCache.cache(vehicleId, listItem);
+                        changedVehicleIds.add(vehicleId);
+                        CurrentDispatchOrderEntityCache.cache(vehicleId, listItem);
 
-                        }
+                    }
+                    for (Session userSession : userSessionSet) {
+                        new Thread(() -> {
+                            try {
+                                AuthenticatedNotificationSessionManager.checkout(userSession);
+                                userSession.getBasicRemote().sendText("{\"dispatchOrder\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                AuthenticatedNotificationSessionManager.checkin(userSession);
+                            } catch (IOException ex) {
+                                Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }).start();
                     }
                 }
             } catch (AccessError ex) {

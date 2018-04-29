@@ -12,6 +12,8 @@ import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.data.Persistence;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,28 +36,30 @@ public class CurrentStatusEntityCacheManager implements Runnable {
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentStatusEntity.class, cacheTime);
                 if (differentialList != null) {
+                    ArrayList<Long> changedVechicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
-                                            Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
+                    Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
 
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
                         long vehicleId = (int) listItem.get("vehicleId");
-                        for (Session userSession : userSessionSet) {
-                            new Thread(() -> {
-                               AuthenticatedNotificationSessionManager.checkout(userSession);
-                                try {
-                                    userSession.getBasicRemote().sendText("{\"status\":" + vehicleId + "}");
-                                } catch (IOException ex) {
-                                    Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
-                                }finally{
+                        changedVechicleIds.add(vehicleId);
+                        CurrentStatusEntityCache.cache(vehicleId, listItem);
+                    }
+                    for (Session userSession : userSessionSet) {
+                        new Thread(() -> {
+                            AuthenticatedNotificationSessionManager.checkout(userSession);
+                            try {
+                                userSession.getBasicRemote().sendText("{\"status\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
+                            } catch (IOException ex) {
+                                Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+                            } finally {
                                 AuthenticatedNotificationSessionManager.checkin(userSession);
-                                }
-                            }).start();
-                       CurrentStatusEntityCache.cache(vehicleId, listItem);
-
+                            }
+                        }).start();
                     }
                 }
-            }} catch (AccessError ex) {
+            } catch (AccessError ex) {
                 handleError(ex);
             } finally {
                 CurrentStatusEntityCache.setTimeStamp(now);
@@ -72,7 +76,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
 
     }
 
-    public   CurrentStatusEntityCacheManager() {
-         CurrentStatusEntityCache.getInstance();
+    public CurrentStatusEntityCacheManager() {
+        CurrentStatusEntityCache.getInstance();
     }
 }
