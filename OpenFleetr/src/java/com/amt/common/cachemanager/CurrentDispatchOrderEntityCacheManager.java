@@ -32,8 +32,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
             long systemTime = System.currentTimeMillis();
             Timestamp now = new Timestamp(systemTime - (systemTime % 1000));
             Timestamp cacheTime = CurrentDispatchOrderEntityCache.getTimeStamp();
-                            CurrentDispatchOrderEntityCache.setTimeStamp(now);
-
+            CurrentDispatchOrderEntityCache.setTimeStamp(now);
 
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentDispatchOrderEntity.class, cacheTime);
