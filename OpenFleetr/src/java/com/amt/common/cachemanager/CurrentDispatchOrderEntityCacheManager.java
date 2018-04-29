@@ -32,6 +32,8 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
             long systemTime = System.currentTimeMillis();
             Timestamp now = new Timestamp(systemTime - (systemTime % 1000));
             Timestamp cacheTime = CurrentDispatchOrderEntityCache.getTimeStamp();
+                            CurrentDispatchOrderEntityCache.setTimeStamp(now);
+
 
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentDispatchOrderEntity.class, cacheTime);
@@ -49,12 +51,13 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                     }
                     for (Session userSession : userSessionSet) {
                         new Thread(() -> {
+                            AuthenticatedNotificationSessionManager.checkout(userSession);
                             try {
-                                AuthenticatedNotificationSessionManager.checkout(userSession);
                                 userSession.getBasicRemote().sendText("{\"dispatchOrder\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
-                                AuthenticatedNotificationSessionManager.checkin(userSession);
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+                            } finally {
+                                AuthenticatedNotificationSessionManager.checkin(userSession);
                             }
                         }).start();
                     }
@@ -62,7 +65,6 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
             } catch (AccessError ex) {
                 handleError(ex);
             } finally {
-                CurrentDispatchOrderEntityCache.setTimeStamp(now);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException ex) {

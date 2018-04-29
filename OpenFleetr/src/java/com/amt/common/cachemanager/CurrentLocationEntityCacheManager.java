@@ -32,6 +32,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
             long systemTime = System.currentTimeMillis();
             Timestamp now = new Timestamp(systemTime - (systemTime % 1000));
             Timestamp cacheTime = CurrentLocationEntityCache.getTimeStamp();
+            CurrentLocationEntityCache.setTimeStamp(now);
 
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentLocationEntity.class, cacheTime);
@@ -62,7 +63,6 @@ public class CurrentLocationEntityCacheManager implements Runnable {
             } catch (AccessError ex) {
                 handleError(ex);
             } finally {
-                CurrentLocationEntityCache.setTimeStamp(now);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException ex) {
