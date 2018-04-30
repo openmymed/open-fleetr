@@ -51,7 +51,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.checkout(userSession);
                             try {
-                                userSession.getBasicRemote().sendText("{\"status\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"type:\"\"status\",\"array\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

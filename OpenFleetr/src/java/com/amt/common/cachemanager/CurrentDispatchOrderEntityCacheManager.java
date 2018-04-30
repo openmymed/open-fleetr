@@ -52,7 +52,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.checkout(userSession);
                             try {
-                                userSession.getBasicRemote().sendText("{\"dispatchOrder\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"type\":\"dispatchOrder\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

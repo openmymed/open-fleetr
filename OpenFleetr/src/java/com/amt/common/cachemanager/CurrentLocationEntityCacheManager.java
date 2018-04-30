@@ -50,7 +50,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.checkout(userSession);
                             try {
-                                userSession.getBasicRemote().sendText("{\"location\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"type\":\"location\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentLocationEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

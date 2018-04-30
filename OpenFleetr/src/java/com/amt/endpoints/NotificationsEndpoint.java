@@ -52,7 +52,8 @@ public class NotificationsEndpoint {
     @OnClose
     public void close(Session session) {
         UserSession userSession = AuthenticatedNotificationSessionManager.get(session);
-        while (userSession.lock.hasQueuedThreads() == true) {
+        if(userSession != null){
+        while ( userSession.lock.hasQueuedThreads() == true) {
         }
         userSession.lock.lock();
         AuthenticatedNotificationSessionManager.removeUserSession(userSession);
@@ -64,7 +65,10 @@ public class NotificationsEndpoint {
             userSession.lock.unlock();
             userSession = null;
         }
+        }
     }
+    
+
 
     public NotificationsEndpoint() {
 
