@@ -6,9 +6,9 @@
 package com.amt.common.cachemanager;
 
 import com.amt.common.cache.CurrentDispatchOrderEntityCache;
+import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.CurrentDispatchOrderEntity;
 import com.tna.common.AccessError;
-import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.data.Persistence;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -52,7 +52,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.checkout(userSession);
                             try {
-                                userSession.getBasicRemote().sendText("{\"dispatchOrder\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"type\":\"dispatchOrder\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
@@ -65,7 +65,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     break;
                 }

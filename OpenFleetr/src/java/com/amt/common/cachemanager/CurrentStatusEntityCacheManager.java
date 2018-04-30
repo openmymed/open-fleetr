@@ -6,9 +6,9 @@
 package com.amt.common.cachemanager;
 
 import com.amt.common.cache.CurrentStatusEntityCache;
+import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.CurrentStatusEntity;
 import com.tna.common.AccessError;
-import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.data.Persistence;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -51,7 +51,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.checkout(userSession);
                             try {
-                                userSession.getBasicRemote().sendText("{\"status\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"type:\"\"status\",\"array\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
@@ -64,7 +64,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     break;
                 }

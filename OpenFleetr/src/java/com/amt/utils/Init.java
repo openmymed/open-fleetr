@@ -8,7 +8,7 @@ package com.amt.utils;
 import com.amt.common.cachemanager.CurrentDispatchOrderEntityCacheManager;
 import com.amt.common.cachemanager.CurrentLocationEntityCacheManager;
 import com.amt.common.cachemanager.CurrentStatusEntityCacheManager;
-import com.tna.common.AuthenticatedNotificationSessionManager;
+import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
 import javax.servlet.annotation.WebListener;
@@ -54,7 +54,5 @@ public class Init extends Initialization {
         locationPoll.interrupt();
         statusPoll.interrupt();
         dispatchPoll.interrupt();
-        
-
     }
 }
