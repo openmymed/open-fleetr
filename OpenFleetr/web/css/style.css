@@ -2,6 +2,11 @@
 
 /* Below line is used for online Google font */
 @import url(http://fonts.googleapis.com/css?family=Droid+Serif);
+body{
+background-image: url("../images/background.png");
+background-position:top left;
+background-repeat:no-repeat;
+}
 h2{
 text-align: center;
 font-size: 24px;
@@ -10,11 +15,14 @@ hr{
 margin-bottom: 30px;
 }
 div.container{
-width: 960px;
-height: 610px;
-margin:50px auto;
+max-width: 1920px;
+max-height: 1080px;
+margin:0 auto;
 font-family: 'Droid Serif', serif;
-position:relative;
+padding-bottom:50px;
+padding-left:50px;
+padding-right:50px;
+padding-top:50px;
 }
 div.main{
 background-color: rgba(187, 255, 184, 0.65);
@@ -56,5 +64,16 @@ text-shadow: 0px 1px 0px #13506D;
 background: linear-gradient(#36caf0 5%, #22abe9 100%);
 }
 .logo {
-width=	125px;
+padding-right:25px;
+padding-left:25px;
+padding-bottom:30px;
+width: 150px;
+margin-left:auto;
+margin-right:auto;
+
+}
+.footer {
+    width: 100%;
+    text-align: center;
+	padding-top:5px;
 }
