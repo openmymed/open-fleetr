@@ -6,6 +6,7 @@
 var vehicles = [];
 var vehicleMap;
 var driversCache = [];
+var notificationSocket;
 $(document).ready(main);
 
 function main() {
@@ -14,6 +15,24 @@ function main() {
     updateDriversInterval();
     updateLocationsInterval();//start refreshing the vehicle locations
     updateStatusesInterval();
+    socketConnect();
+
+
+    notificationSocket.onopen = function (event) {
+        console.log("A channel has been opened");
+    };
+
+    notificationSocket.onclose = function (event) {
+        console.log("A channel has been closed");
+    };
+
+    notificationSocket.onmessage = function (event) {
+        console.log("something has changed!");
+        console.log((event.data));
+    };
+    notificationSocket.onerror = function (event) {
+        console.log("Something wrong has happened");
+    };
 
 }
 
@@ -47,7 +66,7 @@ function updateDriversError(jqHXR, textStatus, errorThrown) {
     } else {
 
     }
-    
+
 }
 
 function updateLocations() {
@@ -93,7 +112,7 @@ function updateLocationsError(jqHXR, textStatus, errorThrown) {
 
 function updateLocationsInterval() {
 
-   updateLocationsTimeout = setTimeout(updateLocations, 1000);//every 1000ms, update the location
+    updateLocationsTimeout = setTimeout(updateLocations, 1000);//every 1000ms, update the location
 
 }
 
@@ -125,10 +144,10 @@ function updateStatusesSuccess(data) {
                     statusText = "Available";
                     break;
                 case 2 :
-                    if(driversCache[array.driverId.toString()]=== undefined){
+                    if (driversCache[array.driverId.toString()] === undefined) {
                         clearTimeout(updateDriversTimeout);
                         updateDrivers();
-                        
+
                     }
                     statusText = "In Use by " + driversCache[array.driverId.toString()];
                     break;
@@ -163,8 +182,8 @@ function updateStatusesInterval() {
 }
 
 function updateDriversInterval() {
-    
-    updateDriversTimeout = setTimeout(updateDrivers,30000);
+
+    updateDriversTimeout = setTimeout(updateDrivers, 30000);
 
 }
 function geolocationSuccess(position) {
@@ -188,6 +207,13 @@ function geolocationError() {
 function loadMap() {
 
     navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, {timeout: 1000});
+
+}
+
+function socketConnect() {
+    console.log(location.host);
+    notificationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
+
 
 }
 
