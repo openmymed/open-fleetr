@@ -30,7 +30,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
     public void run() {
         while (!Thread.interrupted()) {
             long systemTime = System.currentTimeMillis();
-            Timestamp now = new Timestamp(systemTime - (systemTime % 1000));
+            Timestamp now = new Timestamp(systemTime);
             Timestamp cacheTime = CurrentStatusEntityCache.getTimeStamp();
             CurrentStatusEntityCache.setTimeStamp(now);
 
@@ -64,7 +64,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(300);
                 } catch (InterruptedException ex) {
                     break;
                 }

@@ -30,7 +30,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
     public void run() {
         while (!Thread.interrupted()) {
             long systemTime = System.currentTimeMillis();
-            Timestamp now = new Timestamp(systemTime - (systemTime % 1000));
+            Timestamp now = new Timestamp(systemTime);
             Timestamp cacheTime = CurrentLocationEntityCache.getTimeStamp();
             CurrentLocationEntityCache.setTimeStamp(now);
 
@@ -64,7 +64,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(300);
                 } catch (InterruptedException ex) {
                     break;
                 }

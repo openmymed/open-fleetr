@@ -44,12 +44,7 @@ public class CurrentDispatchOrderEntityCache {
 
     public static JSONObject retreive(Long key) {
         JSONObject retreive;
-        lock.lock();
-        try {
-            retreive = CurrentDispatchOrderEntityCache.getInstance().cache.retreive(key);
-        } finally {
-            lock.unlock();
-        }
+        retreive = CurrentDispatchOrderEntityCache.getInstance().cache.retreive(key);
         return retreive;
     }
 
@@ -64,12 +59,7 @@ public class CurrentDispatchOrderEntityCache {
 
     public static Timestamp getTimeStamp() {
         Timestamp timeStamp;
-        lock.lock();
-        try {
-            timeStamp = CurrentDispatchOrderEntityCache.getInstance().cache.getTimeStamp();
-        } finally {
-            lock.unlock();
-        }
+        timeStamp = CurrentDispatchOrderEntityCache.getInstance().cache.getTimeStamp();
         return timeStamp;
     }
 
