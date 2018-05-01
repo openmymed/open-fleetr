@@ -5,10 +5,10 @@
  */
 package com.amt.endpoints;
 
+import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
-import com.tna.common.AuthenticatedNotificationSessionManager;
 import com.tna.common.UserAccessControl;
 import com.tna.utils.UserSession;
 import java.io.IOException;
@@ -33,7 +33,6 @@ public class NotificationsEndpoint {
         JSONObject user;
         try {
             user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
-
             if ((long) user.get("level") >= 2) {
                 UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 AuthenticatedNotificationSessionManager.addUserSession(userSession, session);
@@ -53,7 +52,8 @@ public class NotificationsEndpoint {
     @OnClose
     public void close(Session session) {
         UserSession userSession = AuthenticatedNotificationSessionManager.get(session);
-        while (userSession.lock.hasQueuedThreads() == true) {
+        if(userSession != null){
+        while ( userSession.lock.hasQueuedThreads() == true) {
         }
         userSession.lock.lock();
         AuthenticatedNotificationSessionManager.removeUserSession(userSession);
@@ -65,7 +65,10 @@ public class NotificationsEndpoint {
             userSession.lock.unlock();
             userSession = null;
         }
+        }
     }
+    
+
 
     public NotificationsEndpoint() {
 
