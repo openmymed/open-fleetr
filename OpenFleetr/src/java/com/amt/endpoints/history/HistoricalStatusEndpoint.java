@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.endpoints;
+package com.amt.endpoints.history;
 
-import com.amt.entities.HistoricalDispatchOrderEntity;
-import com.amt.entities.UserEntity;
+import com.amt.entities.history.HistoricalStatusEntity;
+import com.amt.entities.auth.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
@@ -18,36 +18,38 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/vehicle/dispatch/history/*")
-public class HistoricalDispatchOrderEndpoint extends AuthorisedEndpoint{
+@WebServlet("/vehicle/status/history/*")
+public class HistoricalStatusEndpoint  extends AuthorisedEndpoint {
 
-    @Override
+   @Override
     public JSONObject doList(String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
-        return Persistence.list(HistoricalDispatchOrderEntity.class);
+       UserAccessControl.authOperation(UserEntity.class, token, 2);
+       return Persistence.list(HistoricalStatusEntity.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-       throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
+        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
-    
+
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-       UserAccessControl.authOperation(UserEntity.class, token, 3);
-       JSONObject query = new JSONObject();
-       query.put("vehicleId", resource);
-       return Persistence.readByProperties(HistoricalDispatchOrderEntity.class,query);
-    }
+        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        JSONObject obj = new JSONObject();
+        obj.put("vehicleId",resource);
+        return Persistence.listByProperties(HistoricalStatusEntity.class, obj);
+        
+      }
 
     @Override
     public JSONObject doDelete(long resource, String token) throws AccessError {
         throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
     }
+    
     
 }

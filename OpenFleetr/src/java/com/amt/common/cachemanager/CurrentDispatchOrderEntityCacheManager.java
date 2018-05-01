@@ -7,7 +7,7 @@ package com.amt.common.cachemanager;
 
 import com.amt.common.cache.CurrentDispatchOrderEntityCache;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
-import com.amt.entities.CurrentDispatchOrderEntity;
+import com.amt.entities.buisiness.CurrentDispatchOrderEntity;
 import com.tna.common.AccessError;
 import com.tna.data.Persistence;
 import java.io.IOException;

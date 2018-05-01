@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.endpoints;
+package com.amt.endpoints.utils;
 
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
-import com.amt.entities.UserEntity;
+import com.amt.entities.auth.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
