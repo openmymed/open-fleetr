@@ -16,13 +16,12 @@ var updateStatusesTimeout;
 $(document).ready(main);
 
 function main() {
-	
-	
+		
     loadMap();
     updateDrivers();
     updateLocations(); //start refreshing the vehicle locations
     updateStatuses();
-    getDispatcher();
+    //getDispatcher();
     socketConnect();
 
 
@@ -31,6 +30,7 @@ function main() {
 
 function parseNotification(event) {
     var json = JSON.parse(event.data);
+    console.log(json.server);
     switch (json.type) {
         case "location" :
             json.array.forEach(fetchLocation);
@@ -101,7 +101,8 @@ function updateDrivers() {
 
 function updateDriversSuccess(data) {
     var driver;
-    for (driver in data) {//iterate over the JSON data from a successful json request
+    var json = JSON.parse(data)
+    for (driver in json) {//iterate over the JSON data from a successful json request
         var array = data[driver];
         driversCache[array.id.toString()] = "" + array.firstName + " " + array.lastName;
     }
@@ -120,7 +121,6 @@ function updateDriversError(jqHXR, textStatus, errorThrown) {
 }
 
 function updateLocations() {
-
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle/location?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
@@ -148,11 +148,12 @@ function fetchLocation(vehicleId) {
     });
 }
 
-function fetchLocationSuccess(data) {
-    if (vehicles[data.vehicleId.toString()] === undefined) {
-        vehicles[data.vehicleId.toString()] = L.marker([data.latitude, data.longitude]).addTo(vehicleMap);
+function fetchLocationSuccess(location) {
+    if (vehicles[location.vehicleId.toString()] === undefined) {
+        console.log(location);
+        vehicles[location.vehicleId.toString()] = L.marker([location.latitude, location.longitude]).addTo(vehicleMap);
     } else {
-        vehicles[data.vehicleId.toString()].setLatLng([data.latitude, data.longitude]).update();
+        vehicles[location.vehicleId.toString()].setLatLng([location.latitude, location.longitude]).update();
     }
 }
 
@@ -170,7 +171,6 @@ function updateLocationsError(jqHXR, textStatus, errorThrown) {
 
 
 function updateStatuses() {
-
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle/status?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
@@ -278,20 +278,20 @@ function loadMap() {
 }
 
 function logoutUser() {
+    alert("Connection Terminated Gracefully");
     notificationSocket.close();
-    alert("Please log in !"); //alert for a login
     localStorage.removeItem("token"); //delete the user token from storage
     $(location).attr('href', '/OpenFleetr'); //go to the home page
 
 }
 
 function socketConnect() {
-    notificationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"), null, 2000, 0);
+    notificationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"), null, 2000, 0);
     websocket = true;
     notificationSocket.onopen = checkSocketInterval;
     notificationSocket.onmessage = parseNotification;
     notificationSocket.onerror = fallbackPolling;
-    notificationSocket.onclose = logoutUser;
+    //notificationSocket.onclose = logoutUser;
 }
 
 function getDispatcher(){

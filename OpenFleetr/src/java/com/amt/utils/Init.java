@@ -26,9 +26,9 @@ public class Init extends Initialization {
 
     @Override
     public void onInit() {
-        Access.setHost("localhost");
+        Access.setHost("database");
         Access.setDatabase("OpenFleetr");
-        Access.setUsername("api_user");
+        Access.setUsername("app_user");
         Access.setPassword("pass1234");
         Access.pool.initialize(5);
         locationPoll = (new Thread(new CurrentLocationEntityCacheManager()));
@@ -40,7 +40,7 @@ public class Init extends Initialization {
     @Override
     public void onDestroy() {
         stopThreads();
-        AuthenticatedNotificationSessionManager.closeAllSessions();
+        //AuthenticatedNotificationSessionManager.closeAllSessions();
     }
 
     public void startThreads() {

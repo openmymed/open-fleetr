@@ -11,6 +11,7 @@ import com.amt.entities.buisiness.CurrentStatusEntity;
 import com.tna.common.AccessError;
 import com.tna.data.Persistence;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +53,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                             AuthenticatedNotificationSessionManager.lock(token);
                             try {
                                 Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
-                                userSession.getBasicRemote().sendText("{\"type:\"\"status\",\"array\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\",\"type:\"\"status\",\"array\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

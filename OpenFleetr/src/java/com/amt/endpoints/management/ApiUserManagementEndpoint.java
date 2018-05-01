@@ -14,12 +14,14 @@ import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author tareq
  */
+@WebServlet("/user/api/management/*")
 public class ApiUserManagementEndpoint extends AuthorisedEndpoint {
 
     @Override

@@ -11,6 +11,7 @@ import com.amt.entities.buisiness.CurrentLocationEntity;
 import com.tna.common.AccessError;
 import com.tna.data.Persistence;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +52,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
                             AuthenticatedNotificationSessionManager.lock(token);
                             try {
                                 Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
-                                userSession.getBasicRemote().sendText("{\"type\":\"location\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\",\"type\":\"location\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentLocationEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
