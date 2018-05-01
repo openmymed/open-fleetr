@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.endpoints;
+package com.amt.endpoints.buisiness;
 
 import com.amt.common.cache.CurrentDispatchOrderEntityCache;
 import com.amt.common.cache.CurrentStatusEntityCache;
-import com.amt.entities.CurrentLocationEntity;
-import com.amt.entities.CurrentStatusEntity;
-import com.amt.entities.CurrentDispatchOrderEntity;
-import com.amt.entities.DriverEntity;
-import com.amt.entities.HistoricalDispatchOrderEntity;
-import com.amt.entities.HistoricalLocationEntity;
-import com.amt.entities.UserEntity;
+import com.amt.entities.buisiness.CurrentLocationEntity;
+import com.amt.entities.buisiness.CurrentStatusEntity;
+import com.amt.entities.buisiness.CurrentDispatchOrderEntity;
+import com.amt.entities.management.DriverEntity;
+import com.amt.entities.history.HistoricalDispatchOrderEntity;
+import com.amt.entities.history.HistoricalLocationEntity;
+import com.amt.entities.auth.UserEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;

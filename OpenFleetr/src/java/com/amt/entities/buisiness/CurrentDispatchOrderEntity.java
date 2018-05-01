@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.entities;
+package com.amt.entities.buisiness;
 
 import com.tna.entities.BasicEntity;
 import java.sql.Date;
