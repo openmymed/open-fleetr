@@ -60,8 +60,9 @@ public class DriverManagementEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
-        JSONObject query = new JSONObject();
-        return Persistence.update(DriverEntity.class, l, query);
+        jsono.remove("userId");
+
+        return Persistence.update(DriverEntity.class, l, jsono);
     }
 
     @Override

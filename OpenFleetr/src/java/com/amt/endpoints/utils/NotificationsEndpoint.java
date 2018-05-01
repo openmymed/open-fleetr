@@ -7,11 +7,12 @@ package com.amt.endpoints.utils;
 
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.auth.UserEntity;
+import com.amt.utils.UserSession;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
-import com.tna.utils.UserSession;
 import java.io.IOException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.OnClose;
@@ -35,7 +36,7 @@ public class NotificationsEndpoint {
             user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
             if ((long) user.get("level") >= 2) {
                 UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
-                AuthenticatedNotificationSessionManager.addUserSession(userSession, session);
+                AuthenticatedNotificationSessionManager.addUserSession(token, userSession);
             } else {
                 throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
             }
@@ -51,20 +52,22 @@ public class NotificationsEndpoint {
 
     @OnClose
     public void close(Session session) {
-        UserSession userSession = AuthenticatedNotificationSessionManager.get(session);
-        if(userSession != null){
-        while ( userSession.lock.hasQueuedThreads() == true) {
-        }
-        userSession.lock.lock();
-        AuthenticatedNotificationSessionManager.removeUserSession(userSession);
-        try {
-            userSession.getUserSession().close();
-        } catch (IOException ex) {
-            Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            userSession.lock.unlock();
-            userSession = null;
-        }
+        Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
+        for(String token : tokens){
+            UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
+            if(userSession.getToken().equals(token)){
+                AuthenticatedNotificationSessionManager.lock(token);
+                try {
+                    userSession.getUserSession().close();
+                   
+                } catch (IOException ex) {
+                    Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                }finally{
+                AuthenticatedNotificationSessionManager.removeUserSession(token);
+                AuthenticatedNotificationSessionManager.unlock(token);
+                }
+                
+            }
         }
     }
     

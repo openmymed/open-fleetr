@@ -21,13 +21,13 @@ import org.json.simple.JSONObject;
  * @author tareq
  */
 @WebServlet("/user/dispatcher/manager/*")
-public class DispatcherManagementEndpoint extends AuthorisedEndpoint{
+public class DispatcherManagementEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
         return Persistence.list(DispatcherEntity.class);
-      
+
     }
 
     @Override
@@ -50,21 +50,23 @@ public class DispatcherManagementEndpoint extends AuthorisedEndpoint{
     @Override
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
-        return Persistence.update(DispatcherEntity.class,l,jsono);      
+        jsono.remove("userId");
+
+        return Persistence.update(DispatcherEntity.class, l, jsono);
     }
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-    UserAccessControl.authOperation(UserEntity.class, string, 4);
-    return Persistence.read(DispatcherEntity.class,l);
+        UserAccessControl.authOperation(UserEntity.class, string, 4);
+        return Persistence.read(DispatcherEntity.class, l);
     }
 
     @Override
     public JSONObject doDelete(long l, String string) throws AccessError {
-        JSONObject  read = doRead(l,string);
+        JSONObject read = doRead(l, string);
         Persistence.delete(DispatcherEntity.class, (long) read.get("id"));
         return Persistence.delete(UserEntity.class, (long) read.get("userId"));
-        
+
     }
-    
+
 }
