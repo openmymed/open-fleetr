@@ -5,11 +5,13 @@
  */
 package com.amt.entities.management;
 
+import com.tna.entities.BasicEntity;
+
 /**
  *
  * @author tareq
  */
-public class ApiUserEntity {
+public class ApiUserEntity extends BasicEntity{
    
     long userId;
     String applicationName;

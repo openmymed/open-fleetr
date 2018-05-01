@@ -39,7 +39,7 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                 if (differentialList != null) {
                     ArrayList<Long> changedVechicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
-                    Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
+                    Set<String> userTokenSet = AuthenticatedNotificationSessionManager.sessionsTokenSet();
 
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
@@ -47,15 +47,16 @@ public class CurrentStatusEntityCacheManager implements Runnable {
                         changedVechicleIds.add(vehicleId);
                         CurrentStatusEntityCache.cache(vehicleId, listItem);
                     }
-                    for (Session userSession : userSessionSet) {
+                     for (String token : userTokenSet) {
                         new Thread(() -> {
-                            AuthenticatedNotificationSessionManager.checkout(userSession);
+                            AuthenticatedNotificationSessionManager.lock(token);
                             try {
+                                Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
                                 userSession.getBasicRemote().sendText("{\"type:\"\"status\",\"array\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
-                                AuthenticatedNotificationSessionManager.checkin(userSession);
+                                AuthenticatedNotificationSessionManager.unlock(token);
                             }
                         }).start();
                     }
