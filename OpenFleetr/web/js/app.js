@@ -6,15 +6,18 @@
 var vehicles = [];
 var vehicleMap;
 var driversCache = [];
+var dipsatcherName;
 var notificationSocket;
 var websocket = false;
 var updateDriversTimeout;
 var updateLocationsTimeout;
 var updateStatusesTimeout;
+
 $(document).ready(main);
 
 function main() {
-
+	getDispatcher();
+	document.getElementById("dispatcher").innerHTML = dispatcherName;
     loadMap();
     updateDrivers();
     updateLocations(); //start refreshing the vehicle locations
@@ -290,3 +293,25 @@ function socketConnect() {
     notificationSocket.onclose = logoutUser;
 }
 
+function getDispatcher(){
+	    $.ajax({
+        url: "/OpenFleetr/user/dispatcher?token=" + localStorage.getItem("token") + "",
+        type: "GET",
+        dataType: "json",
+        success: getDispatcherSuccess,
+        error: getDispatcherError
+    });
+}
+function getDispatcherSuccess(data) {
+    var dispatcher = data[0].firstName + " " +  data[0].lastName;
+	dispatcherName = dispatcher;
+}
+function getDispatcherError(jqHXR, textStatus, errorThrown) {
+	if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
+        alert("Please log in !");//alert for a login
+        localStorage.removeItem("token");//delete the user token from storage
+        $(location).attr('href', '/OpenFleetr');//go to the home page
+    } else {
+        dispatcherName = "Name not found";
+    }
+}
