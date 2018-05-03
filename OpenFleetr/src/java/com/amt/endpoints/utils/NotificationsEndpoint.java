@@ -43,7 +43,7 @@ public class NotificationsEndpoint {
             }
         } catch (AccessError ex) {
             try {
-                session.close();
+                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,"Goodbye"));
             } catch (IOException ex1) {
 
             }

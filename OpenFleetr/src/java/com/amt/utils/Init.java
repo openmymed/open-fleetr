@@ -26,7 +26,7 @@ public class Init extends Initialization {
 
     @Override
     public void onInit() {
-        Access.setHost("database");
+        Access.setHost("localhost");
         Access.setDatabase("OpenFleetr");
         Access.setUsername("app_user");
         Access.setPassword("pass1234");
