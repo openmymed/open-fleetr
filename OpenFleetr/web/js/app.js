@@ -21,7 +21,7 @@ function main() {
     updateDrivers();
     updateLocations(); //start refreshing the vehicle locations
     updateStatuses();
-    //getDispatcher();
+    getDispatcher();
     socketConnect();
 
 
@@ -333,7 +333,7 @@ function getDispatcherSuccess(data) {
     var dispatcher = data[0].firstName + " " + data[0].lastName;
 
     dispatcherName = dispatcher;
-    document.getElementById("dispatcher").innerHTML = dispatcherName;
+    document.getElementById("dispatcherName").innerHTML = dispatcherName;
 }
 function getDispatcherError(jqHXR, textStatus, errorThrown) {
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
@@ -342,7 +342,7 @@ function getDispatcherError(jqHXR, textStatus, errorThrown) {
         $(location).attr('href', '/OpenFleetr');//go to the home page
     } else {
         dispatcherName = "Name not found";
-        document.getElementById("dispatcher").innerHTML = dispatcherName;
+        document.getElementById("dispatcherName").innerHTML = dispatcherName;
     }
 
 }
