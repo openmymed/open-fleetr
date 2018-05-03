@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 ./OpenFleetr/build/
 OpenFleetr/build/
 /OpenFleetr/build/
 /build/
+=======
+/build/
+/OpenFleetr/nbproject/private/
+/OpenFleetr/build/
+>>>>>>> a6eee61adf6434ec09e6ac427f97ca56ede24a1a
