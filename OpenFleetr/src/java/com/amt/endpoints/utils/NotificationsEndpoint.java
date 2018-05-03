@@ -7,7 +7,7 @@ package com.amt.endpoints.utils;
 
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.auth.UserEntity;
-import com.amt.utils.UserSession;
+import com.amt.common.sessions.UserSession;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;

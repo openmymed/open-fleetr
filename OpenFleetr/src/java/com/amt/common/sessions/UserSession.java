@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.utils;
+package com.amt.common.sessions;
 
 import java.util.concurrent.locks.ReentrantLock;
 import javax.websocket.Session;
