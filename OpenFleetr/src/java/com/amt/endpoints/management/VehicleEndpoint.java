@@ -40,6 +40,7 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
         obj2.put("checkInDate","none");
         obj2.put("checkOutDate","none");
         obj2.put("status",1);
+        
         obj2.put("notes","");
         Persistence.create(CurrentStatusEntity.class, obj2);
         JSONObject obj3 = new JSONObject();
