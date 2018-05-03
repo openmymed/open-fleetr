@@ -36,20 +36,36 @@ function parseNotification(event) {
             break;
         case "status" :
             for (var key in json.array) {
-
+                json.array.forEach(fetchStatus);
             }
             break;
         case "dispatchOrder" :
             for (var key in json.array) {
-
+                json.array.forEach(fetchDispatchOrder);
+            }
+            break;
+        case "notification" :
+            for (var key in json.array) {
+                json.array.forEach(fetchNotification);
             }
             break;
         default :
             break;
     }
 }
-;
 
+function fetchStatus(vehicleId){
+    
+}
+
+function fetchDispatchOrder(vehicleId){
+    
+    
+}
+
+function fetchNotification(notificationId){
+    
+}
 function fallbackPolling(event) {
     websocket = false;
     updateDrivers();
