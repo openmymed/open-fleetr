@@ -5,7 +5,6 @@
  */
 package com.amt.common.sessions;
 
-import com.amt.utils.UserSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
