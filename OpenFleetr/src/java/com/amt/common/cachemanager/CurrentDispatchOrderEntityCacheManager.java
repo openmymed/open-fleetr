@@ -7,10 +7,11 @@ package com.amt.common.cachemanager;
 
 import com.amt.common.cache.CurrentDispatchOrderEntityCache;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
-import com.amt.entities.CurrentDispatchOrderEntity;
+import com.amt.entities.buisiness.CurrentDispatchOrderEntity;
 import com.tna.common.AccessError;
 import com.tna.data.Persistence;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                 if (differentialList != null) {
                     ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
-                    Set<Session> userSessionSet = AuthenticatedNotificationSessionManager.sessionsSet();
+                    Set<String> userTokenSet = AuthenticatedNotificationSessionManager.sessionsTokenSet();
 
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
@@ -48,15 +49,16 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                         CurrentDispatchOrderEntityCache.cache(vehicleId, listItem);
 
                     }
-                    for (Session userSession : userSessionSet) {
+                    for (String token : userTokenSet) {
                         new Thread(() -> {
-                            AuthenticatedNotificationSessionManager.checkout(userSession);
+                            AuthenticatedNotificationSessionManager.lock(token);
                             try {
-                                userSession.getBasicRemote().sendText("{\"type\":\"dispatchOrder\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
+                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\",\"type\":\"dispatchOrder\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
-                                AuthenticatedNotificationSessionManager.checkin(userSession);
+                                AuthenticatedNotificationSessionManager.unlock(token);
                             }
                         }).start();
                     }

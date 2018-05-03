@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.entities;
+package com.amt.entities.auth;
 
-import com.tna.entities.BasicEntity;
+import com.tna.entities.AuthenticationEntity;
 /**
  *
  * @author tareq
  */
-public class VehicleEntity extends BasicEntity{
+public class UserEntity extends AuthenticationEntity {
     
-    public String vehicleType;
+
     
 }

@@ -3,22 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.entities;
+package com.amt.entities.management;
 
+import com.tna.entities.AuthorisedEntity;
 import com.tna.entities.BasicEntity;
-import java.sql.Date;
 
 /**
  *
  * @author tareq
  */
-public class CurrentStatusEntity extends BasicEntity{
+public class DispatcherEntity extends BasicEntity {
     
-    public long vehicleId;
-    public long driverId;
-    public Date checkOutDate;
-    public Date checkInDate;
-    public long status;
-    public String notes;
+    String firstName;
+    String lastName;
+    String birthDate;
+    String phoneNumber;
     
 }

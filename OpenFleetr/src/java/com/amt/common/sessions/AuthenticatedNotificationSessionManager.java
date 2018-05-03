@@ -5,12 +5,13 @@
  */
 package com.amt.common.sessions;
 
-import com.tna.utils.UserSession;
+import com.amt.utils.UserSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
@@ -20,7 +21,7 @@ import javax.websocket.Session;
 public class AuthenticatedNotificationSessionManager {
 
     private static AuthenticatedNotificationSessionManager sessionManager;
-    private static HashMap<Session, UserSession> userSessions;
+    private static HashMap<String, UserSession> userSessions;
 
     private static AuthenticatedNotificationSessionManager getInstance() {
         if (sessionManager == null) {
@@ -37,40 +38,47 @@ public class AuthenticatedNotificationSessionManager {
         userSessions = new HashMap();
     }
 
-    public synchronized static UserSession get(Session session){
-        return AuthenticatedNotificationSessionManager.getInstance().userSessions.get(session);
+    public synchronized static UserSession get(String token){
+        return AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token);
     }
     
-    public static void checkout(Session session) {
-    AuthenticatedNotificationSessionManager.getInstance().userSessions.get(session).lock.lock();      
+    public static void lock(String token) {
+    AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token).lock.lock();      
     }
 
-    public static void checkin(Session session) {
-        AuthenticatedNotificationSessionManager.getInstance().userSessions.get(session).lock.unlock();
+    public static void unlock(String token) {
+        AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token).lock.unlock();
     }
 
-    public synchronized static Set sessionsSet() {
+    public synchronized static Set sessionsTokenSet() {
         return AuthenticatedNotificationSessionManager.getInstance().userSessions.keySet();
     }
     
 
-    public synchronized static void addUserSession(UserSession userSession, Session session) {
+    public synchronized static void addUserSession(String token, UserSession userSession) {
+        if(userSessions.containsKey(token)){
+            try {
+                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT,"User already has a connection"));
+            } catch (IOException ex) {
 
-        AuthenticatedNotificationSessionManager.getInstance().userSessions.put(session, userSession);
+            }
+        }else{
+        AuthenticatedNotificationSessionManager.getInstance().userSessions.put(token, userSession);
+        }
 
     }
 
-    public synchronized static void removeUserSession(UserSession session) {
-        AuthenticatedNotificationSessionManager.getInstance().userSessions.remove(session.getUserSession());
+    public synchronized static void removeUserSession(String token) {
+        AuthenticatedNotificationSessionManager.getInstance().userSessions.remove(token);
     }
 
     public synchronized static void closeAllSessions() {
-        Set<Session> allSessions = sessionsSet();
-        for (Session session : allSessions) {
-            UserSession userSession = AuthenticatedNotificationSessionManager.getInstance().userSessions.get(session);
-            removeUserSession(userSession);
+        Set<String> sessionTokens = sessionsTokenSet();
+        for (String token : sessionTokens) {
+            UserSession userSession = AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token);
+            removeUserSession(token);
             try {
-                userSession.getUserSession().close();
+                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY,"Server is being shut down"));
             } catch (IOException ex) {
                 Logger.getLogger(AuthenticatedNotificationSessionManager.class.getName()).log(Level.SEVERE, null, ex);
             }

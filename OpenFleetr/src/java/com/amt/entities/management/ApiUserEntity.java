@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.amt.entities;
+package com.amt.entities.management;
 
 import com.tna.entities.BasicEntity;
 
@@ -11,10 +11,11 @@ import com.tna.entities.BasicEntity;
  *
  * @author tareq
  */
-public class HistoricalLocationEntity extends BasicEntity{
+public class ApiUserEntity extends BasicEntity{
+   
+    long userId;
+    String applicationName;
+    String maintainerEmail;
     
-    public long vehicleId;
-    public double latitude;
-    public double longitude;
     
 }
