@@ -18,5 +18,6 @@ public class DispatcherEntity extends BasicEntity {
     String lastName;
     String birthDate;
     String phoneNumber;
+    long geographicalAreaId;
     
 }
