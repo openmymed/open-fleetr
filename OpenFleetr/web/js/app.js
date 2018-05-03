@@ -341,7 +341,7 @@ function getDispatcherError(jqHXR, textStatus, errorThrown) {
         localStorage.removeItem("token");//delete the user token from storage
         $(location).attr('href', '/OpenFleetr');//go to the home page
     } else {
-        dispatcherName = "Name not found";
+        dispatcherName = "Error";
         document.getElementById("dispatcherName").innerHTML = dispatcherName;
     }
 
