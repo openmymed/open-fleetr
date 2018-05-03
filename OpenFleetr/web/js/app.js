@@ -131,11 +131,11 @@ function updateLocations() {
 }
 
 function updateLocationsSuccess(data) {
-  for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-        fetchLocationSuccess(data[key]);
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            fetchLocationSuccess(data[key]);
+        }
     }
-}
 }
 
 function fetchLocation(vehicleId) {
@@ -150,6 +150,9 @@ function fetchLocation(vehicleId) {
 
 function fetchLocationSuccess(location) {
     if (!vehicles.hasOwnProperty(location.vehicleId.toString())) {
+        console.log(location.latitude);
+        console.log(location.longitude);
+        console.log(vehicleMap);
         vehicles[location.vehicleId.toString()] = L.marker([location.latitude, location.longitude]).addTo(vehicleMap);
     } else {
         vehicles[location.vehicleId.toString()].setLatLng([location.latitude, location.longitude]).update();
@@ -195,7 +198,7 @@ function updateStatusesSuccess(data) {
                     statusText = "Available";
                     break;
                 case 2 :
-                    if (driversCache[array.driverId.toString()] === undefined) {
+                    if (driversCache[array.driverId.toString()] === undefined && false) {
                         clearTimeout(updateDriversTimeout);
                         updateDrivers();
                     }
@@ -256,8 +259,12 @@ function updateDriversInterval() {
     }
 }
 function geolocationSuccess(position) {
-    vehicleMap = L.map('vehicleMapDiv').setView([position.coords.latitude, position.coords.longitude], 13);
-   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    console.log(position);
+    console.log(position.coords);
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    vehicleMap = L.map('vehicleMapDiv').setView([latitude, longitude], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
 }
@@ -270,36 +277,47 @@ function geolocationError() {
     }).addTo(vehicleMap);
 }
 
-function loadMap() {    
-     if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError);
-     }else{
-         geolocationError();
-     }
+function loadMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(geolocationSuccess);
+    } else {
+        geolocationError();
+    }
 }
 
-function socketError(event) {
-    if (event.code === 1000) {
-        alert("Connection Terminated Gracefully");
-        notificationSocket.close();
-        alert("Please log in !"); //alert for a login
-        localStorage.removeItem("token"); //delete the user token from storage
-        $(location).attr('href', '/OpenFleetr'); //go to the home page
+function socketClose(event) {
 
-    } else {
-        websocket=false;
-        fallbackPolling();
+    switch (event.code) {
+        case 1000 :
+            alert("You have been logged out");
+            localStorage.removeItem("token"); //delete the user token from storage
+            $(location).attr('href', '/OpenFleetr'); //go to the home page
+            break;
+        case 1003 :
+            clearTimeout(socketAttemptInterval);
+            break
+        case 1001 :
+            websocket = false;
+            fallbackPolling();
+            break;
+        case 1006 :
+            websocket = false;
+            fallbackPolling();
+            break;
     }
 
 }
+function socketError(event) {
+     console.log("an error has happened");
+}
 
 function socketConnect() {
-    notificationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"), null, 2000, 5);
+    notificationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
     websocket = true;
     notificationSocket.onopen = checkSocketInterval;
     notificationSocket.onmessage = parseNotification;
-    notificationSocket.onerror = fallbackPolling;
-    notificationSocket.onclose = socketError;
+    notificationSocket.onerror = socketError;
+    notificationSocket.onclose = socketClose;
 }
 
 function getDispatcher() {
@@ -330,14 +348,14 @@ function getDispatcherError(jqHXR, textStatus, errorThrown) {
 }
 
 function requestGeolocationPermission() {
-  navigator.permissions.query({name:'geolocation'}).then(function(result) {
-    if (result.state === 'granted') {
-      geolocationSuccess();
-    } else if (result.state === 'prompt') {
-      loadMap();
-    } else if (result.state === 'denied') {
-      geolocationError();
-    }
-   
-  });
+    navigator.permissions.query({name: 'geolocation'}).then(function (result) {
+        if (result.state === 'granted') {
+            geolocationSuccess();
+        } else if (result.state === 'prompt') {
+            loadMap();
+        } else if (result.state === 'denied') {
+            geolocationError();
+        }
+
+    });
 }

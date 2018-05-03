@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -56,10 +57,15 @@ public class NotificationsEndpoint {
         for(String token : tokens){
             UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
             if(userSession.getToken().equals(token)){
-                AuthenticatedNotificationSessionManager.lock(token);
+                close(token);
+            }
+    }
+    }
+    public void close(String token){
+        UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
+        AuthenticatedNotificationSessionManager.lock(token);
                 try {
-                    userSession.getUserSession().close();
-                   
+                    userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,"Goodbye"));       
                 } catch (IOException ex) {
                     Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
                 }finally{
@@ -68,10 +74,8 @@ public class NotificationsEndpoint {
                 }
                 
             }
-        }
-    }
+        
     
-
 
     public NotificationsEndpoint() {
 
