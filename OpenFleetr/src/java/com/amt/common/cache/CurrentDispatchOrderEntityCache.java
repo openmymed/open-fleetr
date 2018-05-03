@@ -25,9 +25,14 @@ public class CurrentDispatchOrderEntityCache {
         lock = new ReentrantLock();
     }
 
-    public static synchronized CurrentDispatchOrderEntityCache getInstance() {
+    public static CurrentDispatchOrderEntityCache getInstance() {
         if (realTimeCache == null) {
-            realTimeCache = new CurrentDispatchOrderEntityCache();
+            synchronized (CurrentDispatchOrderEntityCache.class) {
+                if (realTimeCache == null) {
+                    realTimeCache = new CurrentDispatchOrderEntityCache();
+
+                }
+            }
         }
         return realTimeCache;
 

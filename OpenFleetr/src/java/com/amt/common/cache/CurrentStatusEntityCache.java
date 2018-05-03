@@ -25,9 +25,13 @@ public class CurrentStatusEntityCache {
         lock = new ReentrantLock();
     }
 
-    public static synchronized CurrentStatusEntityCache getInstance() {
+    public static CurrentStatusEntityCache getInstance() {
         if (realTimeCache == null) {
-            realTimeCache = new CurrentStatusEntityCache();
+            synchronized(CurrentStatusEntityCache.class) {
+                if (realTimeCache == null) {
+                    realTimeCache = new CurrentStatusEntityCache();
+                }
+            }
         }
         return realTimeCache;
 
