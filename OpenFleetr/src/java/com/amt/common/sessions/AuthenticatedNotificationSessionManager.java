@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
@@ -57,7 +58,7 @@ public class AuthenticatedNotificationSessionManager {
     public synchronized static void addUserSession(String token, UserSession userSession) {
         if(userSessions.containsKey(token)){
             try {
-                userSession.getUserSession().close();
+                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT,"User already has a connection"));
             } catch (IOException ex) {
 
             }
@@ -77,7 +78,7 @@ public class AuthenticatedNotificationSessionManager {
             UserSession userSession = AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token);
             removeUserSession(token);
             try {
-                userSession.getUserSession().close();
+                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY,"Server is being shut down"));
             } catch (IOException ex) {
                 Logger.getLogger(AuthenticatedNotificationSessionManager.class.getName()).log(Level.SEVERE, null, ex);
             }
