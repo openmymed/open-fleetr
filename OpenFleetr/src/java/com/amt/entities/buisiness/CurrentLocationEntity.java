@@ -16,5 +16,6 @@ public class CurrentLocationEntity extends BasicEntity {
     public long vehicleId;
     public double longitude;
     public double latitude;
+    public long geographicalAreaId;
     
 }
