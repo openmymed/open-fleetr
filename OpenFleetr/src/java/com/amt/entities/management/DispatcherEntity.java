@@ -13,7 +13,7 @@ import com.tna.entities.BasicEntity;
  * @author tareq
  */
 public class DispatcherEntity extends BasicEntity {
-    
+   long userId; 
     String firstName;
     String lastName;
     String birthDate;
