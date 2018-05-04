@@ -10,6 +10,7 @@ import com.amt.entities.buisiness.NotificationEntity;
 import com.amt.entities.management.DispatcherEntity;
 import com.amt.entities.management.GeographicalAreaEntity;
 import com.amt.common.data.GEOSql;
+import com.amt.entities.management.JurisdictionEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -24,42 +25,55 @@ import org.json.simple.JSONObject;
  */
 @WebServlet("/user/dispatcher/notifications/*")
 public class DispatcherNotificationsEndpoint extends AuthorisedEndpoint {
-
+    
     @Override
     public JSONObject doList(String string) throws AccessError {
-       UserAccessControl.authOperation(UserEntity.class, string, 3);
-       JSONObject query = new JSONObject();
-       query.put("dispatcherId",UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
-       query.put("wasHandled",false);
-       return Persistence.listByProperties(NotificationEntity.class,query); 
+        UserAccessControl.authOperation(UserEntity.class, string, 3);
+        JSONObject query1 = new JSONObject();
+        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
+        JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query1);
+        JSONObject query2 = new JSONObject();
+        for (Object key : jurisdictions.keySet()) {
+            JSONObject jurisdiction = (JSONObject) jurisdictions.get(key);
+            query2.put("geographicalAreaId", jurisdiction.get("geographicalAreaId"));
+        }
+        return Persistence.searchByProperties(NotificationEntity.class, query2);        
     }
-
+    
     @Override
     public JSONObject doCreate(JSONObject jsono, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 2);
-        jsono.put("apiUser",UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
-        jsono.put("wasSeen",false);
-        jsono.put("wasHandled",false);
+        jsono.put("apiUser", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
+        jsono.put("wasSeen", false);
+        jsono.put("wasHandled", false);
         JSONObject query = new JSONObject();
-        query.put("geographicalAreaId",GEOSql.liesWithinPolygon(GeographicalAreaEntity.class, jsono));
-        jsono.put("dispatcherId",Persistence.readByProperties(DispatcherEntity.class, query).get("id"));
+        query.put("geographicalAreaId", GEOSql.liesWithinPolygon(GeographicalAreaEntity.class, jsono));
+        jsono.put("dispatcherId", Persistence.readByProperties(JurisdictionEntity.class, query).get("id"));
         return Persistence.create(NotificationEntity.class, jsono);
     }
-
+    
     @Override
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
         throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
-
+    
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-       UserAccessControl.authOperation(UserEntity.class, string, 3);
-       JSONObject query = new JSONObject();
-       query.put("dispatcherId",UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
-       query.put("id",l);
-       return Persistence.readByProperties(NotificationEntity.class,query);    
+        UserAccessControl.authOperation(UserEntity.class, string, 3);
+        JSONObject query1 = new JSONObject();
+        query1.put("geographicalAreaId", l);
+        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
+        JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query1);
+        if (jurisdictions != null) {
+            JSONObject query2 = new JSONObject();
+            query2.put("geographicalAreaId", l);
+            query2.put("wasHandled",false);
+            return Persistence.listByProperties(NotificationEntity.class, query2);            
+        } else {
+            throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
+        }
     }
-
+    
     @Override
     public JSONObject doDelete(long l, String string) throws AccessError {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
