@@ -5,7 +5,6 @@
  */
 package com.amt.entities.management;
 
-import com.tna.entities.AuthorisedEntity;
 import com.tna.entities.BasicEntity;
 
 /**
@@ -13,11 +12,11 @@ import com.tna.entities.BasicEntity;
  * @author tareq
  */
 public class DispatcherEntity extends BasicEntity {
-   long userId; 
+
+    long userId;
     String firstName;
     String lastName;
     String birthDate;
     String phoneNumber;
-    long geographicalAreaId;
-    
+
 }

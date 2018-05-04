@@ -51,7 +51,6 @@ public class DispatcherManagementEndpoint extends AuthorisedEndpoint {
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
         jsono.remove("userId");
-
         return Persistence.update(DispatcherEntity.class, l, jsono);
     }
 
