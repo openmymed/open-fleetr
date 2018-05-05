@@ -19,8 +19,8 @@ public class NotificationEntity extends BasicEntity{
     long geographicalAreaId;
     double latitude;
     double longitude;
-    boolean wasSeen;
     boolean wasHandled;
+    long dispatchOrderId;
     Timestamp seenTimestamp;
     Timestamp handledTimestamp;
     

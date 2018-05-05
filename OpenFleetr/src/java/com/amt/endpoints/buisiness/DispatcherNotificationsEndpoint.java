@@ -57,7 +57,27 @@ public class DispatcherNotificationsEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
-        throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
+        UserAccessControl.authOperation(UserEntity.class, string, 3);
+        JSONObject query1 = new JSONObject();
+        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
+        query1.put("id", l);
+        JSONObject notification = Persistence.readByProperties(JurisdictionEntity.class, query1);
+        if (notification != null) {
+            JSONObject update = new JSONObject();
+            Object dispatchOrderId = jsono.get("dispatchOrderId");
+            if (dispatchOrderId != null) {
+                update.put("dispatchOrderId", dispatchOrderId);
+                update.put("wasHandled", true);
+                return Persistence.update(NotificationEntity.class, l, update);
+            } else {
+
+                throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
+            }
+
+        } else {
+            throw new AccessError(ERROR_TYPE.ENTITY_NOT_FOUND);
+        }
+
     }
 
     @Override
