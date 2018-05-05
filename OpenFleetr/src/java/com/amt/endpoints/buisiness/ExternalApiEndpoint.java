@@ -60,24 +60,20 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
         JSONObject query = new JSONObject();
         query.put("apiUser", apiUser);
         query.put("id", l);
-        JSONObject notification = null;
-        while (!complete) {
-            notification = Persistence.readByProperties(NotificationEntity.class, query);
-            if (notification != null) {
-                if ((boolean) (notification.get("wasHandled")) == false) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException ex) {
-                        complete = true;
-                    }
-                } else {
-                    complete = true;
-                }
+        JSONObject response = new JSONObject();
+        JSONObject notification = Persistence.readByProperties(NotificationEntity.class, query);
+        if (notification != null) {
+            if ((boolean) (notification.get("wasHandled")) == true) {
+                response = Persistence.read(CurrentDispatchOrderEntity.class, (long) notification.get("dispatchOrderId"));
+                response.put("status", "processed");
+
             } else {
-                throw new AccessError(ERROR_TYPE.ENTITY_NOT_FOUND);
+                response.put("status", "processing");
             }
+        } else {
+            throw new AccessError(ERROR_TYPE.ENTITY_NOT_FOUND);
         }
-        return Persistence.read(CurrentDispatchOrderEntity.class, (long) notification.get("dispatchOrderId"));
+        return response;
     }
 
     @Override
