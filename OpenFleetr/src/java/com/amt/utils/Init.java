@@ -26,7 +26,7 @@ public class Init extends Initialization {
 
     @Override
     public void onInit() {
-        Access.setHost("localhost");
+        Access.setHost("10.149.162.83");
         Access.setDatabase("OpenFleetr");
         Access.setUsername("app_user");
         Access.setPassword("pass1234");
@@ -40,7 +40,7 @@ public class Init extends Initialization {
     @Override
     public void onDestroy() {
         stopThreads();
-        //AuthenticatedNotificationSessionManager.closeAllSessions();
+        AuthenticatedNotificationSessionManager.closeAllSessions();
     }
 
     public void startThreads() {
