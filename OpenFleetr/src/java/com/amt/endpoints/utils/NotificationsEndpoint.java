@@ -5,12 +5,16 @@
  */
 package com.amt.endpoints.utils;
 
+import com.amt.common.cache.NotificationEntityCache;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.auth.UserEntity;
 import com.amt.common.sessions.UserSession;
+import com.amt.entities.management.DispatcherEntity;
+import com.amt.entities.management.JurisdictionEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
+import com.tna.data.Persistence;
 import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
@@ -29,7 +33,7 @@ import org.json.simple.JSONObject;
  */
 @ServerEndpoint("/notifications/{token}")
 public class NotificationsEndpoint {
-
+    
     @OnOpen
     public void open(@PathParam("token") String token, Session session) {
         JSONObject user;
@@ -38,47 +42,61 @@ public class NotificationsEndpoint {
             if ((long) user.get("level") >= 2) {
                 UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 AuthenticatedNotificationSessionManager.addUserSession(token, userSession);
+                
+                JSONObject query1 = new JSONObject();
+                query1.put("userId", user);
+                JSONObject dispatcher = Persistence.readByProperties(DispatcherEntity.class, query1);
+                
+                JSONObject query2 = new JSONObject();
+                query1.put("dispatcherId", dispatcher.get("id"));
+                JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query1);
+                
+                for (Object key : jurisdictions.keySet()) {
+                    JSONObject jurisdiction = (JSONObject) jurisdictions.get(key);
+                   AuthenticatedNotificationSessionManager.setTokenAreaId((long) jurisdiction.get("geographicalAreaId"), token);
+                }
+                
             } else {
                 throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
             }
         } catch (AccessError ex) {
             try {
-                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,"Goodbye"));
+                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));
             } catch (IOException ex1) {
-
+                
             }
         }
-
+        
     }
-
+    
     @OnClose
     public void close(Session session) {
         Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
-        for(String token : tokens){
+        for (String token : tokens) {
             UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
-            if(userSession.getToken().equals(token)){
+            if (userSession.getToken().equals(token)) {
                 close(token);
             }
+        }
     }
-    }
-    public void close(String token){
+
+    public void close(String token) {
         UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
         AuthenticatedNotificationSessionManager.lock(token);
-                try {
-                    userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE,"Goodbye"));       
-                } catch (IOException ex) {
-                    Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                AuthenticatedNotificationSessionManager.removeUserSession(token);
-                AuthenticatedNotificationSessionManager.unlock(token);
-                }
-                
-            }
+        try {
+            userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));            
+        } catch (IOException ex) {
+            Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            AuthenticatedNotificationSessionManager.removeUserSession(token);
+            AuthenticatedNotificationSessionManager.removeTokenGeographicalArea(token);
+            AuthenticatedNotificationSessionManager.unlock(token);
+        }
         
-    
-
-    public NotificationsEndpoint() {
-
     }
-
+    
+    public NotificationsEndpoint() {
+        
+    }
+    
 }

@@ -6,6 +6,7 @@
 package com.amt.common.sessions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
@@ -21,28 +22,49 @@ public class AuthenticatedNotificationSessionManager {
 
     private static AuthenticatedNotificationSessionManager sessionManager;
     private static HashMap<String, UserSession> userSessions;
+    private static HashMap<Long, ArrayList<String>> geographicalAreas;
 
     private static AuthenticatedNotificationSessionManager getInstance() {
         if (sessionManager == null) {
-            synchronized(AuthenticatedNotificationSessionManager.class){
-                if(sessionManager == null){
-            sessionManager = new AuthenticatedNotificationSessionManager();
+            synchronized (AuthenticatedNotificationSessionManager.class) {
+                if (sessionManager == null) {
+                    sessionManager = new AuthenticatedNotificationSessionManager();
+                }
             }
-        }    
 
+        }
+        return sessionManager;
     }
-         return sessionManager;
-}
+
     private AuthenticatedNotificationSessionManager() {
         userSessions = new HashMap();
+        geographicalAreas = new HashMap();
     }
 
-    public synchronized static UserSession get(String token){
+    public static ArrayList<String> getByArea(long areaId) {
+        return AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(areaId);
+    }
+
+    public synchronized static void setTokenAreaId(long areaId, String token) {
+        AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(areaId).add(token);
+
+    }
+
+    public synchronized static void removeTokenGeographicalArea(String token) {
+
+        Set<Long> keySet = geographicalAreas.keySet();
+        for (Long key : keySet) {
+            while (AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(key).remove(token)) {
+            }
+        }
+    }
+
+    public synchronized static UserSession get(String token) {
         return AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token);
     }
-    
+
     public static void lock(String token) {
-    AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token).lock.lock();      
+        AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token).lock.lock();
     }
 
     public static void unlock(String token) {
@@ -52,17 +74,16 @@ public class AuthenticatedNotificationSessionManager {
     public synchronized static Set sessionsTokenSet() {
         return AuthenticatedNotificationSessionManager.getInstance().userSessions.keySet();
     }
-    
 
     public synchronized static void addUserSession(String token, UserSession userSession) {
-        if(userSessions.containsKey(token)){
+        if (userSessions.containsKey(token)) {
             try {
-                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT,"User already has a connection"));
+                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "User already has a connection"));
             } catch (IOException ex) {
 
             }
-        }else{
-        AuthenticatedNotificationSessionManager.getInstance().userSessions.put(token, userSession);
+        } else {
+            AuthenticatedNotificationSessionManager.getInstance().userSessions.put(token, userSession);
         }
 
     }
@@ -77,7 +98,7 @@ public class AuthenticatedNotificationSessionManager {
             UserSession userSession = AuthenticatedNotificationSessionManager.getInstance().userSessions.get(token);
             removeUserSession(token);
             try {
-                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY,"Server is being shut down"));
+                userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Server is being shut down"));
             } catch (IOException ex) {
                 Logger.getLogger(AuthenticatedNotificationSessionManager.class.getName()).log(Level.SEVERE, null, ex);
             }

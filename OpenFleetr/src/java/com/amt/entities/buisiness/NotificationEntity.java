@@ -15,13 +15,11 @@ import java.sql.Timestamp;
 public class NotificationEntity extends BasicEntity{
     
     long apiUser;
-    long dispatcherId;
     long geographicalAreaId;
     double latitude;
     double longitude;
     boolean wasHandled;
     long dispatchOrderId;
-    Timestamp seenTimestamp;
     Timestamp handledTimestamp;
     
 }

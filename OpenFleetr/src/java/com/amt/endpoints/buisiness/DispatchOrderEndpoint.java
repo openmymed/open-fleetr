@@ -14,6 +14,7 @@ import com.amt.entities.management.DriverEntity;
 import com.amt.entities.history.HistoricalDispatchOrderEntity;
 import com.amt.entities.history.HistoricalLocationEntity;
 import com.amt.entities.auth.UserEntity;
+import com.amt.entities.buisiness.CaseEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -77,6 +78,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
                     json.put("startLatitude",readVehicleLocation.get("latitude"));
                     json.put("startLongitude",readVehicleLocation.get("longitude"));
                     json.put("creationDate", new Date().toString());
+                    json.put("caseId",Persistence.create(CaseEntity.class,json).get("key"));
                     json.put("status",1);
                     return Persistence.create(CurrentDispatchOrderEntity.class,json);
                 }    
