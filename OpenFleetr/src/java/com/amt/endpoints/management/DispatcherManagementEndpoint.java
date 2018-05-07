@@ -33,16 +33,19 @@ public class DispatcherManagementEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doCreate(JSONObject jsono, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
+        
         JSONObject userQuery = new JSONObject();
         userQuery.put("userName", Utils.getRandom(8));
         userQuery.put("password", Utils.getRandom(16));
         long createdUser = UserAccessControl.createNewUser(UserEntity.class, userQuery, 2);
+        
         JSONObject dispatcherQuery = new JSONObject();
         dispatcherQuery.put("firstName", jsono.get("firstName"));
         dispatcherQuery.put("lastName", jsono.get("lastName"));
         dispatcherQuery.put("birthDate", jsono.get("birthDate"));
         dispatcherQuery.put("phoneNumber", jsono.get("phoneNumber"));
         dispatcherQuery.put("userId", createdUser);
+       
         userQuery.put("dispatcherId", Persistence.create(DispatcherEntity.class, dispatcherQuery).get("key"));
         return userQuery;
     }

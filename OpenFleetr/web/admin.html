@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+        <script type="text/javascript" src="js/leaflet.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="css/bootstrap.css"/>
+        <link rel="stylesheet" href="css/leaflet.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg bg-info">
+            <div class="container-fluid">
+                <a class="navbar-brand text-light" href="#">Open Fleetr</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent" style="display: unset !important;">
+                    <ul class="nav nav-pills mr-auto justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName">User</a>
+                        </li>	
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="head text-light bg-info">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-sm-12 col-12">
+                                            <span>Notifications (3)</span>
+                                            <a href="" class="float-right text-light">Mark all as read</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="notification-box">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div>    
+                                        <div class="col-lg-8 col-sm-8 col-8">
+                                            <strong class="text-info">API User</strong>
+                                            <div>
+                                                An emergency was posted throught the API.
+                                            </div>
+                                            <small class="text-warning">27.11.2015, 15:00</small>
+                                        </div>    
+                                    </div>
+                                </li>
+                                <li class="notification-box bg-gray">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 
+                                        <div class="col-lg-8 col-sm-8 col-8">
+                                            <strong class="text-info">API User</strong>
+                                            <div>
+                                                An emergency was posted throught the API.
+                                            </div>
+                                            <small class="text-warning">27.11.2015, 15:00</small>
+                                        </div>    
+                                    </div>
+                                </li>
+                                <li class="notification-box">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 			
+                                        <div class="col-lg-8 col-sm-8 col-8">
+                                            <strong class="text-info">API User</strong>
+                                            <div>
+                                                An emergency was posted throught the API.
+                                            </div>
+                                            <small class="text-warning">27.11.2015, 15:00</small>
+                                        </div>    
+                                    </div>
+                                </li>
+                                <li class="footer bg-info text-center">
+                                    <a href="" class="text-light">View All</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a  data-toggle="tab" href="#Dispatchers"><i class="fa fa-user"></i>    Dispatchers</a></li>
+                <li><a  data-toggle="tab" href="#Drivers"><i class="fa fa-drivers-license"></i>    Drivers</a></li>
+                <li><a  data-toggle="tab" href="#Vehicles"><i class="fa fa-ambulance"></i>    Vehicles</a></li>
+                <li><a  data-toggle="tab" href="#Jurisdictions"><i class="fa fa-map"></i>   Jurisdictions</a></li>
+                <li><a  data-toggle="tab" href="#APIUsers"><span class="glyphicon glyphicon-user"></span>    API Users</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="Dispatchers" class="tab-pane fade in active">
+                    <br>
+                    <h4>Dispatchers Management</h4>
+                    <hr>
+                    <br>
+                    <table style="width:100%">
+                        <tr>
+                            <th>First Name</th><!--Dispatchers first name-->
+                            <th>Last Name</th><!--Dispatchers last name-->
+                            <th>Date Of Birth</th><!--Dispatchers DOB-->
+                            <th>Jurisdictions</th>
+                            <th> </th><!--add/delete-->
+                        </tr>
+                    </table> <!--Dispatchers login table ends here-->
+
+                </div><!--Dispatchers login ends here-->
+
+
+                <div id="Vehicles" class="tab-pane fade">
+                    <br>
+                    <h4>Vehicles Management</h4>
+                    <hr>
+                    <br>
+                    <table style="width:100%">
+                        <tr>
+                            <th>Vehicle Id</th>
+                            <th>Vehicle Type</th>
+                            <th> </th>
+                        </tr>
+                    </table> <!--Dispatchers login table ends here-->
+                </div><!--vehicles registration ends here-->
+
+                <div id="Drivers" class="tab-pane fade">
+                    <br>
+                    <h4>Drivers login</h4>
+                    <hr>
+                    <br>
+                    <table style="width:100%">
+                        <tr>
+                            <th>First Name</th><!--Drivers first name-->
+                            <th>Last Name</th><!--Drivers last name-->
+                            <th>Date Of Birth</th><!--Drivers DOB-->
+                            <th>Phone Number</th><!--Drivers E-mail-->
+                            <th>User Name</th>
+                            <th>Password</th>
+                            <th> </th><!--add/delete-->
+                        </tr>
+                    </table> <!--Disptchers login table ends here-->
+                </div><!--Drivers login ends here-->
+
+                <div id="APIUsers" class="tab-pane fade">
+                    <br>
+                    <h4>API Users login</h4>
+                    <hr>
+                    <br>
+                    <table style="width:100%">
+                        <tr>
+                            <th>User ID</th><!--APIUSERS first name-->
+                            <th>Application Name</th><!--APIUSERS last name-->
+                            <th>Maintainer Email</th><!--APIUSERS E-mail-->
+                            <th>API Key</th>
+                            <th> </th><!--add/delete-->
+                        </tr>
+                    </table> <!--APIUSERS login table ends here-->
+
+                </div><!--API users login ends here-->
+
+
+                <div id="Jurisdictions" class="tab-pane fade">
+                    <br>
+                    <h4>Jurisdiction Management</h4>
+                    <hr>
+                    <br>
+                    Some map with the add/delete button
+
+                </div><!--API users login ends here-->
+            </div><!--tab's data ends here-->
+
+        </div><!--nav-tabs end here-->
+
+    </body>
+</html>
