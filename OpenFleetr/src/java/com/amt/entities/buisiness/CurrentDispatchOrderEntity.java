@@ -19,6 +19,7 @@ public class CurrentDispatchOrderEntity extends BasicEntity {
   double destinationLongitude;
   Date creationDate;
   long vehicleId;
+  long caseId;
   long status;
 
 }

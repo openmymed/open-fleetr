@@ -26,7 +26,8 @@ public class GEOSql {
     private static final String WRITE_POLYGON_SQL = "INSERT INTO %s (name,polygon) VALUES (?,ST_GEOMFROMTEXT('Polygon((? ?, ? ?, ? ?, ? ?,? ?))'));";
     private static final String READ_POLYGON_SQL = "SELECT ST_AsText(polygon) FROM %s where id=?";
     private static final String LIES_WITHIN_SQL = "SELECT id FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
-    
+    private static final String DELETE_WITHIN_SQL = "DELETE FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
+
     public static String readPolygon(Class geoEntity, long l) throws AccessError {
         String result = null;
         String geoEntityClassName = geoEntity.getSimpleName();

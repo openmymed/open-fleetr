@@ -28,7 +28,7 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        UserAccessControl.authOperation(UserEntity.class, token, 3);
         return Persistence.list(CurrentStatusEntity.class);
     }
 
@@ -39,18 +39,20 @@ public class CurrentStatusEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        UserAccessControl.authOperation(UserEntity.class, token, 3);
         JSONObject query1 = new JSONObject();
         query1.put("vehicleId",resource);
+        
         JSONObject query2 = Persistence.readByProperties(CurrentStatusEntity.class,query1);
         query2.put("timeStamp", new Date().toString());
         Persistence.create(HistoricalStatusEntity.class, query2);
+        
         return  Persistence.update(CurrentStatusEntity.class,(int)query2.get("id"),json);
     }
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        UserAccessControl.authOperation(UserEntity.class, token, 3);
         JSONObject result = CurrentStatusEntityCache.retreive((long) resource);
         if (result == null) {
             JSONObject obj = new JSONObject();

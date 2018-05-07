@@ -8,6 +8,7 @@ package com.amt.utils;
 import com.amt.common.cachemanager.CurrentDispatchOrderEntityCacheManager;
 import com.amt.common.cachemanager.CurrentLocationEntityCacheManager;
 import com.amt.common.cachemanager.CurrentStatusEntityCacheManager;
+import com.amt.common.cachemanager.NotificationThread;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
@@ -23,10 +24,11 @@ public class Init extends Initialization {
     Thread locationPoll;
     Thread statusPoll;
     Thread dispatchPoll;
+    Thread notificationThread;
 
     @Override
     public void onInit() {
-        Access.setHost("localhost");
+        Access.setHost("10.149.162.83");
         Access.setDatabase("OpenFleetr");
         Access.setUsername("app_user");
         Access.setPassword("pass1234");
@@ -34,19 +36,21 @@ public class Init extends Initialization {
         locationPoll = (new Thread(new CurrentLocationEntityCacheManager()));
         statusPoll = (new Thread(new CurrentStatusEntityCacheManager()));
         dispatchPoll = (new Thread(new CurrentDispatchOrderEntityCacheManager()));
+        notificationThread = (new Thread(new NotificationThread()));
         startThreads();
     }
 
     @Override
     public void onDestroy() {
         stopThreads();
-        //AuthenticatedNotificationSessionManager.closeAllSessions();
+        AuthenticatedNotificationSessionManager.closeAllSessions();
     }
 
     public void startThreads() {
         locationPoll.start();
         statusPoll.start();
         dispatchPoll.start();
+        notificationThread.start();
 
     }
 
@@ -54,5 +58,6 @@ public class Init extends Initialization {
         locationPoll.interrupt();
         statusPoll.interrupt();
         dispatchPoll.interrupt();
+        notificationThread.interrupt();
     }
 }
