@@ -93,22 +93,108 @@ and open the template in the editor.
 			</div>
         </nav>
 		<div class="container-fluid">
-			<a href="#" data-target="#sidebar" data-toggle="collapse"><i class="fa fa-navicon fa-2x py-2 p-1"></i></a>
+			<a href="#" data-target="#sidebar" data-toggle="collapse"><i class="fa fa-ambulance fa-2x py-2 p-1"></i></a>
 			 <div class="row d-flex d-md-block flex-nowrap wrapper">
-				<div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width show" id="sidebar">
+				<div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width hide" id="sidebar">
 					<div class="list-group border-0 card text-center text-md-left">
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-heart"></i> <span class="d-none d-md-inline">Item 4</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-list"></i> <span class="d-none d-md-inline">Item 5</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-clock-o"></i> <span class="d-none d-md-inline">Link</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-th"></i> <span class="d-none d-md-inline">Link</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-gear"></i> <span class="d-none d-md-inline">Link</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-calendar"></i> <span class="d-none d-md-inline">Link</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-envelope"></i> <span class="d-none d-md-inline">Link</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-bar-chart-o"></i> <span class="d-none d-md-inline">Link</span></a>
-						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-star"></i> <span class="d-none d-md-inline">Link</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+						<a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
 					</div>
 				</div>
 				<main id="vehicleMapDiv" "col-md-9 float-left col px-5 pl-md-2 pt-2 main" style="height:500px">
+				</main>
+			</div>
+			<div class="row">
+				<main class="col-md-8 float-left col px-5 pl-md-2 pt-2 main">
+					<div class="card">
+						<header class="card-header">
+							<a href="#" data-toggle="collapse" data-target="#collapse11" aria-expanded="true" class="">
+								<i class="icon-action fa fa-chevron-down"></i>
+								<span class="title">Create a case</span>
+							</a>
+						</header>
+					<Script>
+						$('a[href^="#"]').on('click', function(event) {
+							var target = $(this);
+							if( target.length ) {
+								event.preventDefault();
+								$('html, body').stop().animate({
+									scrollTop: target.offset().top
+								}, 1000);
+							}
+						});
+					</Script>
+					<div class="case collapse hide" id="collapse11">
+						<article class="card-body">
+							<form class="form-horizontal">
+								<fieldset>
+							<!-- Form Name -->
+									<legend>Create Case</legend>
+									<!-- Text input-->
+									<div class="form-group">
+									  <label class="col-md-8 control-label" for="firstName">First Name</label>  
+									  <div class="col-md-6">
+									  <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="">
+									  </div>
+									</div>
+									<!-- Text input-->
+									<div class="form-group">
+									  <label class="col-md-4 control-label" for="lastName">Last Name</label>  
+									  <div class="col-md-6">
+									  <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="">
+										
+									  </div>
+									</div>
+
+									<!-- Text input-->
+									<div class="form-group">
+									  <label class="col-md-4 control-label" for="phoneNumber">Phone Number</label>  
+									  <div class="col-md-6">
+									  <input id="phoneNumber" name="phoneNumber" type="text" placeholder="" class="form-control input-md" required="">
+										
+									  </div>
+									</div>
+
+									<!-- Text input-->
+									<div class="form-group">
+									  <label class="col-md-4 control-label" for="latitude">Latitude</label>  
+									  <div class="col-md-6">
+									  <input id="latitude" name="latitude" type="text" placeholder="" class="form-control input-md" required="">
+										
+									  </div>
+									</div>
+									<!-- Text input-->
+									<div class="form-group">
+									  <label class="col-md-4 control-label" for="longitude">Longitude</label>  
+									  <div class="col-md-6">
+									  <input id="longitude" name="longitude" type="text" placeholder="" class="form-control input-md" required="">
+									  </div>
+									</div>
+									<!-- Textarea -->
+									<div class="form-group">
+									  <label class="col-md-4 control-label" for="textarea">Notes</label>
+									  <div class="col-md-6">                     
+										<textarea class="form-control" id="notes" name="notes"></textarea>
+									  </div>
+									</div>
+									<!-- Button (Double) -->
+									<div class="form-group">
+									  <div class="col-md-6">
+										<button id="button1id" name="button1id" class="btn btn-success">Submit</button>
+										<button id="button2id" name="button2id" type="reset" class="btn btn-danger">Clear</button>
+									  </div>
+									</div>
+								</fieldset>
+							</form>
+						</article> <!-- card-body.// -->
+					</div> <!-- collapse .// -->
 				</main>
 			</div>
 		</div>
