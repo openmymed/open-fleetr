@@ -27,7 +27,9 @@ CREATE TABLE `APIUserEntity` (
   `applicationName` varchar(45) DEFAULT NULL,
   `maintainerEmail` varchar(60) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `APIUserEntity_UserEntity_FK` (`userId`),
+  CONSTRAINT `APIUserEntity_UserEntity_FK` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,7 +59,12 @@ CREATE TABLE `CurrentDispatchOrderEntity` (
   `status` int(11) DEFAULT NULL,
   `creationDate` date DEFAULT NULL,
   `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  PRIMARY KEY (`id`)
+  `dispatcherId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `CurrentDispatchOrderEntity_VehicleEntity_FK` (`vehicleId`),
+  KEY `CurrentDispatchOrderEntity_DispatcherEntity_FK` (`dispatcherId`),
+  CONSTRAINT `CurrentDispatchOrderEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`),
+  CONSTRAINT `CurrentDispatchOrderEntity_VehicleEntity_FK` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -83,10 +90,11 @@ CREATE TABLE `CurrentLocationEntity` (
   `longitude` double DEFAULT NULL,
   `latitude` double DEFAULT NULL,
   `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  `CurrentLocationEntitycol` point DEFAULT NULL,
   `geographicalAreaId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_CurrentLocationEntity_1_idx` (`vehicleId`),
+  KEY `CurrentLocationEntity_GeographicalAreaEntity_FK` (`geographicalAreaId`),
+  CONSTRAINT `CurrentLocationEntity_GeographicalAreaEntity_FK` FOREIGN KEY (`geographicalAreaId`) REFERENCES `GeographicalAreaEntity` (`id`),
   CONSTRAINT `fk_CurrentLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -118,6 +126,8 @@ CREATE TABLE `CurrentStatusEntity` (
   `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   PRIMARY KEY (`id`),
   KEY `fk_CurrentStatusEntity_1_idx` (`vehicleId`),
+  KEY `CurrentStatusEntity_DriverEntity_FK` (`driverId`),
+  CONSTRAINT `CurrentStatusEntity_DriverEntity_FK` FOREIGN KEY (`driverId`) REFERENCES `DriverEntity` (`id`),
   CONSTRAINT `fk_CurrentStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -145,8 +155,9 @@ CREATE TABLE `DispatcherEntity` (
   `lastName` varchar(45) DEFAULT NULL,
   `birthdate` date DEFAULT NULL,
   `phoneNumber` varchar(20) DEFAULT NULL,
-  `geographicalAreaId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `DispatcherEntity_UserEntity_FK` (`userId`),
+  CONSTRAINT `DispatcherEntity_UserEntity_FK` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -304,6 +315,34 @@ LOCK TABLES `HistoricalStatusEntity` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `JurisdictionEntity`
+--
+
+DROP TABLE IF EXISTS `JurisdictionEntity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `JurisdictionEntity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dispatcherId` int(11) DEFAULT NULL,
+  `geographicalAreaId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `JurisdictionEntity_DispatcherEntity_FK` (`dispatcherId`),
+  KEY `JurisdictionEntity_GeographicalAreaEntity_FK` (`geographicalAreaId`),
+  CONSTRAINT `JurisdictionEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`),
+  CONSTRAINT `JurisdictionEntity_GeographicalAreaEntity_FK` FOREIGN KEY (`geographicalAreaId`) REFERENCES `GeographicalAreaEntity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `JurisdictionEntity`
+--
+
+LOCK TABLES `JurisdictionEntity` WRITE;
+/*!40000 ALTER TABLE `JurisdictionEntity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `JurisdictionEntity` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `NotificationEntity`
 --
 
@@ -316,11 +355,16 @@ CREATE TABLE `NotificationEntity` (
   `dispatcherId` int(11) DEFAULT NULL,
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL,
-  `wasSeen` bit(1) DEFAULT NULL,
   `wasHandled` bit(1) DEFAULT NULL,
-  `seenTimestamp` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   `handledTimestamp` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  PRIMARY KEY (`id`)
+  `dispatchOrderId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `NotificationEntity_APIUserEntity_FK` (`apiUser`),
+  KEY `NotificationEntity_DispatcherEntity_FK` (`dispatcherId`),
+  KEY `NotificationEntity_CurrentDispatchOrderEntity_FK` (`dispatchOrderId`),
+  CONSTRAINT `NotificationEntity_APIUserEntity_FK` FOREIGN KEY (`apiUser`) REFERENCES `APIUserEntity` (`id`),
+  CONSTRAINT `NotificationEntity_CurrentDispatchOrderEntity_FK` FOREIGN KEY (`dispatchOrderId`) REFERENCES `CurrentDispatchOrderEntity` (`id`),
+  CONSTRAINT `NotificationEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -357,7 +401,7 @@ CREATE TABLE `UserEntity` (
 
 LOCK TABLES `UserEntity` WRITE;
 /*!40000 ALTER TABLE `UserEntity` DISABLE KEYS */;
-INSERT INTO `UserEntity` VALUES (1,'admin','admin',NULL,4,'2018-05-03 14:15:36');
+INSERT INTO `UserEntity` VALUES (1,'admin','admin','e7fa3d52-9a94-469c-ad3e-1b4be54fa66d',4,'2018-05-06 08:47:43');
 /*!40000 ALTER TABLE `UserEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -384,6 +428,10 @@ LOCK TABLES `VehicleEntity` WRITE;
 /*!40000 ALTER TABLE `VehicleEntity` DISABLE KEYS */;
 /*!40000 ALTER TABLE `VehicleEntity` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'OpenFleetr'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -394,4 +442,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-04 11:17:41
+-- Dump completed on 2018-05-06 12:24:38
