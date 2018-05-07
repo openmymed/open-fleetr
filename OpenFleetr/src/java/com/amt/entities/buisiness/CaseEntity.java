@@ -16,4 +16,5 @@ public class CaseEntity extends BasicEntity{
     String firstName;
     String lastName;
     String phoneNumber;
+    String notes;
 }

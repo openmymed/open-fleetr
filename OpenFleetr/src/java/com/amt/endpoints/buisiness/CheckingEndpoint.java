@@ -32,7 +32,7 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
+        UserAccessControl.authOperation(UserEntity.class, token, 1);
         long UserId = (long)UserAccessControl.fetchUserByToken(UserEntity.class, token).get("id");
 
         JSONObject query1 = new JSONObject();
@@ -70,7 +70,7 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         
-        UserAccessControl.authOperation(UserEntity.class, token, 2); 
+        UserAccessControl.authOperation(UserEntity.class, token, 1); 
         long DriverId = (long)UserAccessControl.fetchUserByToken(UserEntity.class, token).get("id");
         
         JSONObject query1 = new JSONObject();
@@ -102,8 +102,8 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 2);
-        return Persistence.read(CurrentStatusEntity.class, resource);
+        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
+
     }
 
     @Override

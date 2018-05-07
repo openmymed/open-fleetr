@@ -44,11 +44,13 @@ public class ApiUserManagementEndpoint extends AuthorisedEndpoint {
         userQuery.put("userName", Utils.getRandom(32));
         userQuery.put("password", Utils.getRandom(32));
         long createdUser = UserAccessControl.createNewUser(UserEntity.class, userQuery, 3);
+        
         JSONObject userDetails = UserAccessControl.login(UserEntity.class, userQuery);
         userQuery.put("userId", userDetails.get("id"));
         jsono.put("userId", userDetails.get("id"));
         userQuery.put("token", userDetails.get("token"));
         userQuery.put("apiUserId", Persistence.create(ApiUserEntity.class, jsono).get("key"));
+        
         return userQuery;
     }
 
