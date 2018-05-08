@@ -66,6 +66,9 @@ margin-right:auto;
     text-align: center;
 	padding-top:5px;
 }
+.footer::before {
+	content: "Powered by Open-Fleetr ©.";
+}
 .icon{
 margin-bottom:10px;
 margin-left:5px;
@@ -85,3 +88,4 @@ margin-right:5px;
   -o-transform: translate(-270px, 0);
   transform: translate(-270px, 0);
 }
+.footer

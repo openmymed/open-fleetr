@@ -10,17 +10,17 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="css/leaflet.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/bootstrap.css"/>
-        <link rel="stylesheet" href="css/style.css"/>
-        <link rel="stylesheet" href="css/custom.css"/>
+	    <link rel="stylesheet" href="css/leaflet.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/bootstrap.css"/>
+		<link rel="stylesheet" href="css/style.css"/>
+		<link rel="stylesheet" href="css/custom.css"/>
 
         <script type="text/javascript" src="js/leaflet.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
-        <script type="text/javascript" src="js/popper.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/popper.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
     </head>
     <body style="background:white;">
         <nav class="navbar navbar-expand-lg bg-info">
@@ -111,92 +111,52 @@ and open the template in the editor.
 				<main id="vehicleMapDiv" "col-md-9 float-left col px-5 pl-md-2 pt-2 main" style="height:500px">
 				</main>
 			</div>
-			<div class="row">
-				<main class="col-md-8 float-left col px-5 pl-md-2 pt-2 main">
-					<div class="card">
-						<header class="card-header">
-							<a href="#" data-toggle="collapse" data-target="#collapse11" aria-expanded="true" class="">
-								<i class="icon-action fa fa-chevron-down"></i>
-								<span class="title">Create a case</span>
-							</a>
-						</header>
-					<Script>
-						$('a[href^="#"]').on('click', function(event) {
-							var target = $(this);
-							if( target.length ) {
-								event.preventDefault();
-								$('html, body').stop().animate({
-									scrollTop: target.offset().top
-								}, 1000);
-							}
-						});
-					</Script>
-					<div class="case collapse hide" id="collapse11">
-						<article class="card-body">
-							<form class="form-horizontal">
-								<fieldset>
-							<!-- Form Name -->
-									<legend>Create Case</legend>
-									<!-- Text input-->
-									<div class="form-group">
-									  <label class="col-md-8 control-label" for="firstName">First Name</label>  
-									  <div class="col-md-6">
-									  <input id="firstName" name="firstName" type="text" placeholder="" class="form-control input-md" required="">
-									  </div>
-									</div>
-									<!-- Text input-->
-									<div class="form-group">
-									  <label class="col-md-4 control-label" for="lastName">Last Name</label>  
-									  <div class="col-md-6">
-									  <input id="lastName" name="lastName" type="text" placeholder="" class="form-control input-md" required="">
-										
-									  </div>
-									</div>
+			<div class="row py-2 p-3">
+				<!-- Button trigger modal -->
+				
+				<button type="button col-md-9 float-left col px-5 pl-md-2 pt-2" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+					Create Case
+				</button>
 
-									<!-- Text input-->
+				<!-- Modal -->
+				<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+				  <div class="modal-dialog modal-md" role="document">
+					<div class="modal-content">
+					<div class="content-end p-1">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body p-1 px-3">
+						<form class="form-vertical">
+							<fieldset>
+								<!-- Text input-->
 									<div class="form-group">
-									  <label class="col-md-4 control-label" for="phoneNumber">Phone Number</label>  
-									  <div class="col-md-6">
-									  <input id="phoneNumber" name="phoneNumber" type="text" placeholder="" class="form-control input-md" required="">
-										
-									  </div>
-									</div>
-
+										<div class="col-md-8">
+											<input id="fullName" name="fullName" type="text" placeholder="Full Name" class="form-control input-md" required="">
+										</div>
 									<!-- Text input-->
-									<div class="form-group">
-									  <label class="col-md-4 control-label" for="latitude">Latitude</label>  
-									  <div class="col-md-6">
-									  <input id="latitude" name="latitude" type="text" placeholder="" class="form-control input-md" required="">
-										
-									  </div>
-									</div>
-									<!-- Text input-->
-									<div class="form-group">
-									  <label class="col-md-4 control-label" for="longitude">Longitude</label>  
-									  <div class="col-md-6">
-									  <input id="longitude" name="longitude" type="text" placeholder="" class="form-control input-md" required="">
-									  </div>
+										<div class="col-md-8">
+											<input id="phoneNumber" name="phoneNumber" type="text" placeholder="Phone Number" class="form-control input-md" required="">
+										</div>
 									</div>
 									<!-- Textarea -->
 									<div class="form-group">
-									  <label class="col-md-4 control-label" for="textarea">Notes</label>
-									  <div class="col-md-6">                     
-										<textarea class="form-control" id="notes" name="notes"></textarea>
-									  </div>
+										<div class="col-md-12">                     
+											<textarea class="form-control" id="notes" name="notes" placeholder="Notes" style="width:415px;"></textarea>
+										</div>
 									</div>
-									<!-- Button (Double) -->
-									<div class="form-group">
-									  <div class="col-md-6">
-										<button id="button1id" name="button1id" class="btn btn-success">Submit</button>
-										<button id="button2id" name="button2id" type="reset" class="btn btn-danger">Clear</button>
-									  </div>
-									</div>
-								</fieldset>
-							</form>
-						</article> <!-- card-body.// -->
-					</div> <!-- collapse .// -->
-				</main>
+								<div class="form-group">					
+									<button type="button" class="btn btn-secondary" data-dismiss="modal" type="reset">Close</button>
+									<button type="button" class="btn btn-primary">Create Case</button>
+								</div>	
+							</fieldset>
+						</form>
+					</div>
+				  </div>
+				</div>
 			</div>
 		</div>
+		<div class="footer"></div>
     </body>
 </html>
