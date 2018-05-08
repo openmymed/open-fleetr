@@ -16,7 +16,9 @@ var updateStatusesTimeout;
 $(document).ready(main);
 
 function main() {
-
+    $('#createCaseButton').click(createCaseFormDisplayControl);
+    $('#createCaseFormCloseButton').click(createCaseFromClose);
+    $('#createCaseFormConfirmButton').click(createCase);
     requestGeolocationPermission();
     updateDrivers();
     updateLocations(); //start refreshing the vehicle locations
@@ -54,17 +56,17 @@ function parseNotification(event) {
     }
 }
 
-function fetchStatus(vehicleId){
-    
+function fetchStatus(vehicleId) {
+
 }
 
-function fetchDispatchOrder(vehicleId){
-    
-    
+function fetchDispatchOrder(vehicleId) {
+
+
 }
 
-function fetchNotification(notificationId){
-    
+function fetchNotification(notificationId) {
+
 }
 function fallbackPolling(event) {
     websocket = false;
@@ -324,7 +326,7 @@ function socketClose(event) {
 
 }
 function socketError(event) {
-     console.log("an error has happened");
+    console.log("an error has happened");
 }
 
 function socketConnect() {
@@ -353,12 +355,13 @@ function getDispatcherSuccess(data) {
 }
 function getDispatcherError(jqHXR, textStatus, errorThrown) {
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
-        alert("Please log in !");//alert for a login
-        localStorage.removeItem("token");//delete the user token from storage
-        $(location).attr('href', '/OpenFleetr');//go to the home page
+    alert("Please log in !"); //alert for a login
+            localStorage.removeItem("token"); //delete the user token from storage
+            $(location).attr('href', '/OpenFleetr'); //go to the home page
     } else {
-        dispatcherName = "Error";
-        document.getElementById("dispatcherName").innerHTML = dispatcherName;
+    dispatcherName = "Error"
+    ;
+            document.getElementById("dispatcherName").innerHTML = dispatcherName;
     }
 
 }
@@ -374,4 +377,28 @@ function requestGeolocationPermission() {
         }
 
     });
+
+}
+
+function createCaseFormDisplayControl(){
+
+if(!$('#createCaseForm').is(":visible")){
+    $('#createCaseForm').show();
+    $('#createCaseButton').hide();
+}else{
+    $('#createCaseForm').hide();
+    $('#createCaseButton').show();
+}
+}
+
+function createCase(){
+    return "ok";
+}
+
+function createCaseFromClose(){
+    $('#fullName').val("");
+    $('#phoneNumber').val("");
+    $('#notes').val("");
+    createCaseFormDisplayControl();
+    
 }
