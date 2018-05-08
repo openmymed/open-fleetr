@@ -28,7 +28,7 @@ function main() {
 
 }
 
-function parseNotification(event) {
+function parseSocketNotification(event) {
     var json = JSON.parse(event.data);
     switch (json.type) {
         case "location" :
@@ -45,9 +45,7 @@ function parseNotification(event) {
             }
             break;
         case "notification" :
-            for (var key in json.array) {
-                json.array.forEach(fetchNotification);
-            }
+			fetchNotification();
             break;
         default :
             break;
@@ -60,11 +58,24 @@ function fetchStatus(vehicleId){
 
 function fetchDispatchOrder(vehicleId){
     
-    
 }
 
-function fetchNotification(notificationId){
-    
+function fetchNotification(){
+        $.ajax({//new ajax request
+        url: "/OpenFleetr/user/dispatcher/notifacion?token=" + localStorage.getItem("token") + "", //to this url
+        type: "GET", //HTTP request type get
+        dataType: "json", //expected return data type json
+        success: fetchNotificationSuccess, //on success, call success
+        error: fetchNotificationError, //on failure, call error
+        complete: fetchNotificationInterval//In all cases, call interval
+    });
+}
+function fetchNotificationSuccess(){
+}
+function fetchNotificationError(){
+	
+}
+function fetchNotificationInterval(){
 }
 function fallbackPolling(event) {
     websocket = false;
