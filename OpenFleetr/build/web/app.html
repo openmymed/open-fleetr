@@ -13,6 +13,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/leaflet.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/bootstrap.css"/>
+
         <link rel="stylesheet" href="css/style.css"/>
         <link rel="stylesheet" href="css/custom.css"/>
 
@@ -23,8 +24,8 @@ and open the template in the editor.
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
     </head>
     <body style="background:white;">
-        <nav class="navbar navbar-expand-lg bg-info">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-md bg-info p-0 m-0" style="height:7vh;">
+            <div class="container-fluid ">
                 <a class="navbar-brand text-light" href="#">Open Fleetr</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -34,6 +35,9 @@ and open the template in the editor.
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName">User</a>
                         </li>	
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="#"><i class="fa fa-gear"></i> <span id="settings">Settings</a>
+                        </li>	 
                         <li class="nav-item dropdown">
                             <a class="nav-link text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
@@ -87,40 +91,37 @@ and open the template in the editor.
                                     <a href="" class="text-light">View All</a>
                                 </li>
                             </ul>
-                        </li>
+                                 
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="container-fluid">
-            <a href="#" data-target="#sidebar" data-toggle="collapse"><i class="fa fa-ambulance fa-2x py-2 p-1"></i></a>
-            <div class="row d-flex d-md-block flex-nowrap wrapper">
-                <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width hide" id="sidebar">
-                    <div class="list-group border-0 card text-center text-md-left">
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+
+        <main id="vehicleMapDiv" class="main p-0 m-0" style="height:93vh ;width: 100%"> 
+            <div class="container-fluid" style="position:relative;left:0;top:0;z-index: 9999">
+                <a href="#" data-target="#sidebar" data-toggle="collapse"><i class="fa fa-ambulance fa-2x py-2 p-1"></i></a>
+                <div class="row d-flex d-md-block flex-nowrap wrapper">
+                    <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width hide" id="sidebar">
+                        <div class="list-group border-0 card text-center text-md-left">
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
+                        </div>
                     </div>
                 </div>
-
             </div>
-            <main id="vehicleMapDiv" class="main" style="height:500px">
-            </main>
-            <!-- Button trigger modal -->
-
-        </div>
+        </main>
         <footer>
-            <div class ="offset-md-4 col-md-4 fixed-bottom">
-                <div id="createCaseForm" class="rounded border-1" style="display:none;background-color: rgba(255, 255, 255, 0.6);">
-                    <form class="form-vertical">
+            <div class ="col-md-4 fixed-bottom mx-auto px-0">
+                <div id="createCaseForm" class="rounded border-1 " style="display:none;background-color: rgba(255, 255, 255, 0.6);">
+                    <form class="form-vertical col-md-12 justify-content-center">
                         <fieldset>
-                            <!-- Text input-->
                             <div class="row form-group">
                                 <div class="col-md-6">
                                     <input id="fullName" name="fullName" type="text" placeholder="Full Name" class="form-control input-md" required="">
@@ -135,7 +136,7 @@ and open the template in the editor.
                                 </div>
                             </div>
                             <div class="form-group">					
-                                <button id="createCaseFormCloseButton" type="button" data-dissmiss class="btn btn-secondary">Close</button>
+                                <button id="createCaseFormCloseButton" type="button" data-dissmiss class="btn btn-secondary ">Close</button>
                                 <button id="createCaseFormConfirmBytton" type="button" class="btn btn-primary">Create</button>
                             </div>	
                         </fieldset>
