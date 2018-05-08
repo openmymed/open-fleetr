@@ -30,7 +30,7 @@ function main() {
 
 }
 
-function parseNotification(event) {
+function parseSocketNotification(event) {
     var json = JSON.parse(event.data);
     switch (json.type) {
         case "location" :
@@ -47,9 +47,7 @@ function parseNotification(event) {
             }
             break;
         case "notification" :
-            for (var key in json.array) {
-                json.array.forEach(fetchNotification);
-            }
+            fetchNotification();
             break;
         default :
             break;
@@ -60,14 +58,6 @@ function fetchStatus(vehicleId) {
 
 }
 
-function fetchDispatchOrder(vehicleId) {
-
-
-}
-
-function fetchNotification(notificationId) {
-
-}
 function fallbackPolling(event) {
     websocket = false;
     updateDrivers();
@@ -281,18 +271,20 @@ function geolocationSuccess(position) {
     console.log(position.coords);
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    vehicleMap = L.map('vehicleMapDiv').setView([latitude, longitude], 13);
+    vehicleMap = L.map('vehicleMapDiv',{zoomControl:false}).setView([latitude, longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
+
 }
 
 function geolocationError() {
     console.log("no gis");
-    vehicleMap = L.map('vehicleMapDiv').setView([31.7683, 35.2137], 13);
+    vehicleMap = L.map('vehicleMapDiv',{zoomControl:false}).setView([31.7683, 35.2137], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
+    
 }
 
 function loadMap() {
@@ -301,6 +293,8 @@ function loadMap() {
     } else {
         geolocationError();
     }
+    
+    
 }
 
 function socketClose(event) {
@@ -333,7 +327,7 @@ function socketConnect() {
     notificationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
     websocket = true;
     notificationSocket.onopen = checkSocketInterval;
-    notificationSocket.onmessage = parseNotification;
+    notificationSocket.onmessage = parseSocketNotification;
     notificationSocket.onerror = socketError;
     notificationSocket.onclose = socketClose;
 }
@@ -355,13 +349,13 @@ function getDispatcherSuccess(data) {
 }
 function getDispatcherError(jqHXR, textStatus, errorThrown) {
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
-    alert("Please log in !"); //alert for a login
-            localStorage.removeItem("token"); //delete the user token from storage
-            $(location).attr('href', '/OpenFleetr'); //go to the home page
+        alert("Please log in !"); //alert for a login
+        localStorage.removeItem("token"); //delete the user token from storage
+        $(location).attr('href', '/OpenFleetr'); //go to the home page
     } else {
-    dispatcherName = "Error"
-    ;
-            document.getElementById("dispatcherName").innerHTML = dispatcherName;
+        dispatcherName = "Error"
+                ;
+        document.getElementById("dispatcherName").innerHTML = dispatcherName;
     }
 
 }
@@ -377,28 +371,29 @@ function requestGeolocationPermission() {
         }
 
     });
+    
 
 }
 
-function createCaseFormDisplayControl(){
+function createCaseFormDisplayControl() {
 
-if(!$('#createCaseForm').is(":visible")){
-    $('#createCaseForm').show();
-    $('#createCaseButton').hide();
-}else{
-    $('#createCaseForm').hide();
-    $('#createCaseButton').show();
-}
+    if (!$('#createCaseForm').is(":visible")) {
+        $('#createCaseForm').show();
+        $('#createCaseButton').hide();
+    } else {
+        $('#createCaseForm').hide();
+        $('#createCaseButton').show();
+    }
 }
 
-function createCase(){
+function createCase() {
     return "ok";
 }
 
-function createCaseFromClose(){
+function createCaseFromClose() {
     $('#fullName').val("");
     $('#phoneNumber').val("");
     $('#notes').val("");
     createCaseFormDisplayControl();
-    
+
 }
