@@ -73,6 +73,13 @@ function fetchNotification(){
 function fetchNotificationSuccess(){
 }
 function fetchNotificationError(){
+    if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
+        alert("Please log in !"); //alert for a login
+        localStorage.removeItem("token"); //delete the user token from storage
+        $(location).attr('href', '/OpenFleetr'); //go to the home page
+    } else {
+      
+    }
 	
 }
 function fetchNotificationInterval(){
