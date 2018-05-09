@@ -14,7 +14,7 @@ and open the template in the editor.
 
         <script type="text/javascript" src="js/leaflet.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript" src="js/app.js"></script>
+        <script type="text/javascript" src="js/admin.js"></script>
         <script type="text/javascript" src="js/popper.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
@@ -28,7 +28,7 @@ and open the template in the editor.
 
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-info">
+        <nav class="navbar navbar-expand-md bg-info">
             <div class="container-fluid">
                 <a class="navbar-brand text-light" href="#">Open Fleetr</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,63 +39,8 @@ and open the template in the editor.
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName">User</a>
                         </li>	
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-bell"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="head text-light bg-info">
-                                    <div class="row">
-                                        <div class="col-lg-12 col-sm-12 col-12">
-                                            <span>Notifications (3)</span>
-                                            <a href="" class="float-right text-light">Mark all as read</a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="notification-box">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div>    
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
-                                <li class="notification-box bg-gray">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
-                                <li class="notification-box">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 			
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
-                                <li class="footer bg-info text-center">
-                                    <a href="" class="text-light">View All</a>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
                 </div>
-            </div>
         </nav>
         <div class="container">
 
@@ -104,87 +49,182 @@ and open the template in the editor.
                 <li><a  data-toggle="tab" href="#Drivers"><i class="fa fa-drivers-license"></i>    Drivers</a></li>
                 <li><a  data-toggle="tab" href="#Vehicles"><i class="fa fa-ambulance"></i>    Vehicles</a></li>
                 <li><a  data-toggle="tab" href="#Jurisdictions"><i class="fa fa-map"></i>   Jurisdictions</a></li>
-                <li><a  data-toggle="tab" href="#APIUsers"><span class="glyphicon glyphicon-user"></span>    API Users</a></li>
+                <li><a  data-toggle="tab" href="#apiUsers"><span class="glyphicon glyphicon-user"></span>    API Users</a></li>
             </ul>
             <div class="tab-content">
                 <div id="Dispatchers" class="tab-pane fade in active">
-                    <br>
                     <h4>Dispatchers Management</h4>
-                    <hr>
-                    <br>
-                    <table style="width:100%">
-                        <tr>
-                            <th>First Name</th><!--Dispatchers first name-->
-                            <th>Last Name</th><!--Dispatchers last name-->
-                            <th>Date Of Birth</th><!--Dispatchers DOB-->
-                            <th>Jurisdictions</th>
-                            <th> </th><!--add/delete-->
-                        </tr>
-                    </table> <!--Dispatchers login table ends here-->
+                    <br/>
+                    <table class="table table-condensed table-bordered table-striped volumes">
+                        <thead>
+                            <tr>
+                                <th>First Name</th><!--Dispatchers first name-->
+                                <th>Last Name</th><!--Dispatchers last name-->
+                                <th>Date Of Birth</th><!--Dispatchers DOB-->
+                                <th>Phone Number</th>
+                                <th>Jurisdictions</th>
+                                <th>User Name</th>
+                                <th>Password</th>
+                                <th> </th><!--add/delete-->
+                            </tr>
+                        </thead>
+                        <tbody id="dispatchersTable">
 
+                        </tbody>
+                        <tfoot id="dispatchersForm">
+                            <tr>
+                                <td>
+                                    <input type="text" name="firstName" id="firstName" placeholder="First Name">
+                                </td>
+                                <td>
+                                    <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+                                </td>
+                                <td>
+                                    <input type="date" name="birthDate" id="birthDate">
+                                </td>
+                                <td>
+                                    <input type="text" name="phoneNumber" id="phoneNumber" placeholder="05xxxxxxxx">
+                                </td>
+                                <td>
+                                    <div>
+                                        <div>
+                                            <div class="button-group">
+                                                <button type="button" class="btn btn-default btn-sm dropdown-toggle fa fa-map" data-toggle="dropdown">&nbsp;Jurisdictions</button>
+                                                <ul class="dropdown-menu" id="jurisdictionSelector">
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="mx-auto justify-content-center"> --- </td>
+                                <td class="mx-auto justify-content-center"> --- </td>
+                                <td>
+                                    <button id="createNewDispatcherFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table> <!--Dispatchers login table ends here-->
                 </div><!--Dispatchers login ends here-->
 
-
                 <div id="Vehicles" class="tab-pane fade">
-                    <br>
                     <h4>Vehicles Management</h4>
-                    <hr>
                     <br>
-                    <table style="width:100%">
-                        <tr>
-                            <th>Vehicle Id</th>
-                            <th>Vehicle Type</th>
-                            <th> </th>
-                        </tr>
+                    <table class="table table-condensed table-bordered table-striped volumes">
+                        <thead>
+                            <tr>
+                                <th>Vehicle Id</th>
+                                <th>Vehicle Type</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehiclesTable">
+
+                        </tbody>
+                        <tfoot id="vehiclesForm">
+                            <tr>
+                                <td> -- </td>
+                                <td>
+                                    <input type="text" name="firstName" id="vehicleType" placeholder="Vehicle Descripton">
+                                </td>
+                                <td>
+                                    <button id="createNewVehicleFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                </td>
+
+                            </tr>
+                        </tfoot>
                     </table> <!--Dispatchers login table ends here-->
                 </div><!--vehicles registration ends here-->
 
                 <div id="Drivers" class="tab-pane fade">
-                    <br>
-                    <h4>Drivers login</h4>
-                    <hr>
-                    <br>
-                    <table style="width:100%">
-                        <tr>
-                            <th>First Name</th><!--Drivers first name-->
-                            <th>Last Name</th><!--Drivers last name-->
-                            <th>Date Of Birth</th><!--Drivers DOB-->
-                            <th>Phone Number</th><!--Drivers E-mail-->
-                            <th>User Name</th>
-                            <th>Password</th>
-                            <th> </th><!--add/delete-->
-                        </tr>
-                    </table> <!--Disptchers login table ends here-->
-                </div><!--Drivers login ends here-->
+                    <h4>Drivers Management</h4>
+                    <>
+                    <table class="table table-condensed table-bordered table-striped volumes">
+                        <thead>
+                            <tr>
+                                <th>First Name</th><!--Dispatchers first name-->
+                                <th>Last Name</th><!--Dispatchers last name-->
+                                <th>Date Of Birth</th><!--Dispatchers DOB-->
+                                <th>Phone Number</th>
+                                <th>User Name</th>
+                                <th>Password</th>
+                                <th> </th><!--add/delete-->
+                            </tr>
+                        </thead>
+                        <tbody id="driversTable">
 
-                <div id="APIUsers" class="tab-pane fade">
-                    <br>
-                    <h4>API Users login</h4>
-                    <hr>
-                    <br>
-                    <table style="width:100%">
-                        <tr>
-                            <th>User ID</th><!--APIUSERS first name-->
-                            <th>Application Name</th><!--APIUSERS last name-->
-                            <th>Maintainer Email</th><!--APIUSERS E-mail-->
-                            <th>API Key</th>
-                            <th> </th><!--add/delete-->
-                        </tr>
-                    </table> <!--APIUSERS login table ends here-->
+                        </tbody>
+                        <tfoot id="driversForm">
+                            <tr>
+                                <td>
+                                    <input type="text" name="firstName" id="firstName" placeholder="First Name">
+                                </td>
+                                <td>
+                                    <input type="text" name="lastName" id="lastName" placeholder="Last Name">
+                                </td>
+                                <td>
+                                    <input type="date" name="birthDate" id="birthDate">
+                                </td>
+                                <td>
+                                    <input type="text" name="phoneNumber" id="phoneNumber" placeholder="05xxxxxxxx">
+                                </td>
 
-                </div><!--API users login ends here-->
+                                <td class="mx-auto justify-content-center"> --- </td>
+                                <td class="mx-auto justify-content-center"> --- </td>
+                                <td>
+                                    <button id="createNewDriverFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table> <!--Dispatchers login table ends here-->
+                </div><!--Dispatchers login ends here-->
 
 
                 <div id="Jurisdictions" class="tab-pane fade">
-                    <br>
                     <h4>Jurisdiction Management</h4>
-                    <hr>
                     <br>
-                    Some map with the add/delete button
+                    
+                    <div id="jurisdictionsMap" style="height:90vh;">
+                        <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
+                        <button id="addNewJurisdiction" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Jurisdiction</button>
+                        
+                        <button id="addNewJurisdiction" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete a Jurisdiction</button>
+                        </div>
+                    </div>
 
                 </div><!--API users login ends here-->
-            </div><!--tab's data ends here-->
+                <div id="apiUsers" class="tab-pane fade">
+                    <h4>API Users Management</h4>
+                    <br/>
+                    <table class="table table-condensed table-bordered table-striped volumes">
+                        <thead>
+                            <tr>
+                                <th>Application Name</th><!--Dispatchers first name-->
+                                <th>Maintainer Email</th><!--Dispatchers last name-->
+                                <th>Token</th><!--Dispatchers DOB-->
+                                <th> </th><!--add/delete-->
+                            </tr>
+                        </thead>
+                        <tbody id="apiUserTable">
 
+                        </tbody>
+                        <tfoot id="apiUserForm">
+                            <tr>
+                                <td>
+                                    <input type="text" name="applicationName" id="firstName" placeholder="Application Name">
+                                </td>
+                                <td>
+                                    <input type="email" name="maintainerEmail" id="lastName" placeholder="Maintainer Email">
+                                </td>                            
+                                <td class="mx-auto justify-content-center"> --- </td>
+                                <td>
+                                    <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table> <!--Dispatchers login table ends here-->
+                </div>
+            </div>
         </div><!--nav-tabs end here-->
 
     </body>
