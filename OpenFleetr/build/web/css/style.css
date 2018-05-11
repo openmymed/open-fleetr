@@ -1,78 +1,61 @@
 /* Below line is used for online Google font */
 @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
 hr{
-margin-bottom: 30px;
-}
-div.container{
-max-width: 1920px;
-max-height: 1080px;
-margin:0 auto;
-font-family: 'Droid Serif', serif;
-padding-bottom:50px;
-padding-left:50px;
-padding-right:50px;
-padding-top:50px;
-}
-div.main{
-background-color: transparent;
-border: 15px solid white;
-box-shadow: 0 0 10px;
-border-radius: 2px;
-font-size: 13px;
+    margin-bottom: 30px;
 }
 input[type=text],[type=password] {
-width: 97.7%;
-height: 34px;
-padding-left: 5px;
-margin-bottom: 20px;
-margin-top: 8px;
-box-shadow: 0 0 5px #00F5FF;
-border: 2px solid #00F5FF;
-color: #4f4f4f;
-font-size: 16px;
+    width: 97.7%;
+    height: 34px;
+    padding-left: 5px;
+    margin-bottom: 20px;
+    margin-top: 8px;
+    box-shadow: 0 0 5px #00F5FF;
+    border: 2px solid #00F5FF;
+    color: #4f4f4f;
+    font-size: 16px;
 }
 label{
-color: #464646;
-text-shadow: 0 1px 0 #fff;
-font-size: 14px;
-font-weight: bold;
+    color: #464646;
+    text-shadow: 0 1px 0 #fff;
+    font-size: 14px;
+    font-weight: bold;
 }
 #login {
-width: 100%;
-background: linear-gradient(#22abe9 5%, #36caf0 100%);
-border: 1px solid #0F799E;
-font-size: 20px;
-margin-top: 15px;
-padding: 8px;
-font-weight: bold;
-cursor: pointer;
-color: white;
-text-shadow: 0px 1px 0px #13506D;
+    width: 100%;
+    background: linear-gradient(#22abe9 5%, #36caf0 100%);
+    border: 1px solid #0F799E;
+    font-size: 20px;
+    margin-top: 15px;
+    padding: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    text-shadow: 0px 1px 0px #13506D;
 }
 #login:hover{
-background: linear-gradient(#36caf0 5%, #22abe9 100%);
+    background: linear-gradient(#36caf0 5%, #22abe9 100%);
 }
 .logo {
-padding-right:25px;
-padding-left:25px;
-padding-bottom:30px;
-width: 150px;
-margin-left:auto;
-margin-right:auto;
+    padding-right:25px;
+    padding-left:25px;
+    padding-bottom:30px;
+    width: 150px;
+    margin-left:auto;
+    margin-right:auto;
 
 }
 .footer {
     width: 100%;
     text-align: center;
-	padding-top:5px;
+    padding-top:5px;
 }
 .footer::before {
-	content: "Powered by Open-Fleetr ©.";
+    content: "Powered by Open-Fleetr ©.";
 }
 .icon{
-margin-bottom:10px;
-margin-left:5px;
-margin-right:5px;
+    margin-bottom:10px;
+    margin-left:5px;
+    margin-right:5px;
 }
 .top {
     width:100%;
@@ -81,11 +64,50 @@ margin-right:5px;
 }
 
 .side {
-  padding: 0px;
-  -webkit-transform: translate(-270px, 0);
-  -moz-transform: translate(-270px, 0);
-  -ms-transform: translate(-270px, 0);
-  -o-transform: translate(-270px, 0);
-  transform: translate(-270px, 0);
+    padding: 0px;
+    -webkit-transform: translate(-270px, 0);
+    -moz-transform: translate(-270px, 0);
+    -ms-transform: translate(-270px, 0);
+    -o-transform: translate(-270px, 0);
+    transform: translate(-270px, 0);
 }
-.footer
+.footer{
+
+}
+
+
+.sidebar {
+    pointer-events: autp;
+    z-index:9999;
+    top:0;
+    left:0px;
+    position:absolute;
+    height:100%;
+    background:white;
+    width:10vw;
+    opacity:.85;
+}
+
+.sidebar-icon{
+    pointer-events: auto;
+}
+
+.sidebar-item{
+    pointer-events: auto;
+    vertical-align:middle;
+    padding-top: 2.5vh;
+    padding-bottom: 2.5vh;
+    border-width: 2;
+    border-style: solid;
+    border-top-width: 0px;
+    font-size: 3vh;
+    display:block;
+}
+
+
+.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;
+}

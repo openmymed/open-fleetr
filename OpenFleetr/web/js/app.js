@@ -16,6 +16,7 @@ var updateStatusesTimeout;
 $(document).ready(main);
 
 function main() {
+    var pop = new Popper($('#createCaseButton'),$('#createCaseForm'),{placement:'right'});
     $('#createCaseButton').click(createCaseFormDisplayControl);
     $('#createCaseFormCloseButton').click(createCaseFromClose);
     $('#createCaseFormConfirmButton').click(createCase);
@@ -373,10 +374,8 @@ function requestGeolocationPermission() {
 function createCaseFormDisplayControl() {
     if (!$('#createCaseForm').is(":visible")) {
         $('#createCaseForm').show();
-        $('#createCaseButton').hide();
     } else {
         $('#createCaseForm').hide();
-        $('#createCaseButton').show();
     }
 }
 

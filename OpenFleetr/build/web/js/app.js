@@ -16,6 +16,7 @@ var updateStatusesTimeout;
 $(document).ready(main);
 
 function main() {
+    var pop = new Popper($('#createCaseButton'),$('#createCaseForm'),{placement:'right'});
     $('#createCaseButton').click(createCaseFormDisplayControl);
     $('#createCaseFormCloseButton').click(createCaseFromClose);
     $('#createCaseFormConfirmButton').click(createCase);
@@ -25,8 +26,6 @@ function main() {
     updateStatuses();
     getDispatcher();
     socketConnect();
-
-
 
 }
 
@@ -54,9 +53,6 @@ function parseSocketNotification(event) {
     }
 }
 
-function fetchStatus(vehicleId) {
-
-}
 
 function fallbackPolling(event) {
     websocket = false;
@@ -376,13 +372,10 @@ function requestGeolocationPermission() {
 }
 
 function createCaseFormDisplayControl() {
-
     if (!$('#createCaseForm').is(":visible")) {
         $('#createCaseForm').show();
-        $('#createCaseButton').hide();
     } else {
         $('#createCaseForm').hide();
-        $('#createCaseButton').show();
     }
 }
 
@@ -396,4 +389,51 @@ function createCaseFromClose() {
     $('#notes').val("");
     createCaseFormDisplayControl();
 
+}
+function fetchNotification() {
+	    $.ajax({
+        url: "/OpenFleetr/user/driver?token=" + localStorage.getItem("token") + "",
+        type: "GET",
+        dataType: "json",
+        success: fetchNotificationSuccess,
+        error: fetchNotificationError,
+        complete: fetchNotificationInterval
+    });
+}
+function fetchNotificationSuccess(){
+//	for (var i in data) {
+		//var json = JSON.parse(data[i]);
+//	}	
+}
+function test() {
+	var arr = ["bob", "12.1231", "12.2312"] 
+	let notifBox = document.createElement("li");
+	notifBox.className = "notification-box";
+	notifBox.setAttribute("onlcick", "notifcationCreateCase()");
+	let col1 = document.createElement("div");
+	col1.className = "col-lg-1 col-sm-1 col-1 text-center";
+	let col2 = document.createElement("div");
+	col2.className = "col-lg-8 col-sm-8 col-8";
+	let name =  document.createElement("strong");
+	name.className = "text-info";
+	name.innerHTML =  ""+ arr[0];
+	let div = document.createElement("div");
+	div.innerHTML = "An emergency notification has been posted";
+	let location = document.createElement("small");
+	location.className = "text-warning";
+	location.innerHTML = "Location: " + arr[1].toString() + ", "+arr[2].toString();
+	col2.appendChild(name);
+	col2.appendChild(div);
+	col2.appendChild(location);
+	notifBox.appendChild(col1);
+	notifBox.appendChild(col2);
+	var ul = document.getElementById("notis");
+	ul.insertBefore(notifBox, ul.children[ul.children.length-1]);
+}
+function notificationCreateCase(){
+	$(document).ready(function(){
+    $("li").click(function(){
+        $(this).hide();
+    });
+});
 }
