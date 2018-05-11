@@ -13,7 +13,6 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/leaflet.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/bootstrap.css"/>
-
         <link rel="stylesheet" href="css/style.css"/>
         <link rel="stylesheet" href="css/custom.css"/>
 
@@ -23,7 +22,7 @@ and open the template in the editor.
         <script type="text/javascript" src="js/popper.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
     </head>
-    <body style="background:white;">
+    <body style="background:white;" onload="test();">
         <nav class="navbar navbar-expand-md bg-info p-0 m-0" style="height:7vh;">
             <div class="container-fluid ">
                 <a class="navbar-brand text-light" href="#">Open Fleetr</a>
@@ -38,20 +37,20 @@ and open the template in the editor.
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#"><i class="fa fa-gear"></i> <span id="settings">Settings</a>
                         </li>	 
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown" >
                             <a class="nav-link text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu"  id="notis" >
                                 <li class="head text-light bg-info">
                                     <div class="row">
                                         <div class="col-lg-12 col-sm-12 col-12">
-                                            <span>Notifications (3)</span>
-                                            <a href="" class="float-right text-light">Mark all as read</a>
+                                            <span>Notifications</span>
+                                            <!-- <a href="" class="float-right text-light">Mark all as read</a> -->
                                         </div>
                                     </div>
                                 </li>
-                                <li class="notification-box">
+<!--                            <li class="notification-box">
                                     <div class="row">
                                         <div class="col-lg-1 col-sm-1 col-1 text-center"></div>    
                                         <div class="col-lg-8 col-sm-8 col-8">
@@ -74,21 +73,9 @@ and open the template in the editor.
                                             <small class="text-warning">27.11.2015, 15:00</small>
                                         </div>    
                                     </div>
-                                </li>
-                                <li class="notification-box">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 			
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
+                                </li> -->
                                 <li class="footer bg-info text-center">
-                                    <a href="" class="text-light">View All</a>
+                                    <!-- <a href="" class="text-light">View All</a> -->
                                 </li>
                             </ul>
                                  
