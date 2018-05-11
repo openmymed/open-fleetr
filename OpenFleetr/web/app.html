@@ -58,46 +58,44 @@ and open the template in the editor.
             </div>
         </nav>
 
-        <div  class="container-fluid p-0 m-0" > 
-            <div class="row p-0 m-0">
-                <div id="vehicleMapDiv" class="col-md-12 p-0 m-0" style="height:93vh;">
-                    <div id="sidebar" class="p-0 m-0 sidebar">
-                        <a href="#"  class="sidebar-item"><i class="fa fa-lg fa-ambulance sidebar-icon"></i> Vehicles</a>
-
-                        <a href="#"  id="createCaseButton" class="sidebar-item"><i class="fa fa-lg fa-plus sidebar-icon "></i> New Case</a>
-                    </div>
-
-                </div>
+        <main class="p-0 m-0" > 
+            <div id="sidebar" class="p-0 m-0 sidebar">
+                <a href="#" id="ambulanceStatusesButton" class="sidebar-item"><i class="fa fa-lg fa-ambulance sidebar-icon"></i></a>
+                <a href="#" id="createCaseButton" class="sidebar-item"><i class="fa fa-lg fa-plus sidebar-icon "></i></a>
+                <a href="#" id="hospitalsButton" class="sidebar-item"><i class="fa fa-lg fa-h-square sidebar-icon "></i></a>
+                <a href="#" id="jurisdictionsToggle" class="sidebar-item"><i class="fa fa-lg fa-map sidebar-icon"></i></a>
             </div>
-        </div>
-        
-         <div id="createCaseForm" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
-                <form class="px-1 mx-1">
-                    <fieldset>
+            <div id="vehicleMapDiv" class="p-0 m-0" style="height:93vh;">
+            </div>
+        </main>
+
+        <div id="createCaseForm" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
+            <form class="py-1 my-1">
+                <fieldset>
+                    <div>
                         <div>
-                            <div>
-                                <input id="fullName" name="fullName" type="text" placeholder="Full Name" class="form-control input-md" required="">
-                            </div>
-                            <div>
-                                <input id="phoneNumber" name="phoneNumber" type="text" placeholder="Phone Number" class="form-control input-md" required="">
-                            </div>
+                            <input id="fullName" name="fullName" type="text" placeholder="Full Name" class="form-control input-md" required="">
                         </div>
-                        <div >
-                            <div>                     
-                                <input id="notes" name="notes" placeholder="Notes" type="text" class="form-control input-md" >
-                            </div>
+                        <div>
+                            <input id="phoneNumber" name="phoneNumber" type="text" placeholder="Phone Number" class="form-control input-md" required="">
                         </div>
-                        <br/>
+                        <div>                     
+                            <input id="notes" name="notes" placeholder="Notes" type="text" class="form-control input-md" >
+                        </div>
                         <div class="form-group">					
-                            <button id="createCaseFormCloseButton" type="button" data-dissmiss class="btn btn-secondary alignleft">Close</button>
-                            <button id="createCaseFormConfirmBytton" type="button" class="btn btn-primary alignright">Create</button>
+                            <button id="createCaseFormCloseButton" type="button" data-dissmiss class="py-1 my-1 btn btn-secondary alignleft">Close</button>
+                            <button id="createCaseFormConfirmBytton" type="button" class="py-1 my-1 btn btn-primary alignright">Create</button>
                         </div>
-                    </fieldset>
-                    <br/>
-                </form>
-            </div>     
-        <footer>
-           
-        </footer>
+                </fieldset>
+                <br/>
+            </form>
+        </div>    
+        <div id="ambulanceStatusesList" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
+            Lorem ipsum 1
+        </div>
+
+        <div id="hospitalsList" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
+            Lorem ipsum 2
+        </div>
     </body>
 </html>

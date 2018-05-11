@@ -77,37 +77,33 @@ label{
 
 
 .sidebar {
-    pointer-events: autp;
     z-index:9999;
-    top:0;
+    top:7vh;
     left:0px;
     position:absolute;
-    height:100%;
+    height:93vh;
     background:white;
-    width:10vw;
+    width:3vw;
     opacity:.85;
 }
 
 .sidebar-icon{
-    pointer-events: auto;
 }
 
 .sidebar-item{
-    pointer-events: auto;
-    vertical-align:middle;
+    text-align: center;
+    vertical-align: middle;
     padding-top: 2.5vh;
     padding-bottom: 2.5vh;
-    border-width: 2;
-    border-style: solid;
-    border-top-width: 0px;
     font-size: 3vh;
     display:block;
 }
 
 
-.alignleft {
-	float: left;
+.alignleft{
+    float:left;
 }
-.alignright {
-	float: right;
+
+.alignright{
+    float:right;
 }
