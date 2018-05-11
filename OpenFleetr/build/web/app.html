@@ -13,17 +13,16 @@ and open the template in the editor.
         <link rel="stylesheet" href="css/leaflet.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/bootstrap.css"/>
-
         <link rel="stylesheet" href="css/style.css"/>
         <link rel="stylesheet" href="css/custom.css"/>
-
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/leaflet.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
-        <script type="text/javascript" src="js/popper.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
     </head>
-    <body style="background:white;">
+    <body style="background:white;" onload="test();">
         <nav class="navbar navbar-expand-md bg-info p-0 m-0" style="height:7vh;">
             <div class="container-fluid ">
                 <a class="navbar-brand text-light" href="#">Open Fleetr</a>
@@ -38,116 +37,65 @@ and open the template in the editor.
                         <li class="nav-item">
                             <a class="nav-link text-light" href="#"><i class="fa fa-gear"></i> <span id="settings">Settings</a>
                         </li>	 
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown" >
                             <a class="nav-link text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu"  id="notis" >
                                 <li class="head text-light bg-info">
                                     <div class="row">
                                         <div class="col-lg-12 col-sm-12 col-12">
-                                            <span>Notifications (3)</span>
-                                            <a href="" class="float-right text-light">Mark all as read</a>
+                                            <span>Notifications</span>
+                                            <!-- <a href="" class="float-right text-light">Mark all as read</a> -->
                                         </div>
                                     </div>
                                 </li>
-                                <li class="notification-box">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div>    
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
-                                <li class="notification-box bg-gray">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
-                                <li class="notification-box">
-                                    <div class="row">
-                                        <div class="col-lg-1 col-sm-1 col-1 text-center"></div> 			
-                                        <div class="col-lg-8 col-sm-8 col-8">
-                                            <strong class="text-info">API User</strong>
-                                            <div>
-                                                An emergency was posted throught the API.
-                                            </div>
-                                            <small class="text-warning">27.11.2015, 15:00</small>
-                                        </div>    
-                                    </div>
-                                </li>
                                 <li class="footer bg-info text-center">
-                                    <a href="" class="text-light">View All</a>
                                 </li>
-                            </ul>
-                                 
+                            </ul>                       
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <main id="vehicleMapDiv" class="main p-0 m-0" style="height:93vh ;width: 100%"> 
-            <div class="container-fluid" style="position:relative;left:0;top:0;z-index: 9999">
-                <a href="#" data-target="#sidebar" data-toggle="collapse"><i class="fa fa-ambulance fa-2x py-2 p-1"></i></a>
-                <div class="row d-flex d-md-block flex-nowrap wrapper">
-                    <div class="col-md-3 float-left col-1 pl-0 pr-0 collapse width hide" id="sidebar">
-                        <div class="list-group border-0 card text-center text-md-left">
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                            <a href="#" class="list-group-item d-inline-block collapsed" data-parent="#sidebar"><i class="fa fa-ambulance"></i> <span class="d-none d-md-inline">Ambulance</span></a>
-                        </div>
-                    </div>
-                </div>
+        <main class="p-0 m-0" > 
+            <div id="sidebar" class="p-0 m-0 sidebar">
+                <a href="#" id="ambulanceStatusesButton" class="sidebar-item"><i class="fa fa-lg fa-ambulance sidebar-icon"></i></a>
+                <a href="#" id="createCaseButton" class="sidebar-item"><i class="fa fa-lg fa-plus sidebar-icon "></i></a>
+                <a href="#" id="hospitalsButton" class="sidebar-item"><i class="fa fa-lg fa-h-square sidebar-icon "></i></a>
+                <a href="#" id="jurisdictionsToggle" class="sidebar-item"><i class="fa fa-lg fa-map sidebar-icon"></i></a>
+            </div>
+            <div id="vehicleMapDiv" class="p-0 m-0" style="height:93vh;">
             </div>
         </main>
-        <footer>
-            <div class ="col-md-4 fixed-bottom mx-auto px-0">
-                <div id="createCaseForm" class="rounded border-1 " style="display:none;background-color: rgba(255, 255, 255, 0.6);">
-                    <form class="form-vertical col-md-12 justify-content-center">
-                        <fieldset>
-                            <div class="row form-group">
-                                <div class="col-md-6">
-                                    <input id="fullName" name="fullName" type="text" placeholder="Full Name" class="form-control input-md" required="">
-                                </div>
-                                <div class="col-md-6">
-                                    <input id="phoneNumber" name="phoneNumber" type="text" placeholder="Phone Number" class="form-control input-md" required="">
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-md-12">                     
-                                    <textarea class="form-control" id="notes" name="notes" placeholder="Notes"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">					
-                                <button id="createCaseFormCloseButton" type="button" data-dissmiss class="btn btn-secondary ">Close</button>
-                                <button id="createCaseFormConfirmBytton" type="button" class="btn btn-primary">Create</button>
-                            </div>	
-                        </fieldset>
-                    </form>
-                </div>        
-                <div class="d-flex justify-content-center" > 
-                    <button id="createCaseButton" class="btn btn-primary">
-                        Create Case
-                    </button>
-                </div>
-            </div>
-        </footer>
+
+        <div id="createCaseForm" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
+            <form class="py-1 my-1">
+                <fieldset>
+                    <div>
+                        <div>
+                            <input id="fullName" name="fullName" type="text" placeholder="Full Name" class="form-control input-md" required="">
+                        </div>
+                        <div>
+                            <input id="phoneNumber" name="phoneNumber" type="text" placeholder="Phone Number" class="form-control input-md" required="">
+                        </div>
+                        <div>                     
+                            <input id="notes" name="notes" placeholder="Notes" type="text" class="form-control input-md" >
+                        </div>
+                        <div class="form-group">					
+                            <button id="createCaseFormCloseButton" type="button" data-dissmiss class="py-1 my-1 btn btn-secondary alignleft">Close</button>
+                            <button id="createCaseFormConfirmBytton" type="button" class="py-1 my-1 btn btn-primary alignright">Create</button>
+                        </div>
+                </fieldset>
+                <br/>
+            </form>
+        </div>    
+        <div id="ambulanceStatusesList" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
+            Lorem ipsum 1
+        </div>
+
+        <div id="hospitalsList" style="z-index:9999;display:none;background-color: rgba(255, 255, 255, 0.85);">
+            Lorem ipsum 2
+        </div>
     </body>
 </html>

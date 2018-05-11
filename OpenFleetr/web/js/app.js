@@ -12,13 +12,23 @@ var websocket = false;
 var updateDriversTimeout;
 var updateLocationsTimeout;
 var updateStatusesTimeout;
-
+var handling;
 $(document).ready(main);
 
 function main() {
+
+    var createCaseFormPopper = new Popper($('#createCaseButton'), $('#createCaseForm'), {placement: 'right'});
+    var ambulanceStatusesPopper = new Popper($('#ambulanceStatusesButton'), $('#ambulanceStatusesList'), {placement: 'right'});
+    var hospitalListPopper = new Popper($('#hospitalsButton'), $('#hospitalsList'), {placement: 'right'});
+
     $('#createCaseButton').click(createCaseFormDisplayControl);
     $('#createCaseFormCloseButton').click(createCaseFromClose);
     $('#createCaseFormConfirmButton').click(createCase);
+    $('#ambulanceStatusesButton').click(ambulancesListControl);
+    $('#hospitalsButton').click(hospitalsListControl);
+    $('#jurisdictionsToggle').click(jurisdictionsToggleControl);
+
+
     requestGeolocationPermission();
     updateDrivers();
     updateLocations(); //start refreshing the vehicle locations
@@ -28,6 +38,36 @@ function main() {
 
 }
 
+function closeAll() {
+    if (!handling) {
+        $('#createCaseForm').hide();
+        $('#ambulanceStatusesList').hide();
+        $('#hospitalsList').hide();
+    }
+}
+
+function ambulancesListControl() {
+    if (!$('#ambulanceStatusesList').is(":visible")) {
+        closeAll();
+        $('#ambulanceStatusesList').show();
+    } else {
+        $('#ambulanceStatusesList').hide();
+    }
+
+}
+
+function hospitalsListControl() {
+    if (!$('#hospitalsList').is(":visible")) {
+        closeAll();
+        $('#hospitalsList').show();
+    } else {
+        $('#hospitalsList').hide();
+    }
+}
+
+function jurisdictionsToggleControl() {
+
+}
 function parseSocketNotification(event) {
     var json = JSON.parse(event.data);
     switch (json.type) {
@@ -266,20 +306,22 @@ function geolocationSuccess(position) {
     console.log(position.coords);
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    vehicleMap = L.map('vehicleMapDiv',{zoomControl:false}).setView([latitude, longitude], 13);
+    vehicleMap = L.map('vehicleMapDiv', {zoomControl: false}).setView([latitude, longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
+    vehicleMap.on('click', closeAll);
 
 }
 
 function geolocationError() {
     console.log("no gis");
-    vehicleMap = L.map('vehicleMapDiv',{zoomControl:false}).setView([31.7683, 35.2137], 13);
+    vehicleMap = L.map('vehicleMapDiv', {zoomControl: false}).setView([31.7683, 35.2137], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
-    
+    vehicleMap.on('click', closeAll);
+
 }
 
 function loadMap() {
@@ -288,8 +330,8 @@ function loadMap() {
     } else {
         geolocationError();
     }
-    
-    
+
+
 }
 
 function socketClose(event) {
@@ -366,17 +408,16 @@ function requestGeolocationPermission() {
         }
 
     });
-    
+
 
 }
 
 function createCaseFormDisplayControl() {
     if (!$('#createCaseForm').is(":visible")) {
+        closeAll();
         $('#createCaseForm').show();
-        $('#createCaseButton').hide();
     } else {
         $('#createCaseForm').hide();
-        $('#createCaseButton').show();
     }
 }
 
@@ -392,7 +433,7 @@ function createCaseFromClose() {
 
 }
 function fetchNotification() {
-	    $.ajax({
+    $.ajax({
         url: "/OpenFleetr/user/driver?token=" + localStorage.getItem("token") + "",
         type: "GET",
         dataType: "json",
@@ -401,40 +442,40 @@ function fetchNotification() {
         complete: fetchNotificationInterval
     });
 }
-function fetchNotificationSuccess(){
+function fetchNotificationSuccess() {
 //	for (var i in data) {
-		//var json = JSON.parse(data[i]);
+    //var json = JSON.parse(data[i]);
 //	}	
 }
 function test() {
-	var arr = ["bob", "12.1231", "12.2312"] 
-	let notifBox = document.createElement("li");
-	notifBox.className = "notification-box";
-	notifBox.setAttribute("onlcick", "notifcationCreateCase()");
-	let col1 = document.createElement("div");
-	col1.className = "col-lg-1 col-sm-1 col-1 text-center";
-	let col2 = document.createElement("div");
-	col2.className = "col-lg-8 col-sm-8 col-8";
-	let name =  document.createElement("strong");
-	name.className = "text-info";
-	name.innerHTML =  ""+ arr[0];
-	let div = document.createElement("div");
-	div.innerHTML = "An emergency notification has been posted";
-	let location = document.createElement("small");
-	location.className = "text-warning";
-	location.innerHTML = "Location: " + arr[1].toString() + ", "+arr[2].toString();
-	col2.appendChild(name);
-	col2.appendChild(div);
-	col2.appendChild(location);
-	notifBox.appendChild(col1);
-	notifBox.appendChild(col2);
-	var ul = document.getElementById("notis");
-	ul.insertBefore(notifBox, ul.children[ul.children.length-1]);
+    var arr = ["bob", "12.1231", "12.2312"]
+    let notifBox = document.createElement("li");
+    notifBox.className = "notification-box";
+    notifBox.setAttribute("onlcick", "notifcationCreateCase()");
+    let col1 = document.createElement("div");
+    col1.className = "col-lg-1 col-sm-1 col-1 text-center";
+    let col2 = document.createElement("div");
+    col2.className = "col-lg-8 col-sm-8 col-8";
+    let name = document.createElement("strong");
+    name.className = "text-info";
+    name.innerHTML = "" + arr[0];
+    let div = document.createElement("div");
+    div.innerHTML = "An emergency notification has been posted";
+    let location = document.createElement("small");
+    location.className = "text-warning";
+    location.innerHTML = "Location: " + arr[1].toString() + ", " + arr[2].toString();
+    col2.appendChild(name);
+    col2.appendChild(div);
+    col2.appendChild(location);
+    notifBox.appendChild(col1);
+    notifBox.appendChild(col2);
+    var ul = document.getElementById("notis");
+    ul.insertBefore(notifBox, ul.children[ul.children.length - 1]);
 }
-function notificationCreateCase(){
-	$(document).ready(function(){
-    $("li").click(function(){
-        $(this).hide();
+function notificationCreateCase() {
+    $(document).ready(function () {
+        $("li").click(function () {
+            $(this).hide();
+        });
     });
-});
 }
