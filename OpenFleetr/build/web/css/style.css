@@ -114,10 +114,16 @@ label{
     display:none;
     background-color:white;
     opacity:.85;
-    padding:2vw;
-    
+    padding:2vw;  
     border : 1px #005cbf solid;
     border-left:0px;
     border-radius:  0px  7pt 7pt 0px;
         
+}
+
+.login-form {
+    border : 1px #005cbf solid;
+    border-radius : 7pt;
+    background-color:#ccccff;
+    padding:1vw;
 }
