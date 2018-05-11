@@ -17,7 +17,9 @@ public class CurrentDispatchOrderEntity extends BasicEntity {
   double startLongitude;
   double destinationLatitude;
   double destinationLongitude;
+  long destinationHospitalId;
   Date creationDate;
+  Date completionDate;
   long vehicleId;
   long caseId;
   long status;

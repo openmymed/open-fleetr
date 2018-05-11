@@ -85,6 +85,7 @@ label{
     background:white;
     width:3vw;
     opacity:.85;
+    border-right : 1px #005cbf solid;
 }
 
 .sidebar-icon{
@@ -106,4 +107,17 @@ label{
 
 .alignright{
     float:right;
+}
+
+.sidebar-popper{
+    z-index:10000;
+    display:none;
+    background-color:white;
+    opacity:.85;
+    padding:2vw;
+    
+    border : 1px #005cbf solid;
+    border-left:0px;
+    border-radius:  0px  7pt 7pt 0px;
+        
 }
