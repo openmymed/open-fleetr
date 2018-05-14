@@ -442,10 +442,10 @@ function fetchNotification() {
         complete: fetchNotificationInterval
     });
 }
-function fetchNotificationSuccess() {
+function fetchNotificationSuccess(data) {
 //	for (var i in data) {
     //var json = JSON.parse(data[i]);
-//	}	
+//	}	currently function is in test()
 }
 function test() {
     var arr = ["bob", "12.1231", "12.2312"]
@@ -472,10 +472,23 @@ function test() {
     var ul = document.getElementById("notis");
     ul.insertBefore(notifBox, ul.children[ul.children.length - 1]);
 }
-function notificationCreateCase() {
+function notificationCreateCase() { //TODO create casses by clicking on a notification
     $(document).ready(function () {
         $("li").click(function () {
             $(this).hide();
         });
     });
 }
+function createDispatcher(){
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/user/dispatcher/manager/"+ "?token=" + localStorage.getItem("token") + "", //to this url
+        type: "POST", //HTTP request type get
+        data: "json", //Data sent to the server
+        success: function(response){
+			
+			
+			
+		}, //on success, call updateLocationsSuccess
+        error: createDispatcherError //on failure, call updateLocationsFailure
+}
+
