@@ -72,7 +72,8 @@ and open the template in the editor.
                         <tbody id="dispatchersTable">
 
                         </tbody>
-                        <tfoot id="dispatchersForm">
+                        <tfoot>
+							<form id="dispatchersForm" method="post" action="">
                             <tr>
                                 <td>
                                     <input type="text" name="firstName" id="firstName" placeholder="First Name">
@@ -92,7 +93,6 @@ and open the template in the editor.
                                             <div class="button-group">
                                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle fa fa-map" data-toggle="dropdown">&nbsp;Jurisdictions</button>
                                                 <ul class="dropdown-menu" id="jurisdictionSelector">
-
                                                 </ul>
                                             </div>
                                         </div>
@@ -101,9 +101,10 @@ and open the template in the editor.
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td>
-                                    <button id="createNewDispatcherFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                    <button id="createNewDispatcherFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createDispatcher()"></button>
                                 </td>
                             </tr>
+							</form>
                         </tfoot>
                     </table> <!--Dispatchers login table ends here-->
                 </div><!--Dispatchers login ends here-->
@@ -122,17 +123,18 @@ and open the template in the editor.
                         <tbody id="vehiclesTable">
 
                         </tbody>
-                        <tfoot id="vehiclesForm">
+                        <tfoot>
+						<form id="vehiclesForm" method="post" action="">
                             <tr>
                                 <td> -- </td>
                                 <td>
                                     <input type="text" name="firstName" id="vehicleType" placeholder="Vehicle Descripton">
                                 </td>
                                 <td>
-                                    <button id="createNewVehicleFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                    <button id="createNewVehicleFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createVehicle()></button>
                                 </td>
-
                             </tr>
+							</form>
                         </tfoot>
                     </table> <!--Dispatchers login table ends here-->
                 </div><!--vehicles registration ends here-->
@@ -155,7 +157,8 @@ and open the template in the editor.
                         <tbody id="driversTable">
 
                         </tbody>
-                        <tfoot id="driversForm">
+                        <tfoot>
+						<form id="driversForm" action="" method="post">
                             <tr>
                                 <td>
                                     <input type="text" name="firstName" id="firstName" placeholder="First Name">
@@ -173,9 +176,10 @@ and open the template in the editor.
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td>
-                                    <button id="createNewDriverFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                    <button id="createNewDriverFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createDriver()"></button>
                                 </td>
                             </tr>
+							</form>
                         </tfoot>
                     </table> <!--Dispatchers login table ends here-->
                 </div><!--Dispatchers login ends here-->
@@ -229,7 +233,7 @@ and open the template in the editor.
                                 </td>                            
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td>
-                                    <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"></button>
+                                    <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createApiUser()"></button>
                                 </td>
                             </tr>
                         </tfoot>
@@ -237,6 +241,5 @@ and open the template in the editor.
                 </div>
             </div>
         </div><!--nav-tabs end here-->
-
     </body>
 </html>
