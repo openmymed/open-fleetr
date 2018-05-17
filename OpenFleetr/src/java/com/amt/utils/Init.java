@@ -28,10 +28,10 @@ public class Init extends Initialization {
 
     @Override
     public void onInit() {
-        Access.setHost("10.149.162.83");
+        Access.setHost("localhost");
         Access.setDatabase("OpenFleetr");
         Access.setUsername("app_user");
-        Access.setPassword("pass1234");
+        Access.setPassword("app_password");
         Access.pool.initialize(5);
         locationPoll = (new Thread(new CurrentLocationEntityCacheManager()));
         statusPoll = (new Thread(new CurrentStatusEntityCacheManager()));
