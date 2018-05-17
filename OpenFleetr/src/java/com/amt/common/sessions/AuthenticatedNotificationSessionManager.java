@@ -46,13 +46,16 @@ public class AuthenticatedNotificationSessionManager {
     }
 
     public synchronized static void setTokenAreaId(long areaId, String token) {
-        AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(areaId).add(token);
+      if(!AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.containsKey(areaId)){
+          AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.put(areaId, new ArrayList<>());    
+      }
+      AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(areaId).add(token);
 
     }
 
     public synchronized static void removeTokenGeographicalArea(String token) {
 
-        Set<Long> keySet = geographicalAreas.keySet();
+        Set<Long> keySet = AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.keySet();
         for (Long key : keySet) {
             while (AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(key).remove(token)) {
             }
@@ -76,7 +79,7 @@ public class AuthenticatedNotificationSessionManager {
     }
 
     public synchronized static void addUserSession(String token, UserSession userSession) {
-        if (userSessions.containsKey(token)) {
+        if (AuthenticatedNotificationSessionManager.getInstance().userSessions.containsKey(token)) {
             try {
                 userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "User already has a connection"));
             } catch (IOException ex) {

@@ -33,29 +33,32 @@ import org.json.simple.JSONObject;
  */
 @ServerEndpoint("/notifications/{token}")
 public class NotificationsEndpoint {
-    
+
     @OnOpen
     public void open(@PathParam("token") String token, Session session) {
         JSONObject user;
         try {
             user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
-            if ((long) user.get("level") >= 2) {
+            System.out.println(user);
+            long level = (long) user.get("level");
+            System.out.println(level);
+            if (level > 2) {
                 UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 AuthenticatedNotificationSessionManager.addUserSession(token, userSession);
-                
+
                 JSONObject query1 = new JSONObject();
-                query1.put("userId", user);
+                query1.put("userId", user.get("id"));
                 JSONObject dispatcher = Persistence.readByProperties(DispatcherEntity.class, query1);
                 
                 JSONObject query2 = new JSONObject();
-                query1.put("dispatcherId", dispatcher.get("id"));
-                JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query1);
-                
+                query2.put("dispatcherId", dispatcher.get("id"));
+                JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query2);
+
                 for (Object key : jurisdictions.keySet()) {
                     JSONObject jurisdiction = (JSONObject) jurisdictions.get(key);
-                   AuthenticatedNotificationSessionManager.setTokenAreaId((long) jurisdiction.get("geographicalAreaId"), token);
+                    AuthenticatedNotificationSessionManager.setTokenAreaId((long) jurisdiction.get("geographicalAreaId"), token);
                 }
-                
+
             } else {
                 throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
             }
@@ -63,28 +66,28 @@ public class NotificationsEndpoint {
             try {
                 session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));
             } catch (IOException ex1) {
-                
+
             }
         }
-        
+
     }
-    
+
     @OnClose
     public void close(Session session) {
         Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
         for (String token : tokens) {
             UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
             if (userSession.getToken().equals(token)) {
-                close(token);
+                DoClose(token);
             }
         }
     }
 
-    public void close(String token) {
+    public void DoClose(String token) {
         UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
         AuthenticatedNotificationSessionManager.lock(token);
         try {
-            userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));            
+            userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));
         } catch (IOException ex) {
             Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -92,11 +95,11 @@ public class NotificationsEndpoint {
             AuthenticatedNotificationSessionManager.removeTokenGeographicalArea(token);
             AuthenticatedNotificationSessionManager.unlock(token);
         }
-        
+
     }
-    
+
     public NotificationsEndpoint() {
-        
+
     }
-    
+
 }
