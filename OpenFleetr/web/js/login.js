@@ -38,7 +38,11 @@ function loginSuccess(data) {
 
     localStorage.removeItem("token");//delete the old login token
     localStorage.setItem("token", data.token);//store the token 
-    $(location).attr('href', '/OpenFleetr/app.html');//move to them main app page
+    if (data.level > 3) {
+        $(location).attr('href', '/OpenFleetr/admin.html');//move to them main app page
+    } else {
+        $(location).attr('href', '/OpenFleetr/app.html');//move to them main app page
+    }
 
 }
 

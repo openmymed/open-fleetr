@@ -39,9 +39,7 @@ public class NotificationsEndpoint {
         JSONObject user;
         try {
             user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
-            System.out.println(user);
             long level = (long) user.get("level");
-            System.out.println(level);
             if (level > 2) {
                 UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 AuthenticatedNotificationSessionManager.addUserSession(token, userSession);
