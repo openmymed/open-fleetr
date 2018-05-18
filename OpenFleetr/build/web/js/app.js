@@ -1,8 +1,3 @@
-/*
- * 
- * The main application page 
- * 
- */
 var vehicles = [];
 var vehicleMap;
 var driversCache = [];
@@ -13,6 +8,7 @@ var updateDriversTimeout;
 var updateLocationsTimeout;
 var updateStatusesTimeout;
 var handling;
+
 $(document).ready(main);
 
 function main() {
@@ -31,7 +27,7 @@ function main() {
 
     requestGeolocationPermission();
     updateDrivers();
-    updateLocations(); //start refreshing the vehicle locations
+    updateLocations(); 
     updateStatuses();
     getDispatcher();
     socketConnect();
@@ -92,7 +88,6 @@ function parseSocketNotification(event) {
     }
 }
 
-
 function fallbackPolling(event) {
     websocket = false;
     updateDrivers();
@@ -144,7 +139,7 @@ function updateDrivers() {
 function updateDriversSuccess(data) {
     var driver;
     var json = JSON.parse(data)
-    for (driver in json) {//iterate over the JSON data from a successful json request
+    for (driver in json) {
         var array = data[driver];
         driversCache[array.id.toString()] = "" + array.firstName + " " + array.lastName;
     }
@@ -152,24 +147,23 @@ function updateDriversSuccess(data) {
 
 function updateDriversError(jqHXR, textStatus, errorThrown) {
 
-    if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
-        alert("Please log in !"); //alert for a login
-        localStorage.removeItem("token"); //delete the user token from storage
-        $(location).attr('href', '/OpenFleetr'); //go to the home page
+    if (jqHXR.status === 401 || jqHXR.status === 403) {
+        alert("Please log in !"); 
+        localStorage.removeItem("token"); 
+        $(location).attr('href', '/OpenFleetr'); 
     } else {
 
     }
-
 }
 
 function updateLocations() {
-    $.ajax({//new ajax request
-        url: "/OpenFleetr/vehicle/location?token=" + localStorage.getItem("token") + "", //to this url
-        type: "GET", //HTTP request type get
-        dataType: "json", //expected return data type json
-        success: updateLocationsSuccess, //on success, call updateLocationsSuccess
-        error: updateLocationsError, //on failure, call updateLocationsFailure
-        complete: updateLocationsInterval//In all cases, call updateLocationsInterval
+    $.ajax({
+        url: "/OpenFleetr/vehicle/location?token=" + localStorage.getItem("token") + "", 
+        type: "GET",
+        dataType: "json", 
+        success: updateLocationsSuccess, 
+        error: updateLocationsError,
+        complete: updateLocationsInterval
     });
 }
 
@@ -182,12 +176,12 @@ function updateLocationsSuccess(data) {
 }
 
 function fetchLocation(vehicleId) {
-    $.ajax({//new ajax request
+    $.ajax({
         url: "/OpenFleetr/vehicle/location/" + vehicleId + "?token=" + localStorage.getItem("token") + "", //to this url
-        type: "GET", //HTTP request type get
-        dataType: "json", //expected return data type json
-        success: fetchLocationSuccess, //on success, call updateLocationsSuccess
-        error: updateLocationsError //on failure, call updateLocationsFailure
+        type: "GET", 
+        dataType: "json",
+        success: fetchLocationSuccess,
+        error: updateLocationsError
     });
 }
 
@@ -204,35 +198,32 @@ function fetchLocationSuccess(location) {
 
 function updateLocationsError(jqHXR, textStatus, errorThrown) {
 
-    if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
-        alert("Please log in !"); //alert for a login
-        localStorage.removeItem("token"); //delete the user token from storage
-        $(location).attr('href', '/OpenFleetr'); //go to the home page
+    if (jqHXR.status === 401 || jqHXR.status === 403) {
+        alert("Please log in !");
+        localStorage.removeItem("token");
+        $(location).attr('href', '/OpenFleetr');
     } else {
-        $("#locationsList").text("No locations found"); //if it is a not found error, simply say there are no locations
+        $("#locationsList").text("No locations found");
     }
 }
 
-
-
 function updateStatuses() {
-    $.ajax({//new ajax request
+    $.ajax({
         url: "/OpenFleetr/vehicle/status?token=" + localStorage.getItem("token") + "", //to this url
-        type: "GET", //HTTP request type get
-        dataType: "json", //expected return data type json
-        success: updateStatusesSuccess, //on success, call updateLocationsSuccess
-        error: updateStatusesError, //on failure, call updateLocationsFailure
-        complete: updateStatusesInterval//In all cases, call updateLocationsInterval
+        type: "GET",
+        dataType: "json",
+        success: updateStatusesSuccess,
+        error: updateStatusesError,
+        complete: updateStatusesInterval
     });
 }
 
 function updateStatusesSuccess(data) {
-
     var html = "";
     var status;
     for (status in data) {
         var array = data[status];
-        html += "<li>" + JSON.stringify(array) + "</li>"; //formate it into an ordered list
+        html += "<li>" + JSON.stringify(array) + "</li>";
         if (vehicles[array.vehicleId.toString()] === undefined) {
         } else {
             var statusText = "";
@@ -254,42 +245,37 @@ function updateStatusesSuccess(data) {
             vehicles[array.vehicleId.toString()].bindPopup("" + statusText);
         }
     }
-
     $("#statusesList").html(html); //set the output
-
 }
 
 function updateStatusesError(jqHXR, textStatus, errorThrown) {
-
-    if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
-        alert("Please log in !"); //alert for a login
-        localStorage.removeItem("token"); //delete the user token from storage
-        $(location).attr('href', '/OpenFleetr'); //go to the home page
+    if (jqHXR.status === 401 || jqHXR.status === 403) {
+        alert("Please log in !");
+        localStorage.removeItem("token");
+        $(location).attr('href', '/OpenFleetr');
     } else {
-        $("#statusesList").text("No Statuses found"); //if it is a not found error, simply say there are no locations
+        $("#statusesList").text("No Statuses found");
     }
-
 }
 
 function updateLocationsInterval() {
     if (websocket === false) {
-        updateLocationsTimeout = setTimeout(updateLocations, 1000); //every 1000ms, update the location
+        updateLocationsTimeout = setTimeout(updateLocations, 1000);
     } else {
         if (updateLocationsTimeout !== undefined) {
             clearTimeout(updateLocationsTimeout);
         }
     }
-
 }
+
 function updateStatusesInterval() {
     if (websocket === false) {
-        updateStatusesTimeout = setTimeout(updateStatuses, 1000); //every 1000ms, update the location
+        updateStatusesTimeout = setTimeout(updateStatuses, 1000);
     } else {
         if (updateStatusesTimeout !== undefined) {
             clearTimeout(updateStatusesTimeout);
         }
     }
-
 }
 
 function updateDriversInterval() {
@@ -330,12 +316,9 @@ function loadMap() {
     } else {
         geolocationError();
     }
-
-
 }
 
 function socketClose(event) {
-
     switch (event.code) {
         case 1000 :
             alert("You have been logged out");
@@ -354,8 +337,8 @@ function socketClose(event) {
             fallbackPolling();
             break;
     }
-
 }
+
 function socketError(event) {
     console.log("an error has happened");
 }
@@ -378,23 +361,23 @@ function getDispatcher() {
         error: getDispatcherError
     });
 }
+
 function getDispatcherSuccess(data) {
     var dispatcher = data[0].firstName + " " + data[0].lastName;
 
     dispatcherName = dispatcher;
     document.getElementById("dispatcherName").innerHTML = dispatcherName;
 }
+
 function getDispatcherError(jqHXR, textStatus, errorThrown) {
     if (jqHXR.status === 401 || jqHXR.status === 403) {//check if the error is an authorisation or authentication error
         alert("Please log in !"); //alert for a login
         localStorage.removeItem("token"); //delete the user token from storage
         $(location).attr('href', '/OpenFleetr'); //go to the home page
     } else {
-        dispatcherName = "Error"
-                ;
+        dispatcherName = "Error";
         document.getElementById("dispatcherName").innerHTML = dispatcherName;
     }
-
 }
 
 function requestGeolocationPermission() {
@@ -408,8 +391,6 @@ function requestGeolocationPermission() {
         }
 
     });
-
-
 }
 
 function createCaseFormDisplayControl() {
@@ -432,6 +413,7 @@ function createCaseFromClose() {
     createCaseFormDisplayControl();
 
 }
+
 function fetchNotification() {
     $.ajax({
         url: "/OpenFleetr/user/driver?token=" + localStorage.getItem("token") + "",
@@ -443,10 +425,10 @@ function fetchNotification() {
     });
 }
 function fetchNotificationSuccess() {
-//	for (var i in data) {
-    //var json = JSON.parse(data[i]);
-//	}	
+
+
 }
+
 function test() {
     var arr = ["bob", "12.1231", "12.2312"]
     let notifBox = document.createElement("li");
@@ -472,6 +454,7 @@ function test() {
     var ul = document.getElementById("notis");
     ul.insertBefore(notifBox, ul.children[ul.children.length - 1]);
 }
+
 function notificationCreateCase() {
     $(document).ready(function () {
         $("li").click(function () {

@@ -1,59 +1,45 @@
-/*
- * 
- * The application login page 
- * 
- */
 $(document).ready(main);
 
 function main() {
-
-    $("#login").click(login);//bind the click even tot function login
-
+    $("#login").click(login);
 }
 
 function login() {
-
-    var userName = $("#userName").val();//fetch the username
-    var password = $("#password").val();//fetch the password
-    postData = {"userName": userName, "password": password};//create the post data array.
-    if (userName === '' || password === '') {//if the username or password are empty
+    var userName = $("#userName").val();
+    var password = $("#password").val();
+    postData = {"userName": userName, "password": password};
+    if (userName === '' || password === '') {
         $('input[type="text"],input[type="password"]').css("border", "2px solid red");
         $('input[type="text"],input[type="password"]').css("box-shadow", "0 0 3px red");
-        alert("Please fill all fields...!!!!!!");//do some CSS stuff and alrert the user
+        alert("Please fill all fields...!!!!!!");
     } else {
-        $.ajax({//new ajax request
-            url: "/OpenFleetr/user/auth", //to this endpoint
-            type: "POST", //HTTP request type post
-            data: JSON.stringify(postData), //data is the json arrray from the array above
-            contentType: "application/json; charset=utf-8", //the content we want to send is of type json
-            dataType: "json", //the content we want to receive is of type json
-            success: loginSuccess, //on success, call loginSuccess();
-            error: loginError//on failure, call loginError()
+        $.ajax({
+            url: "/OpenFleetr/user/auth", 
+            type: "POST", 
+            data: JSON.stringify(postData), 
+            dataType: "json",
+            success: loginSuccess,
+            error: loginError
         });
     }
-
 }
 
 function loginSuccess(data) {
-
-    localStorage.removeItem("token");//delete the old login token
-    localStorage.setItem("token", data.token);//store the token 
+    localStorage.removeItem("token");
+    localStorage.setItem("token", data.token);
     if (data.level > 3) {
-        $(location).attr('href', '/OpenFleetr/admin.html');//move to them main app page
+        $(location).attr('href', '/OpenFleetr/admin.html');
     } else {
-        $(location).attr('href', '/OpenFleetr/app.html');//move to them main app page
+        $(location).attr('href', '/OpenFleetr/app.html');
     }
-
 }
 
 function loginError(jqHXR, textStatus, errorThrown) {
-
-    if (jqHXR.status === 401 || jqHXR.status === 403) {//if there is an authorisation error 
+    if (jqHXR.status === 401 || jqHXR.status === 403) {
         $('input[type="text"],input[type="password"]').css("border", "2px solid red");
         $('input[type="text"],input[type="password"]').css("box-shadow", "0 0 3px red");
-        alert("Username or password wrong!!!");//tell the user there is an authorisation error
-    } else {//if it is another kind of error, give them an alert that something is wrong in the system.
+        alert("Username or password wrong!!!");
+    } else {
         alert("Something wrong seems to have happend. Please contact your system administrator");
     }
-
 }

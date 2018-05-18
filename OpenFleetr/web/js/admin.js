@@ -1,12 +1,12 @@
 var expanded = false;
 var jurisdictionsMap;
 var hospitalsMap
+
 $(document).ready(main);
 
 function main(){
     $('#hospitalsTab').click(drawHospitalsMap);
     $('#jurisdictionsTab').click(drawJurisdictionsMap);
-
 }
 function showCheckboxes() {
     var checkboxes = document.getElementById("checkboxes");
@@ -33,10 +33,6 @@ function drawHospitalsMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(hospitalsMap);
     
-}/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+}
 
 
