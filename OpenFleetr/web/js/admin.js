@@ -4,9 +4,9 @@ var hospitalsMap
 
 $(document).ready(main);
 
-function main(){
-    $('#hospitalsTab').click(drawHospitalsMap);
-    $('#jurisdictionsTab').click(drawJurisdictionsMap);
+function main() {
+	$('#hospitalsTab').click(drawHospitalsMap);
+	$('#jurisdictionsTab').click(drawJurisdictionsMap);
 }
 function showCheckboxes() {
 	var checkboxes = document.getElementById("checkboxes");
@@ -21,8 +21,8 @@ function showCheckboxes() {
 
 function drawJurisdictionsMap() {
 	jurisdictionsMap = L.map('jurisdictionsMap', {
-			zoomControl: false
-		}).setView([31.7683, 35.2137], 13);
+		zoomControl: false
+	}).setView([31.7683, 35.2137], 13);
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 	}).addTo(jurisdictionsMap);
@@ -30,10 +30,10 @@ function drawJurisdictionsMap() {
 }
 
 function drawHospitalsMap() {
-    hospitalsMap = L.map('hospitalsMap',{zoomControl:false}).setView([31.7683, 35.2137], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(hospitalsMap);    
+	hospitalsMap = L.map('hospitalsMap', { zoomControl: false }).setView([31.7683, 35.2137], 13);
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(hospitalsMap);
 }
 
 function createDispatcher() {
@@ -47,7 +47,7 @@ function createDispatcher() {
 		error: function (xhr, resp, text) {
 			console.log(xhr, resp, text);
 		}
-	}));
+	});
 }
 function createDriver() {
 	$.ajax({ //new ajax request
@@ -98,9 +98,129 @@ function fetchDispatchers() {
 		datatype: 'json',
 		success: function (response) {
 			console.log("response");
+			for (var i in response) {
+				var data = response.i;
+				var id = userId;	
+				var info = [ data.firstName, data.lastName, data.birthDate, data.phoneNumber];
+
+				var row = document.createElement("tr");
+				var column = document.createElement("td");
+
+				for (var j in info) {
+					column.innerHTML = "<span> " + data[j] + "</span>";
+					row.appendChild(column);
+				}
+			}
 		},
 		error: function (xhr, resp, text) {
 			console.log(xhr, resp, text);
 		}
 	});
 }
+function fetchDrivers() {
+	$.ajax({ //new ajax request
+		url: "/OpenFleetr/user/driver/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
+		type: "GET", //HTTP request type get
+		datatype: 'json',
+		success: function (response) {
+			console.log("response");
+			for (var i in response) {
+				var data = response.i;
+				var id = userId;
+				
+				var info =  [data.firstName, data.lastName, data.birthDate, data.phoneNumber];
+
+				var row = document.createElement("tr");
+				var column = document.createElement("td");
+
+				for (var j in info) {
+					column.innerHTML = "<span> " + data[j] + "</span>";
+					row.appendChild(column);
+				}
+			}
+		},
+		error: function (xhr, resp, text) {
+			console.log(xhr, resp, text);
+		}
+	});
+}
+function fetchVehicles() {
+	$.ajax({ //new ajax request
+		url: "/OpenFleetr/vehicle/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
+		type: "GET", //HTTP request type get
+		datatype: 'json',
+		success: function (response) {
+			console.log("response");
+			for (var i in response) {
+				var data = response.i;
+
+				var info = [data.vehicleType];
+
+				var row = document.createElement("tr");
+				var column = document.createElement("td");
+				
+				column.innerHTML = "<span> Your framerwork needs a lot of work</span>";
+				row.appendChild(column);
+				for (var j in info) {
+					column.innerHTML = "<span> " + data[j] + "</span>";
+					row.appendChild(column);
+				}
+			}
+		},
+		error: function (xhr, resp, text) {
+			console.log(xhr, resp, text);
+		}
+	});
+}
+function fetchHospitals() {
+	$.ajax({ //new ajax request
+		url: "/OpenFleetr/user/dispatcher/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
+		type: "GET", //HTTP request type get
+		datatype: 'json',
+		success: function (response) {
+			console.log("response");
+		},
+		error: function (xhr, resp, text) {
+			console.log(xhr, resp, text);
+		}
+	});
+}
+function fetchJurisdictions() {
+	$.ajax({ //new ajax request
+		url: "/OpenFleetr/user/dispatcher/manager/jurisdiction" + "?token=" + localStorage.getItem("token") + "", //to this url
+		type: "GET", //HTTP request type get
+		datatype: 'json',
+		success: function (response) {
+			console.log("response");
+		},
+		error: function (xhr, resp, text) {
+			console.log(xhr, resp, text);
+		}
+	});
+}
+function fetchApiUsers() {
+	$.ajax({ //new ajax request
+		url: "/OpenFleetr/user/dispatcher/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
+		type: "GET", //HTTP request type get
+		datatype: 'json',
+		success: function (response) {
+			console.log("response");
+			for (var i in response) {
+				var data = response.i;
+
+				var info = [data.vehicleType];
+
+				var row = document.createElement("tr");
+				var column = document.createElement("td");
+
+				for (var j in info) {
+					column.innerHTML = "<span> " + data[j] + "</span>";
+					row.appendChild(column);
+				}
+			},
+		error: function (xhr, resp, text) {
+			console.log(xhr, resp, text);
+		}
+	});
+}
+

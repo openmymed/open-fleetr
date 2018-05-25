@@ -5,75 +5,82 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
 
-        <script type="text/javascript" src="js/leaflet.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript" src="js/admin.js"></script>
-        <script type="text/javascript" src="js/popper.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/leaflet.js"></script>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/admin.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" href="css/bootstrap.css"/>
-        <link rel="stylesheet" href="css/leaflet.css"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    </head>
-    <body>
-        <nav class="navbar navbar-expand-md bg-info">
-            <div class="container-fluid">
-                <a class="navbar-brand text-light" href="#">Open Fleetr</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md bg-info">
+        <div class="container-fluid">
+            <a class="navbar-brand text-light" href="#">Open Fleetr</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent" style="display: unset !important;">
-                    <ul class="nav nav-pills mr-auto justify-content-end">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName">User</a>
-                        </li>	
-                    </ul>
-                </div>
-        </nav>
-        <div class="container">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="display: unset !important;">
+                <ul class="nav nav-pills mr-auto justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName">User</a>
+                    </li>
+                </ul>
+            </div>
+    </nav>
+    <div class="container">
 
-            <ul class="nav nav-tabs">
-                <li class="active"><a  data-toggle="tab" href="#dispatchers"><i class="fa fa-user"></i>    Dispatchers</a></li>
-                <li><a  data-toggle="tab" href="#drivers"><i class="fa fa-drivers-license"></i>    Drivers</a></li>
-                <li><a  data-toggle="tab" href="#vehicles"><i class="fa fa-ambulance"></i>    Vehicles</a></li>
-                <li id="jurisdictionsTab"><a  data-toggle="tab" href="#jurisdictions"><i class="fa fa-map"></i>   Jurisdictions</a></li>
-                <li id="hospitalsTab"><a data-toggle="tab" href="#hospitals"><i class="fa fa-h-square"></i> Hospitals</a></li>
-                <li><a  data-toggle="tab" href="#apiUsers"><span class="glyphicon glyphicon-user"></span>    API Users</a></li>
-            </ul>
-            <div class="tab-content">
-                <div id="dispatchers" class="tab-pane fade in active">
-                    <h4>Dispatchers Management</h4>
-                    <br/>
-                    <table class="table table-condensed table-bordered table-striped volumes">
-                        <thead>
-                            <tr>
-                                <th>First Name</th><!--Dispatchers first name-->
-                                <th>Last Name</th><!--Dispatchers last name-->
-                                <th>Date Of Birth</th><!--Dispatchers DOB-->
-                                <th>Phone Number</th>
-                                <th>Jurisdictions</th>
-                                <th>User Name</th>
-                                <th>Password</th>
-                                <th> </th><!--add/delete-->
-                            </tr>
-                        </thead>
-                        <tbody id="dispatchersTable">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#dispatchers"><i class="fa fa-user"></i>    Dispatchers</a></li>
+            <li><a data-toggle="tab" href="#drivers"><i class="fa fa-drivers-license"></i>    Drivers</a></li>
+            <li><a data-toggle="tab" href="#vehicles"><i class="fa fa-ambulance"></i>    Vehicles</a></li>
+            <li id="jurisdictionsTab"><a data-toggle="tab" href="#jurisdictions"><i class="fa fa-map"></i>   Jurisdictions</a></li>
+            <li id="hospitalsTab"><a data-toggle="tab" href="#hospitals"><i class="fa fa-h-square"></i> Hospitals</a></li>
+            <li><a data-toggle="tab" href="#apiUsers"><span class="glyphicon glyphicon-user"></span>    API Users</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="dispatchers" class="tab-pane fade in active">
+                <h4>Dispatchers Management</h4>
+                <br/>
+                <table class="table table-condensed table-bordered table-striped volumes">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <!--Dispatchers first name-->
+                            <th>Last Name</th>
+                            <!--Dispatchers last name-->
+                            <th>Date Of Birth</th>
+                            <!--Dispatchers DOB-->
+                            <th>Phone Number</th>
+                            <th>Jurisdictions</th>
+                            <th>User Name</th>
+                            <th>Password</th>
+                            <th> </th>
+                            <!--add/delete-->
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchersTable">
 
-                        </tbody>
-                        <tfoot>
-							<form id="dispatchersForm" method="post" action="">
+                    </tbody>
+                    <tfoot>
+                        <form id="dispatchersForm" method="post" action="">
                             <tr>
                                 <td>
                                     <input type="text" name="firstName" id="firstName" placeholder="First Name">
@@ -101,64 +108,72 @@ and open the template in the editor.
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td class="mx-auto justify-content-center"> --- </td>
                                 <td>
-                                    <button id="createNewDispatcherFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createDispatcher()"></button>
+                                    <button id="createNewDispatcherFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown"
+                                        onclick="createDispatcher()"></button>
                                 </td>
                             </tr>
-							</form>
-                        </tfoot>
-                    </table> <!--Dispatchers login table ends here-->
-                </div><!--Dispatchers login ends here-->
+                        </form>
+                    </tfoot>
+                </table>
+                <!--Dispatchers login table ends here-->
+            </div>
+            <!--Dispatchers login ends here-->
 
-                <div id="vehicles" class="tab-pane fade">
-                    <h4>Vehicles Management</h4>
-                    <br>
-                    <table class="table table-condensed table-bordered table-striped volumes">
-                        <thead>
-                            <tr>
-                                <th>Vehicle Id</th>
-                                <th>Vehicle Type</th>
-                                <th> </th>
-                            </tr>
-                        </thead>
-                        <tbody id="vehiclesTable">
+            <div id="vehicles" class="tab-pane fade">
+                <h4>Vehicles Management</h4>
+                <br>
+                <table class="table table-condensed table-bordered table-striped volumes">
+                    <thead>
+                        <tr>
+                            <th>Vehicle Id</th>
+                            <th>Vehicle Type</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehiclesTable">
 
-                        </tbody>
-                        <tfoot>
-						<form id="vehiclesForm" method="post" action="">
+                    </tbody>
+                    <tfoot>
+                        <form id="vehiclesForm" method="post" action="">
                             <tr>
                                 <td> -- </td>
                                 <td>
                                     <input type="text" name="firstName" id="vehicleType" placeholder="Vehicle Descripton">
                                 </td>
                                 <td>
-                                    <button id="createNewVehicleFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createVehicle()></button>
+                                    <button id="createNewVehicleFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createVehicle()"></button>
                                 </td>
                             </tr>
-							</form>
-                        </tfoot>
-                    </table> <!--Dispatchers login table ends here-->
-                </div><!--vehicles registration ends here-->
+                        </form>
+                    </tfoot>
+                </table>
+                <!--Dispatchers login table ends here-->
+            </div>
+            <!--vehicles registration ends here-->
 
-                <div id="drivers" class="tab-pane fade">
-                    <h4>Drivers Management</h4>
-                    <br/>
-                    <table class="table table-condensed table-bordered table-striped volumes">
-                        <thead>
-                            <tr>
-                                <th>First Name</th><!--Dispatchers first name-->
-                                <th>Last Name</th><!--Dispatchers last name-->
-                                <th>Date Of Birth</th><!--Dispatchers DOB-->
-                                <th>Phone Number</th>
-                                <th>User Name</th>
-                                <th>Password</th>
-                                <th> </th><!--add/delete-->
-                            </tr>
-                        </thead>
-                        <tbody id="driversTable">
-
-                        </tbody>
-                        <tfoot>
-						<form id="driversForm" action="" method="post">
+            <div id="drivers" class="tab-pane fade">
+                <h4>Drivers Management</h4>
+                <br/>
+                <table class="table table-condensed table-bordered table-striped volumes">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <!--Dispatchers first name-->
+                            <th>Last Name</th>
+                            <!--Dispatchers last name-->
+                            <th>Date Of Birth</th>
+                            <!--Dispatchers DOB-->
+                            <th>Phone Number</th>
+                            <th>User Name</th>
+                            <th>Password</th>
+                            <th> </th>
+                            <!--add/delete-->
+                        </tr>
+                    </thead>
+                    <tbody id="driversTable">
+                    </tbody>
+                    <tfoot>
+                        <form id="driversForm" action="" method="post">
                             <tr>
                                 <td>
                                     <input type="text" name="firstName" id="firstName" placeholder="First Name">
@@ -179,67 +194,77 @@ and open the template in the editor.
                                     <button id="createNewDriverFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createDriver()"></button>
                                 </td>
                             </tr>
-							</form>
-                        </tfoot>
-                    </table> <!--Dispatchers login table ends here-->
-                </div><!--Dispatchers login ends here-->
-
-
-                <div id="jurisdictions" class="tab-pane fade">
-                    <h4>Jurisdiction Management</h4>
-                    <br/>
-                    <div id="jurisdictionsMap" style="height:90vh;">
-                        <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
-                            <button id="addJurisdiction" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Jurisdiction</button>
-
-                            <button id="deleteJurisdiction" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete a Jurisdiction</button>
-                        </div>
-                    </div>
-
-                </div><!--API users login ends here-->
-                <div id="hospitals" class="tab-pane fade">
-                    <h4>Hospitals Management</h4>                    <br/>
-                    <div id="hospitalsMap" style="height:90vh;">
-                        <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
-                            <button id="addHospital" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Hospital</button>
-
-                            <button id="deleteHospital" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete a Hospital</button>
-                        </div>
-                    </div>
-                    <br/>
-                </div>
-                <div id="apiUsers" class="tab-pane fade">
-                    <h4>API Users Management</h4>
-                    <br/>
-                    <table class="table table-condensed table-bordered table-striped volumes">
-                        <thead>
-                            <tr>
-                                <th>Application Name</th><!--Dispatchers first name-->
-                                <th>Maintainer Email</th><!--Dispatchers last name-->
-                                <th>Token</th><!--Dispatchers DOB-->
-                                <th> </th><!--add/delete-->
-                            </tr>
-                        </thead>
-                        <tbody id="apiUserTable">
-
-                        </tbody>
-                        <tfoot id="apiUserForm">
-                            <tr>
-                                <td>
-                                    <input type="text" name="applicationName" id="firstName" placeholder="Application Name">
-                                </td>
-                                <td>
-                                    <input type="email" name="maintainerEmail" id="lastName" placeholder="Maintainer Email">
-                                </td>                            
-                                <td class="mx-auto justify-content-center"> --- </td>
-                                <td>
-                                    <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createApiUser()"></button>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table> <!--Dispatchers login table ends here-->
-                </div>
+                        </form>
+                    </tfoot>
+                </table>
+                <!--Dispatchers login table ends here-->
             </div>
-        </div><!--nav-tabs end here-->
-    </body>
+            <!--Dispatchers login ends here-->
+
+
+            <div id="jurisdictions" class="tab-pane fade">
+                <h4>Jurisdiction Management</h4>
+                <br/>
+                <div id="jurisdictionsMap" style="height:90vh;">
+                    <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
+                        <button id="addJurisdiction" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Jurisdiction</button>
+
+                        <button id="deleteJurisdiction" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete a Jurisdiction</button>
+                    </div>
+                </div>
+
+            </div>
+            <!--API users login ends here-->
+            <div id="hospitals" class="tab-pane fade">
+                <h4>Hospitals Management</h4> <br/>
+                <div id="hospitalsMap" style="height:90vh;">
+                    <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
+                        <button id="addHospital" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Hospital</button>
+
+                        <button id="deleteHospital" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete a Hospital</button>
+                    </div>
+                </div>
+                <br/>
+            </div>
+            <div id="apiUsers" class="tab-pane fade">
+                <h4>API Users Management</h4>
+                <br/>
+                <table class="table table-condensed table-bordered table-striped volumes">
+                    <thead>
+                        <tr>
+                            <th>Application Name</th>
+                            <!--Dispatchers first name-->
+                            <th>Maintainer Email</th>
+                            <!--Dispatchers last name-->
+                            <th>Token</th>
+                            <!--Dispatchers DOB-->
+                            <th> </th>
+                            <!--add/delete-->
+                        </tr>
+                    </thead>
+                    <tbody id="apiUserTable">
+
+                    </tbody>
+                    <tfoot id="apiUserForm">
+                        <tr>
+                            <td>
+                                <input type="text" name="applicationName" id="firstName" placeholder="Application Name">
+                            </td>
+                            <td>
+                                <input type="email" name="maintainerEmail" id="lastName" placeholder="Maintainer Email">
+                            </td>
+                            <td class="mx-auto justify-content-center"> --- </td>
+                            <td>
+                                <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus" data-toggle="dropdown" onclick="createApiUser()"></button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <!--Dispatchers login table ends here-->
+            </div>
+        </div>
+    </div>
+    <!--nav-tabs end here-->
+</body>
+
 </html>
