@@ -159,12 +159,8 @@ function fetchVehicles() {
 				var row = document.createElement("tr");
 				var column = document.createElement("td");
 				
-				column.innerHTML = "<span> Your framerwork needs a lot of work</span>";
+				column.innerHTML = "<span> " + data[i] + "</span>";
 				row.appendChild(column);
-				for (var j in info) {
-					column.innerHTML = "<span> " + data[j] + "</span>";
-					row.appendChild(column);
-				}
 			}
 		},
 		error: function (xhr, resp, text) {
