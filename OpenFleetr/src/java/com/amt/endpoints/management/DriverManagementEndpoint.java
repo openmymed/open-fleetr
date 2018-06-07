@@ -48,14 +48,14 @@ public class DriverManagementEndpoint extends AuthorisedEndpoint {
         userQuery.put("password", Utils.getRandom(16));
         long createdUser = UserAccessControl.createNewUser(UserEntity.class, userQuery, 1);
         
-        JSONObject dispatcherQuery = new JSONObject();
-        dispatcherQuery.put("firstName", jsono.get("firstName"));
-        dispatcherQuery.put("lastName", jsono.get("lastName"));
-        dispatcherQuery.put("birthDate", jsono.get("birthDate"));
-        dispatcherQuery.put("phoneNumber", jsono.get("phoneNumber"));
-        dispatcherQuery.put("userId", createdUser);
+        JSONObject driverQuery = new JSONObject();
+        driverQuery.put("firstName", jsono.get("firstName"));
+        driverQuery.put("lastName", jsono.get("lastName"));
+        driverQuery.put("birthDate", jsono.get("birthDate"));
+        driverQuery.put("phoneNumber", jsono.get("phoneNumber"));
+        driverQuery.put("userId", createdUser);
         
-        userQuery.put("dispatcherId", Persistence.create(DispatcherEntity.class, dispatcherQuery).get("key"));
+        userQuery.put("driverId", Persistence.create(DriverEntity.class, driverQuery).get("key"));
         return userQuery;
     }
 

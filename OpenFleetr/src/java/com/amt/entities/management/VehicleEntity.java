@@ -12,6 +12,7 @@ import com.tna.entities.BasicEntity;
  */
 public class VehicleEntity extends BasicEntity{
     
-    public String vehicleType;
+    public String vehicleDescription;
+    public String vehicleLicensePlate;
     
 }

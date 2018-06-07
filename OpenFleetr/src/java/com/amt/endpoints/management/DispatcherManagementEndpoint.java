@@ -31,7 +31,6 @@ public class DispatcherManagementEndpoint extends AuthorisedEndpoint {
         JSONObject readDispatcher = (JSONObject) dispatcherList.get(key);
         JSONObject query1 = new JSONObject();
         JSONObject readUser = Persistence.read(UserEntity.class, (int)readDispatcher.get("userId"));
-        System.out.println(readUser);
         readDispatcher.put("userName",readUser.get("userName"));
         readDispatcher.put("password",readUser.get("password"));
         dispatcherList.put(key, readDispatcher);
