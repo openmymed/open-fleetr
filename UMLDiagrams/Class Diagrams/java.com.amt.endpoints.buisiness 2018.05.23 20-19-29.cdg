@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="java.com.amt.endpoints.buisiness">
+  <ClassDiagramComponents>
+    <Class name="CheckingEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="20.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ExternalApiEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="20.0" yPosition="230.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="jsono"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="jsono"/>
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="getApiUser" returnType="long" visibility="private">
+          <Argument type="String" name="token"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="DispatcherNotificationsEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="532.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="jsono"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="jsono"/>
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="DispatchOrderEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="532.0" yPosition="238.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="HospitalEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="20.0" yPosition="462.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="jsono"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="jsono"/>
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="l"/>
+          <Argument type="String" name="string"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="CurrentLocationEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="509.0" yPosition="462.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="DriverEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="1057.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="CurrentStatusEndpoint" package="com.amt.endpoints.buisiness" visibility="public" xPosition="1021.0" yPosition="247.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="doList" returnType="JSONObject" visibility="public">
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doUpdate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doRead" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doDelete" returnType="JSONObject" visibility="public">
+          <Argument type="long" name="resource"/>
+          <Argument type="String" name="token"/>
+        </Method>
+        <Method name="doCreate" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="json"/>
+          <Argument type="String" name="token"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations/>
+</ClassDiagram>

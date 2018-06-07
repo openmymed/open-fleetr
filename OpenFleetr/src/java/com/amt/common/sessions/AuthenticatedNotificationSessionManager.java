@@ -23,6 +23,7 @@ public class AuthenticatedNotificationSessionManager {
     private static AuthenticatedNotificationSessionManager sessionManager;
     private static HashMap<String, UserSession> userSessions;
     private static HashMap<Long, ArrayList<String>> geographicalAreas;
+    private static HashMap<Session,Integer> sessionState;
 
     private static AuthenticatedNotificationSessionManager getInstance() {
         if (sessionManager == null) {
@@ -39,8 +40,25 @@ public class AuthenticatedNotificationSessionManager {
     private AuthenticatedNotificationSessionManager() {
         userSessions = new HashMap();
         geographicalAreas = new HashMap();
+        sessionState = new HashMap();
     }
 
+    public static void startAction(Session s){
+        AuthenticatedNotificationSessionManager.getInstance().sessionState.put(s,0);
+    }
+    public Integer getSessionState(Session s){
+       Integer state = AuthenticatedNotificationSessionManager.getInstance().sessionState.get(s);
+       if(state == null){
+           startAction(s);
+           state = 0;
+       }
+       return state;
+    }
+    
+    public void setSessionState(Session s, Integer i){
+        AuthenticatedNotificationSessionManager.getInstance().sessionState.put(s,i);
+    }
+    
     public static ArrayList<String> getByArea(long areaId) {
         return AuthenticatedNotificationSessionManager.getInstance().geographicalAreas.get(areaId);
     }

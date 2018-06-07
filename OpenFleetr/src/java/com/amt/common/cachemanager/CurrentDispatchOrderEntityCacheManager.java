@@ -12,6 +12,7 @@ import com.tna.common.AccessError;
 import com.tna.data.Persistence;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,12 +50,20 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                         CurrentDispatchOrderEntityCache.cache(vehicleId, listItem);
 
                     }
+                    JSONObject resp = new JSONObject();
+                    try {
+                        resp.put("server",InetAddress.getLocalHost().getHostName());
+                    } catch (UnknownHostException ex) {
+                        Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    resp.put("type","dispatchOrder");
+                    resp.put("array",Arrays.toString(changedVehicleIds.toArray()));
                     for (String token : userTokenSet) {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.lock(token);
                             try {
                                 Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
-                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\",\"type\":\"dispatchOrder\",\"array\":" + Arrays.toString(changedVehicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText(resp.toJSONString());
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

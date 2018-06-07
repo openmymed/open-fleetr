@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
@@ -25,8 +26,9 @@ public class GEOSql {
 
     private static final String WRITE_POLYGON_SQL = "INSERT INTO %s (name,polygon) VALUES (?,ST_GEOMFROMTEXT('Polygon((? ?, ? ?, ? ?, ? ?,? ?))'));";
     private static final String READ_POLYGON_SQL = "SELECT ST_AsText(polygon) FROM %s where id=?";
-    private static final String LIES_WITHIN_SQL = "SELECT id FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
+    private static final String LIES_WITHIN_SQL = "SELECT vehicleId FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
     private static final String DELETE_WITHIN_SQL = "DELETE FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
+    private static final String CALCULATE_DISTANCES_SQL = "SELECT `vehicleId`,`latitude`,`longitude` FROM  %s AS vehicle ORDER BY((ST_Distance(POINT(?,?),POINT(vehicle.latitude,vehicle.longitude)))) LIMIT 5";
 
     public static String readPolygon(Class geoEntity, long l) throws AccessError {
         String result = null;
@@ -54,7 +56,7 @@ public class GEOSql {
         JSONObject result = new JSONObject();
         String geoEntityClassName = geoEntity.getSimpleName();
         Connection conn = Access.pool.checkOut();
-        try (PreparedStatement pstmt = conn.prepareStatement(String.format(WRITE_POLYGON_SQL, geoEntityClassName),Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(String.format(WRITE_POLYGON_SQL, geoEntityClassName), Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setObject(1, coords.get("name"));
             pstmt.setObject(2, coords.get("latitude1"));
             pstmt.setObject(3, coords.get("longitude1"));
@@ -64,8 +66,8 @@ public class GEOSql {
             pstmt.setObject(7, coords.get("longitude3"));
             pstmt.setObject(8, coords.get("latitude4"));
             pstmt.setObject(9, coords.get("longitude4"));
-            pstmt.setObject(10,coords.get("latitude1"));
-            pstmt.setObject(11,coords.get("longitude1"));
+            pstmt.setObject(10, coords.get("latitude1"));
+            pstmt.setObject(11, coords.get("longitude1"));
             pstmt.execute();
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 if (!rs.next()) {
@@ -89,7 +91,7 @@ public class GEOSql {
         long result = -1;
         try (PreparedStatement pstmt = conn.prepareStatement(String.format(LIES_WITHIN_SQL, geoEntityClassName))) {
             pstmt.setObject(1, coords.get("latitude"));
-            pstmt.setObject(2, coords.get("longitudee"));
+            pstmt.setObject(2, coords.get("longitude"));
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -106,7 +108,30 @@ public class GEOSql {
         }
         return result;
     }
-    
-    
+
+    public static int[] fetchNearestVehicles(Class vehicle, JSONObject coords) throws AccessError {
+        String vehicleClassName = vehicle.getSimpleName();
+        Connection conn = Access.pool.checkOut();
+        int[] result  = new int[5];
+        try (PreparedStatement pstmt = conn.prepareStatement(String.format(CALCULATE_DISTANCES_SQL, vehicleClassName, vehicleClassName, vehicleClassName))) {
+            pstmt.setObject(1, coords.get("latitude"));
+            pstmt.setObject(2, coords.get("longitude"));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                int i=0;
+                while (rs.next()) {
+                    result[i] = (rs.getInt("vehicleId"));
+                    i++;
+                }
+
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        } finally {
+            Access.pool.checkIn(conn);
+        }
+        return result;
+
+    }
 
 }

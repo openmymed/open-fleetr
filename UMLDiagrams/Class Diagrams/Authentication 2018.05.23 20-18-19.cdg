@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Authentication">
+  <ClassDiagramComponents>
+    <Class name="Authentication" package="com.amt.endpoints.auth" visibility="public" xPosition="20.0" yPosition="20.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="login" returnType="JSONObject" visibility="public">
+          <Argument type="JSONObject" name="obj"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations/>
+</ClassDiagram>

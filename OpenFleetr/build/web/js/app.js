@@ -7,15 +7,23 @@ var websocket = false;
 var updateDriversTimeout;
 var updateLocationsTimeout;
 var updateStatusesTimeout;
-var handling;
+var handling = false;
+var  socketCheckInterval;
+var socketAttemptInterval;
 
 $(document).ready(main);
 
 function main() {
 
-    var createCaseFormPopper = new Popper($('#createCaseButton'), $('#createCaseForm'), {placement: 'right'});
-    var ambulanceStatusesPopper = new Popper($('#ambulanceStatusesButton'), $('#ambulanceStatusesList'), {placement: 'right'});
-    var hospitalListPopper = new Popper($('#hospitalsButton'), $('#hospitalsList'), {placement: 'right'});
+    var createCaseFormPopper = new Popper($('#createCaseButton'), $('#createCaseForm'), {
+        placement: 'right'
+    });
+    var ambulanceStatusesPopper = new Popper($('#ambulanceStatusesButton'), $('#ambulanceStatusesList'), {
+        placement: 'right'
+    });
+    var hospitalListPopper = new Popper($('#hospitalsButton'), $('#hospitalsList'), {
+        placement: 'right'
+    });
 
     $('#createCaseButton').click(createCaseFormDisplayControl);
     $('#createCaseFormCloseButton').click(createCaseFromClose);
@@ -23,15 +31,21 @@ function main() {
     $('#ambulanceStatusesButton').click(ambulancesListControl);
     $('#hospitalsButton').click(hospitalsListControl);
     $('#jurisdictionsToggle').click(jurisdictionsToggleControl);
+    $("#latitude").on("change", getReccomendations);
+    $("#longitude").on("change", getReccomendations);
+
+    loadMap();
 
 
-    requestGeolocationPermission();
+
+}
+
+function start() {
     updateDrivers();
-    updateLocations(); 
+    updateLocations(); //start refreshing the vehicle locations
     updateStatuses();
     getDispatcher();
     socketConnect();
-
 }
 
 function closeAll() {
@@ -39,6 +53,7 @@ function closeAll() {
         $('#createCaseForm').hide();
         $('#ambulanceStatusesList').hide();
         $('#hospitalsList').hide();
+
     }
 }
 
@@ -61,34 +76,44 @@ function hospitalsListControl() {
     }
 }
 
-function jurisdictionsToggleControl() {
-
-}
+function jurisdictionsToggleControl() {}
 function parseSocketNotification(event) {
+    console.log(event.data);
     var json = JSON.parse(event.data);
+    console.log(json);
     switch (json.type) {
-        case "location" :
-            json.array.forEach(fetchLocation);
+        case "location":
+            var array = JSON.parse(json.array);
+            array.forEach(fetchLocation);
             break;
-        case "status" :
-            for (var key in json.array) {
-                json.array.forEach(fetchStatus);
-            }
+        case "status":
+            var array = JSON.parse(json.array);
+            array.forEach(fetchStatus);
             break;
-        case "dispatchOrder" :
-            for (var key in json.array) {
-                json.array.forEach(fetchDispatchOrder);
-            }
+        case "dispatchOrder":
+            var array = JSON.parse(json.array);
+            array.forEach(fetchDispatchOrder);
             break;
-        case "notification" :
+        case "notification":
             fetchNotification();
             break;
-        default :
+        case  "recommendation":
+            handleRecomendations(json);
+            break;
+        default:
             break;
     }
 }
 
-function fallbackPolling(event) {
+function handleRecomendations(json) {
+    var htmlString = "";
+    var array = JSON.parse(json.array);
+    for (var item in array) {
+        htmlString = htmlString + ('<option value ="' + array[item] + '">Ambulance ' + array[item] + '</option>\n');
+    }
+    $("#recomendationList").html(htmlString);
+}
+function fallbackPolling() {
     websocket = false;
     updateDrivers();
     updateLocations(); //start refreshing the vehicle locations
@@ -105,22 +130,16 @@ function attemptSocketInterval() {
 }
 
 function checkSocketInterval(event) {
-    if (websocket === true) {
         socketCheckInterval = setTimeout(socketPing, 10000);
-    } else {
-        if (socketCheckInterval !== undefined) {
-            clearTimeout(socketCheckInterval);
-        }
-    }
-
 }
 
 function socketPing() {
 
     if (websocket === true) {
         notificationSocket.send('');
-        checkSocketInterval();
+        
     }
+    checkSocketInterval();
 
 }
 
@@ -146,11 +165,10 @@ function updateDriversSuccess(data) {
 }
 
 function updateDriversError(jqHXR, textStatus, errorThrown) {
-
     if (jqHXR.status === 401 || jqHXR.status === 403) {
-        alert("Please log in !"); 
-        localStorage.removeItem("token"); 
-        $(location).attr('href', '/OpenFleetr'); 
+        alert("Please log in !");
+        localStorage.removeItem("token");
+        $(location).attr('href', '/OpenFleetr');
     } else {
 
     }
@@ -158,10 +176,10 @@ function updateDriversError(jqHXR, textStatus, errorThrown) {
 
 function updateLocations() {
     $.ajax({
-        url: "/OpenFleetr/vehicle/location?token=" + localStorage.getItem("token") + "", 
+        url: "/OpenFleetr/vehicle/location?token=" + localStorage.getItem("token") + "",
         type: "GET",
-        dataType: "json", 
-        success: updateLocationsSuccess, 
+        dataType: "json",
+        success: updateLocationsSuccess,
         error: updateLocationsError,
         complete: updateLocationsInterval
     });
@@ -178,7 +196,7 @@ function updateLocationsSuccess(data) {
 function fetchLocation(vehicleId) {
     $.ajax({
         url: "/OpenFleetr/vehicle/location/" + vehicleId + "?token=" + localStorage.getItem("token") + "", //to this url
-        type: "GET", 
+        type: "GET",
         dataType: "json",
         success: fetchLocationSuccess,
         error: updateLocationsError
@@ -197,7 +215,6 @@ function fetchLocationSuccess(location) {
 }
 
 function updateLocationsError(jqHXR, textStatus, errorThrown) {
-
     if (jqHXR.status === 401 || jqHXR.status === 403) {
         alert("Please log in !");
         localStorage.removeItem("token");
@@ -288,68 +305,81 @@ function updateDriversInterval() {
     }
 }
 function geolocationSuccess(position) {
-    console.log(position);
-    console.log(position.coords);
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    vehicleMap = L.map('vehicleMapDiv', {zoomControl: false}).setView([latitude, longitude], 13);
+
+    var crds = position.coords;
+    var latitude = crds.latitude;
+    var longitude = crds.longitude;
+    vehicleMap = L.map('vehicleMapDiv', {
+        zoomControl: false
+    }).setView([latitude, longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
     vehicleMap.on('click', closeAll);
-
+    vehicleMap.on("click", getLatLng)
+    vehicleMap.doubleClickZoom.disable();
+    start();
 }
 
 function geolocationError() {
-    console.log("no gis");
-    vehicleMap = L.map('vehicleMapDiv', {zoomControl: false}).setView([31.7683, 35.2137], 13);
+    vehicleMap = L.map('vehicleMapDiv', {
+        zoomControl: false
+    }).setView([31.7683, 35.2137], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
     vehicleMap.on('click', closeAll);
+    vehicleMap.on("click", getLatLng);
+    vehicleMap.doubleClickZoom.disable();
+    start();
 
 }
 
 function loadMap() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(geolocationSuccess);
-    } else {
-        geolocationError();
-    }
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+    navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
+
 }
 
 function socketClose(event) {
+    websocket = false;
+    console.log(event);
     switch (event.code) {
         case 1000 :
             alert("You have been logged out");
             localStorage.removeItem("token"); //delete the user token from storage
-            $(location).attr('href', '/OpenFleetr'); //go to the home page
+            window.history.back();
             break;
-        case 1003 :
-            clearTimeout(socketAttemptInterval);
-            break
-        case 1001 :
-            websocket = false;
+        case 1001:
             fallbackPolling();
             break;
-        case 1006 :
-            websocket = false;
-            fallbackPolling();
+        default :
             break;
     }
 }
 
 function socketError(event) {
-    console.log("an error has happened");
+    console.log(event);
+    fallbackPolling();
 }
 
 function socketConnect() {
-    notificationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
+    clearTimeout()
+    if(notificationSocket !== undefined){
+        notificationSocket.terminate();
+    }
+    
+    var Socket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));  
+    Socket.onopen = checkSocketInterval;
+    Socket.onmessage = parseSocketNotification;
+    Socket.onerror = socketError;
+    Socket.onclose = socketClose;
     websocket = true;
-    notificationSocket.onopen = checkSocketInterval;
-    notificationSocket.onmessage = parseSocketNotification;
-    notificationSocket.onerror = socketError;
-    notificationSocket.onclose = socketClose;
+    notificationSocket = Socket;
 }
 
 function getDispatcher() {
@@ -380,25 +410,16 @@ function getDispatcherError(jqHXR, textStatus, errorThrown) {
     }
 }
 
-function requestGeolocationPermission() {
-    navigator.permissions.query({name: 'geolocation'}).then(function (result) {
-        if (result.state === 'granted') {
-            geolocationSuccess();
-        } else if (result.state === 'prompt') {
-            loadMap();
-        } else if (result.state === 'denied') {
-            geolocationError();
-        }
-
-    });
-}
 
 function createCaseFormDisplayControl() {
     if (!$('#createCaseForm').is(":visible")) {
         closeAll();
+        handling = true;
         $('#createCaseForm').show();
     } else {
+        handling = false;
         $('#createCaseForm').hide();
+
     }
 }
 
@@ -407,10 +428,15 @@ function createCase() {
 }
 
 function createCaseFromClose() {
-    $('#fullName').val("");
-    $('#phoneNumber').val("");
-    $('#notes').val("");
-    createCaseFormDisplayControl();
+    if (handling == true) {
+        $('#fullName').val("");
+        $('#phoneNumber').val("");
+        $('#notes').val("");
+        $('#latitude').val("");
+        $('#longitude').val("");
+        $("recommendationList").html("");
+        createCaseFormDisplayControl();
+    }
 
 }
 
@@ -424,9 +450,22 @@ function fetchNotification() {
         complete: fetchNotificationInterval
     });
 }
+
 function fetchNotificationSuccess() {
+    $.ajax({
+        url: "/OpenFleetr/user/driver?token=" + localStorage.getItem("token") + "",
+        type: "GET",
+        dataType: "json",
+        success: fetchNotificationSuccess,
+        error: fetchNotificationError,
+        complete: fetchNotificationInterval
+    });
+}
 
-
+function fetchNotificationSuccess(data) {
+    //	for (var i in data) {
+    //var json = JSON.parse(data[i]);
+    //	}	currently function is in test()
 }
 
 function test() {
@@ -462,3 +501,27 @@ function notificationCreateCase() {
         });
     });
 }
+
+
+function getLatLng(event) {
+    if (handling == true) {
+        $("#latitude").val(event.latlng.lat);
+        $("#longitude").val(event.latlng.lng)
+        getReccomendations();
+        console.log($("#latitude").val());
+        console.log($("#longitude").val());
+    }
+
+}
+
+function getReccomendations() {
+    if(websocket === true){
+    notificationSocket.send(JSON.stringify({
+        latitude: $("#latitude").val(),
+        longitude: $("#longitude").val()
+    }));
+    }else{
+        fallbackPolling();
+    }
+}
+
