@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Multi-package class diagram">
+  <ClassDiagramComponents>
+    <Class name="CurrentDispatchOrderEntityCache" package="com.amt.common.cache" visibility="public" xPosition="976.0" yPosition="49.0">
+      <Fields>
+        <Field name="realTimeCache" type="CurrentDispatchOrderEntityCache" visibility="private" isStatic="true"/>
+        <Field name="cache" type="ObjectCache&lt;Long, JSONObject&gt;" visibility="private" isStatic="true"/>
+        <Field name="lock" type="ReentrantLock" visibility="private" isStatic="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="private"/>
+      </Constructors>
+      <Methods>
+        <Method name="getInstance" returnType="CurrentDispatchOrderEntityCache" visibility="public" isStatic="true"/>
+        <Method name="cache" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+          <Argument type="JSONObject" name="value"/>
+        </Method>
+        <Method name="retreive" returnType="JSONObject" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+        </Method>
+        <Method name="setTimeStamp" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Timestamp" name="time"/>
+        </Method>
+        <Method name="getTimeStamp" returnType="Timestamp" visibility="public" isStatic="true"/>
+      </Methods>
+    </Class>
+    <Class name="CurrentStatusEntityCache" package="com.amt.common.cache" visibility="public" xPosition="344.0" yPosition="248.0">
+      <Fields>
+        <Field name="realTimeCache" type="CurrentStatusEntityCache" visibility="private" isStatic="true"/>
+        <Field name="cache" type="ObjectCache&lt;Long, JSONObject&gt;" visibility="private" isStatic="true"/>
+        <Field name="lock" type="ReentrantLock" visibility="private" isStatic="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="private"/>
+      </Constructors>
+      <Methods>
+        <Method name="getInstance" returnType="CurrentStatusEntityCache" visibility="public" isStatic="true"/>
+        <Method name="cache" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+          <Argument type="JSONObject" name="value"/>
+        </Method>
+        <Method name="retreive" returnType="JSONObject" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+        </Method>
+        <Method name="setTimeStamp" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Timestamp" name="time"/>
+        </Method>
+        <Method name="getTimeStamp" returnType="Timestamp" visibility="public" isStatic="true"/>
+      </Methods>
+    </Class>
+    <Class name="CurrentLocationEntityCache" package="com.amt.common.cache" visibility="public" xPosition="1072.0" yPosition="415.0">
+      <Fields>
+        <Field name="realTimeCache" type="CurrentLocationEntityCache" visibility="private" isStatic="true"/>
+        <Field name="cache" type="ObjectCache&lt;Long, JSONObject&gt;" visibility="private" isStatic="true"/>
+        <Field name="lock" type="ReentrantLock" visibility="private" isStatic="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="private"/>
+      </Constructors>
+      <Methods>
+        <Method name="getInstance" returnType="CurrentLocationEntityCache" visibility="public" isStatic="true"/>
+        <Method name="cache" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+          <Argument type="JSONObject" name="value"/>
+        </Method>
+        <Method name="retreive" returnType="JSONObject" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+        </Method>
+        <Method name="setTimeStamp" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Timestamp" name="time"/>
+        </Method>
+        <Method name="getTimeStamp" returnType="Timestamp" visibility="public" isStatic="true"/>
+      </Methods>
+    </Class>
+    <Class name="NotificationEntityCache" package="com.amt.common.cache" visibility="public" xPosition="675.0" yPosition="552.0">
+      <Fields>
+        <Field name="realTimeCache" type="NotificationEntityCache" visibility="private" isStatic="true"/>
+        <Field name="cache" type="ObjectCache&lt;Long, ArrayList&lt;String&gt;&gt;" visibility="private" isStatic="true"/>
+        <Field name="lock" type="ReentrantLock" visibility="private" isStatic="true"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="private"/>
+      </Constructors>
+      <Methods>
+        <Method name="getInstance" returnType="NotificationEntityCache" visibility="public" isStatic="true"/>
+        <Method name="cache" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+          <Argument type="String" name="value"/>
+        </Method>
+        <Method name="retreive" returnType="ArrayList&lt;String&gt;" visibility="public" isStatic="true">
+          <Argument type="Long" name="key"/>
+        </Method>
+        <Method name="setTimeStamp" returnType="void" visibility="public" isStatic="true">
+          <Argument type="Timestamp" name="time"/>
+        </Method>
+        <Method name="getTimeStamp" returnType="Timestamp" visibility="public" isStatic="true"/>
+      </Methods>
+    </Class>
+    <Class name="CurrentLocationEntityCacheManager" package="com.amt.common.cachemanager" visibility="public" xPosition="1401.0" yPosition="235.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="run" returnType="void" visibility="public"/>
+        <Method name="handleError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="AccessError" name="ex"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="NotificationThread" package="com.amt.common.cachemanager" visibility="public" xPosition="344.0" yPosition="528.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="run" returnType="void" visibility="public"/>
+        <Method name="handleError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="AccessError" name="ex"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="CurrentStatusEntityCacheManager" package="com.amt.common.cachemanager" visibility="public" xPosition="708.0" yPosition="337.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="run" returnType="void" visibility="public"/>
+        <Method name="handleError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="AccessError" name="ex"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="CurrentDispatchOrderEntityCacheManager" package="com.amt.common.cachemanager" visibility="public" xPosition="554.0" yPosition="49.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="run" returnType="void" visibility="public"/>
+        <Method name="handleError" returnType="void" visibility="public" isStatic="true">
+          <Argument type="AccessError" name="ex"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="realTimeCache" source="com.amt.common.cache.CurrentStatusEntityCache" target="com.amt.common.cache.CurrentStatusEntityCache" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="realTimeCache" source="com.amt.common.cache.CurrentDispatchOrderEntityCache" target="com.amt.common.cache.CurrentDispatchOrderEntityCache" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="realTimeCache" source="com.amt.common.cache.CurrentLocationEntityCache" target="com.amt.common.cache.CurrentLocationEntityCache" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="com.amt.common.cache.CurrentLocationEntityCache" target="com.amt.common.cache.CurrentLocationEntityCache" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="com.amt.common.cache.NotificationEntityCache" target="com.amt.common.cache.NotificationEntityCache" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="com.amt.common.cache.CurrentDispatchOrderEntityCache" target="com.amt.common.cache.CurrentDispatchOrderEntityCache" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="com.amt.common.cache.CurrentStatusEntityCache" target="com.amt.common.cache.CurrentStatusEntityCache" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="realTimeCache" source="com.amt.common.cache.NotificationEntityCache" target="com.amt.common.cache.NotificationEntityCache" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>

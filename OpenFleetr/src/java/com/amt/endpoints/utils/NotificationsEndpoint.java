@@ -6,26 +6,35 @@
 package com.amt.endpoints.utils;
 
 import com.amt.common.cache.NotificationEntityCache;
+import com.amt.common.data.GEOSql;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.amt.entities.auth.UserEntity;
 import com.amt.common.sessions.UserSession;
+import com.amt.entities.buisiness.CurrentLocationEntity;
 import com.amt.entities.management.DispatcherEntity;
 import com.amt.entities.management.JurisdictionEntity;
+import com.amt.entities.management.VehicleEntity;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.CloseReason;
+import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -47,7 +56,7 @@ public class NotificationsEndpoint {
                 JSONObject query1 = new JSONObject();
                 query1.put("userId", user.get("id"));
                 JSONObject dispatcher = Persistence.readByProperties(DispatcherEntity.class, query1);
-                
+
                 JSONObject query2 = new JSONObject();
                 query2.put("dispatcherId", dispatcher.get("id"));
                 JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query2);
@@ -81,6 +90,27 @@ public class NotificationsEndpoint {
         }
     }
 
+    @OnError
+    public void onError(Throwable t, Session session) throws Throwable {
+        Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
+        for (String token : tokens) {
+            UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
+            if (userSession.getUserSession().equals(session)) {
+                AuthenticatedNotificationSessionManager.lock(token);
+                try {
+                    userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Goodbye"));
+                } catch (IOException ex) {
+                    Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    AuthenticatedNotificationSessionManager.removeUserSession(token);
+                    AuthenticatedNotificationSessionManager.removeTokenGeographicalArea(token);
+
+                }
+            }
+        }
+
+    }
+
     public void DoClose(String token) {
         UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
         AuthenticatedNotificationSessionManager.lock(token);
@@ -91,7 +121,6 @@ public class NotificationsEndpoint {
         } finally {
             AuthenticatedNotificationSessionManager.removeUserSession(token);
             AuthenticatedNotificationSessionManager.removeTokenGeographicalArea(token);
-            AuthenticatedNotificationSessionManager.unlock(token);
         }
 
     }
@@ -100,4 +129,35 @@ public class NotificationsEndpoint {
 
     }
 
+    @OnMessage
+    public void handleMessage(String message, Session session) {
+        if (message != null && !"".equals(message)) {
+            try {
+                JSONObject json;
+                json = (JSONObject) new JSONParser().parse(message);
+                int a[] = GEOSql.fetchNearestVehicles(CurrentLocationEntity.class, json);
+                JSONObject resp = new JSONObject();
+                resp.put("type", "recommendation");
+                resp.put("array", Arrays.toString(a));
+
+                Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
+                for (String token : tokens) {
+                    UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
+                    if (userSession.getUserSession().equals(session)) {
+                        AuthenticatedNotificationSessionManager.lock(token);
+                        try {
+                            session.getBasicRemote().sendText(resp.toJSONString());
+                        } catch (IOException ex) {
+
+                        } finally {
+                            AuthenticatedNotificationSessionManager.unlock(token);
+                        }
+
+                    }
+                }
+            } catch (AccessError | ParseException ex) {
+                Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }

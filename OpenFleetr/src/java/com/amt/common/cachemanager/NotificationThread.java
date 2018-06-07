@@ -43,7 +43,7 @@ public class NotificationThread implements Runnable {
                             AuthenticatedNotificationSessionManager.lock(token);
                             try {
                                 Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
-                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\",\"type:\"\"notification\",\"value\":" +  notification.get("id") + "}");
+                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\";\"type\":\"notification\";\"value\":" +  notification.get("id") + "}");
                             } catch (IOException ex) {
                                 Logger.getLogger(NotificationThread.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

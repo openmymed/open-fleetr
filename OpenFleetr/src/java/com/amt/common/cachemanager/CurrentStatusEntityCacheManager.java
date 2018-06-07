@@ -12,6 +12,7 @@ import com.tna.common.AccessError;
 import com.tna.data.Persistence;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,22 +39,29 @@ public class CurrentStatusEntityCacheManager implements Runnable {
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentStatusEntity.class, cacheTime);
                 if (differentialList != null) {
-                    ArrayList<Long> changedVechicleIds = new ArrayList();
+                    ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
                     Set<String> userTokenSet = AuthenticatedNotificationSessionManager.sessionsTokenSet();
 
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
                         long vehicleId = (int) listItem.get("vehicleId");
-                        changedVechicleIds.add(vehicleId);
+                        changedVehicleIds.add(vehicleId);
                         CurrentStatusEntityCache.cache(vehicleId, listItem);
+                    }JSONObject resp = new JSONObject();
+                    try {
+                        resp.put("server",InetAddress.getLocalHost().getHostName());
+                    } catch (UnknownHostException ex) {
+                        Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    resp.put("type","status");
+                    resp.put("array",Arrays.toString(changedVehicleIds.toArray()));
                      for (String token : userTokenSet) {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.lock(token);
                             try {
                                 Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
-                                userSession.getBasicRemote().sendText("{\"server\":\""+InetAddress.getLocalHost().getHostName()+"\",\"type:\"\"status\",\"array\":" + Arrays.toString(changedVechicleIds.toArray()) + "}");
+                                userSession.getBasicRemote().sendText(resp.toJSONString());
                             } catch (IOException ex) {
                                 Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {

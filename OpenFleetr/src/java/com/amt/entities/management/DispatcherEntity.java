@@ -6,6 +6,7 @@
 package com.amt.entities.management;
 
 import com.tna.entities.BasicEntity;
+import java.util.Date;
 
 /**
  *
@@ -16,7 +17,7 @@ public class DispatcherEntity extends BasicEntity {
     long userId;
     String firstName;
     String lastName;
-    String birthDate;
+    Date birthDate;
     String phoneNumber;
 
 }

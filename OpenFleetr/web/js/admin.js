@@ -42,7 +42,7 @@ function createDispatcher() {
 		type: "POST", //HTTP request type get
 		data: $("#dispatchersForm").serialize(), //Data sent to the server
 		success: function (response) {
-			console.log("response");
+			console.log(response);
 		}, //on success, call updateLocationsSuccess
 		error: function (xhr, resp, text) {
 			console.log(xhr, resp, text);
@@ -56,7 +56,7 @@ function createDriver() {
 		data: $("#driversForm").serialize(), //Data sent to the server
 		datatype: 'json',
 		success: function (response) {
-			console.log("response");
+			console.log(response);
 		}, //on success, call updateLocationsSuccess
 		error: function (xhr, resp, text) {
 			console.log(xhr, resp, text);
