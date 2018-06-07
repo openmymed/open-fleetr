@@ -109,19 +109,17 @@ public class GEOSql {
         return result;
     }
 
-    public static int[] fetchNearestVehicles(Class vehicle, JSONObject coords) throws AccessError {
+    public static ArrayList<Integer> fetchNearestVehicles(Class vehicle, JSONObject coords) throws AccessError {
+        ArrayList<Integer> array = new ArrayList();
         String vehicleClassName = vehicle.getSimpleName();
         Connection conn = Access.pool.checkOut();
-        int[] result  = new int[5];
         try (PreparedStatement pstmt = conn.prepareStatement(String.format(CALCULATE_DISTANCES_SQL, vehicleClassName, vehicleClassName, vehicleClassName))) {
             pstmt.setObject(1, coords.get("latitude"));
             pstmt.setObject(2, coords.get("longitude"));
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                int i=0;
                 while (rs.next()) {
-                    result[i] = (rs.getInt("vehicleId"));
-                    i++;
+                    array.add(rs.getInt("vehicleId"));
                 }
 
             }
@@ -130,7 +128,7 @@ public class GEOSql {
         } finally {
             Access.pool.checkIn(conn);
         }
-        return result;
+        return array;
 
     }
 

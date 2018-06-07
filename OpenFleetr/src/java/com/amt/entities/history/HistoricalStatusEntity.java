@@ -5,13 +5,14 @@
  */
 package com.amt.entities.history;
 
+import com.tna.entities.BasicEntity;
 import java.sql.Date;
 
 /**
  *
  * @author tareq
  */
-public class HistoricalStatusEntity {
+public class HistoricalStatusEntity extends BasicEntity {
     
     public long vehicleId;
     public long driverId;

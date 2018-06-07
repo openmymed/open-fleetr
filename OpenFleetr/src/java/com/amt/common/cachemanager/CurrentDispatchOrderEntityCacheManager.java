@@ -57,7 +57,7 @@ public class CurrentDispatchOrderEntityCacheManager implements Runnable {
                         Logger.getLogger(CurrentDispatchOrderEntityCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     resp.put("type","dispatchOrder");
-                    resp.put("array",Arrays.toString(changedVehicleIds.toArray()));
+                    resp.put("array",changedVehicleIds);
                     for (String token : userTokenSet) {
                         new Thread(() -> {
                             AuthenticatedNotificationSessionManager.lock(token);

@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/hospital/manage/*")
+@WebServlet("/hospital/manager/*")
 public class HospitalManagementEndpoint extends AuthorisedEndpoint {
 
     @Override

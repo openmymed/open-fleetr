@@ -26,7 +26,18 @@ public class DispatcherManagementEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doList(String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
-        return Persistence.list(DispatcherEntity.class);
+        JSONObject dispatcherList =  Persistence.list(DispatcherEntity.class);
+        for(Object key : dispatcherList.keySet()){
+        JSONObject readDispatcher = (JSONObject) dispatcherList.get(key);
+        JSONObject query1 = new JSONObject();
+        JSONObject readUser = Persistence.read(UserEntity.class, (int)readDispatcher.get("userId"));
+        System.out.println(readUser);
+        readDispatcher.put("userName",readUser.get("userName"));
+        readDispatcher.put("password",readUser.get("password"));
+        dispatcherList.put(key, readDispatcher);
+        }
+        return dispatcherList;
+        
 
     }
 
@@ -60,7 +71,13 @@ public class DispatcherManagementEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
-        return Persistence.read(DispatcherEntity.class, l);
+        JSONObject readDispatcher = Persistence.read(DispatcherEntity.class, l);
+        JSONObject query1 = new JSONObject();
+        query1.put("id",readDispatcher.get("userId"));
+        JSONObject readUser = Persistence.readByProperties(UserEntity.class, query1);
+        readDispatcher.put("userName",readUser.get("userName"));
+        readDispatcher.put("password",readUser.get("password"));
+        return readDispatcher;
     }
 
     @Override

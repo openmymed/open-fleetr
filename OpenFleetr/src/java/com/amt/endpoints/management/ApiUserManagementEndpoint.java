@@ -21,7 +21,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/user/api/management/*")
+@WebServlet("/user/api/manager/*")
 public class ApiUserManagementEndpoint extends AuthorisedEndpoint {
 
     @Override

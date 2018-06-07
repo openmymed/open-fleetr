@@ -21,7 +21,7 @@ import org.json.simple.JSONObject;
  *
  * @author tareq
  */
-@WebServlet("/vehicle/manage/*")
+@WebServlet("/vehicle/manager/*")
 public class VehicleEndpoint extends AuthorisedEndpoint {
 
     @Override

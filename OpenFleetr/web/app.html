@@ -5,16 +5,17 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="css/leaflet.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/bootstrap.css"/>
         <link rel="stylesheet" href="css/style.css"/>
-        <link rel="stylesheet" href="css/custom.css"/>
+        <link rel="stylesheet" href="css/leaflet.css"/>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/popper.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript" src="js/leaflet.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.serializeObject.min.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
+        <link rel="stylesheet" href="css/custom.css"/>
 
     </head>
     <body style="background:white;">
@@ -27,10 +28,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent" style="display: unset !important;">
                     <ul class="nav nav-pills mr-auto justify-content-end">
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName">User</a>
+                            <a class="nav-link text-light" href="#"><i class="fa fa-user"></i> <span id="dispatcherName"></span>User</a>
                         </li>	
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="#"><i class="fa fa-gear"></i> <span id="settings">Settings</a>
+                            <a class="nav-link text-light" href="#"><i class="fa fa-gear"></i> <span id="settings"></span>Settings</a>
                         </li>	 
                         <li class="nav-item dropdown" >
                             <a class="nav-link text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -63,7 +64,7 @@
             <div id="vehicleMapDiv" class="p-0 m-0" style="height:93vh;">
             </div>
         </main>
-        
+
         <div id="createCaseForm" class="sidebar-popper">
             <form class="py-1 my-1">
                 <fieldset>
@@ -97,10 +98,10 @@
                 <br/>
             </form>
         </div>  
-                    
+
         <div id="ambulanceStatusesList" class="sidebar-popper">
         </div>
-                    
+
         <div id="hospitalsList" class="sidebar-popper">
         </div>
     </body>

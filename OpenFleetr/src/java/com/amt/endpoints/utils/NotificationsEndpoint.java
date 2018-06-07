@@ -135,18 +135,16 @@ public class NotificationsEndpoint {
             try {
                 JSONObject json;
                 json = (JSONObject) new JSONParser().parse(message);
-                int a[] = GEOSql.fetchNearestVehicles(CurrentLocationEntity.class, json);
-                JSONObject resp = new JSONObject();
-                resp.put("type", "recommendation");
-                resp.put("array", Arrays.toString(a));
-
+                JSONObject response = new JSONObject();
+                response.put("type", "recommendation");
+                response.put("array",GEOSql.fetchNearestVehicles(CurrentLocationEntity.class, json));
                 Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
                 for (String token : tokens) {
                     UserSession userSession = AuthenticatedNotificationSessionManager.get(token);
                     if (userSession.getUserSession().equals(session)) {
                         AuthenticatedNotificationSessionManager.lock(token);
                         try {
-                            session.getBasicRemote().sendText(resp.toJSONString());
+                            session.getBasicRemote().sendText(response.toJSONString());
                         } catch (IOException ex) {
 
                         } finally {

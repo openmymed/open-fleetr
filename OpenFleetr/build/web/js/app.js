@@ -8,7 +8,7 @@ var updateDriversTimeout;
 var updateLocationsTimeout;
 var updateStatusesTimeout;
 var handling = false;
-var  socketCheckInterval;
+var socketCheckInterval;
 var socketAttemptInterval;
 
 $(document).ready(main);
@@ -83,16 +83,13 @@ function parseSocketNotification(event) {
     console.log(json);
     switch (json.type) {
         case "location":
-            var array = JSON.parse(json.array);
-            array.forEach(fetchLocation);
+            json.array.forEach(fetchLocation);
             break;
         case "status":
-            var array = JSON.parse(json.array);
-            array.forEach(fetchStatus);
+            json.array.forEach(fetchStatus);
             break;
         case "dispatchOrder":
-            var array = JSON.parse(json.array);
-            array.forEach(fetchDispatchOrder);
+            json.array.forEach(fetchDispatchOrder);
             break;
         case "notification":
             fetchNotification();
@@ -105,12 +102,19 @@ function parseSocketNotification(event) {
     }
 }
 
+function fetchStatus(vehicleId){
+    console.log(vehicleId);
+}
+
+function fetchDispatchOrder(orderId){
+    console.log(orderId);
+}
+
 function handleRecomendations(json) {
     var htmlString = "";
-    var array = JSON.parse(json.array);
-    for (var item in array) {
-        htmlString = htmlString + ('<option value ="' + array[item] + '">Ambulance ' + array[item] + '</option>\n');
-    }
+    json.array.forEach(function (item) {
+        htmlString = htmlString + ('<option value ="' + item + '">Ambulance ' + item + '</option>\n');
+    });
     $("#recomendationList").html(htmlString);
 }
 function fallbackPolling() {
@@ -130,14 +134,14 @@ function attemptSocketInterval() {
 }
 
 function checkSocketInterval(event) {
-        socketCheckInterval = setTimeout(socketPing, 10000);
+    socketCheckInterval = setTimeout(socketPing, 10000);
 }
 
 function socketPing() {
 
     if (websocket === true) {
         notificationSocket.send('');
-        
+
     }
     checkSocketInterval();
 
@@ -369,11 +373,12 @@ function socketError(event) {
 
 function socketConnect() {
     clearTimeout()
-    if(notificationSocket !== undefined){
-        notificationSocket.terminate();
+    if (notificationSocket !== undefined) {
+        notificationSocket.close();
+        notificationSocket = null;
     }
-    
-    var Socket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));  
+
+    var Socket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
     Socket.onopen = checkSocketInterval;
     Socket.onmessage = parseSocketNotification;
     Socket.onerror = socketError;
@@ -515,12 +520,12 @@ function getLatLng(event) {
 }
 
 function getReccomendations() {
-    if(websocket === true){
-    notificationSocket.send(JSON.stringify({
-        latitude: $("#latitude").val(),
-        longitude: $("#longitude").val()
-    }));
-    }else{
+    if (websocket === true) {
+        notificationSocket.send(JSON.stringify({
+            latitude: $("#latitude").val(),
+            longitude: $("#longitude").val()
+        }));
+    } else {
         fallbackPolling();
     }
 }

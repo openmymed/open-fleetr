@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `APIUserEntity`
+-- Table structure for table `ApiUserEntity`
 --
 
-DROP TABLE IF EXISTS `APIUserEntity`;
+DROP TABLE IF EXISTS `ApiUserEntity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `APIUserEntity` (
+CREATE TABLE `ApiUserEntity` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `applicationName` varchar(45) DEFAULT NULL,
   `maintainerEmail` varchar(60) DEFAULT NULL,
@@ -34,12 +34,38 @@ CREATE TABLE `APIUserEntity` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `APIUserEntity`
+-- Dumping data for table `ApiUserEntity`
 --
 
-LOCK TABLES `APIUserEntity` WRITE;
-/*!40000 ALTER TABLE `APIUserEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `APIUserEntity` ENABLE KEYS */;
+LOCK TABLES `ApiUserEntity` WRITE;
+/*!40000 ALTER TABLE `ApiUserEntity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ApiUserEntity` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CaseEntity`
+--
+
+DROP TABLE IF EXISTS `CaseEntity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CaseEntity` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(100) DEFAULT NULL,
+  `lastName` varchar(100) DEFAULT NULL,
+  `phoneNumber` varchar(100) DEFAULT NULL,
+  `notes` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CaseEntity`
+--
+
+LOCK TABLES `CaseEntity` WRITE;
+/*!40000 ALTER TABLE `CaseEntity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CaseEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -55,14 +81,18 @@ CREATE TABLE `CurrentDispatchOrderEntity` (
   `startLongitude` double DEFAULT NULL,
   `destinationLatitude` double DEFAULT NULL,
   `destinationLongitude` double DEFAULT NULL,
-  `vehicleId` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
   `creationDate` date DEFAULT NULL,
-  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `completionDate` date DEFAULT NULL,
+  `vehicleId` int(11) DEFAULT NULL,
+  `caseId` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `destinationHospitalId` int(11) DEFAULT NULL,
   `dispatcherId` int(11) DEFAULT NULL,
+  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   PRIMARY KEY (`id`),
   KEY `CurrentDispatchOrderEntity_VehicleEntity_FK` (`vehicleId`),
   KEY `CurrentDispatchOrderEntity_DispatcherEntity_FK` (`dispatcherId`),
+  CONSTRAINT `CurrentDispatchOrderEntity_CaseEntity_FK` FOREIGN KEY (`id`) REFERENCES `CaseEntity` (`id`),
   CONSTRAINT `CurrentDispatchOrderEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`),
   CONSTRAINT `CurrentDispatchOrderEntity_VehicleEntity_FK` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -89,8 +119,8 @@ CREATE TABLE `CurrentLocationEntity` (
   `vehicleId` int(11) DEFAULT NULL,
   `longitude` double DEFAULT NULL,
   `latitude` double DEFAULT NULL,
-  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   `geographicalAreaId` int(11) DEFAULT NULL,
+  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   PRIMARY KEY (`id`),
   KEY `fk_CurrentLocationEntity_1_idx` (`vehicleId`),
   KEY `CurrentLocationEntity_GeographicalAreaEntity_FK` (`geographicalAreaId`),
@@ -153,12 +183,12 @@ CREATE TABLE `DispatcherEntity` (
   `userId` int(11) DEFAULT NULL,
   `firstName` varchar(45) DEFAULT NULL,
   `lastName` varchar(45) DEFAULT NULL,
-  `birthdate` date DEFAULT NULL,
+  `birthdate` varchar(40) DEFAULT NULL,
   `phoneNumber` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `DispatcherEntity_UserEntity_FK` (`userId`),
   CONSTRAINT `DispatcherEntity_UserEntity_FK` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,6 +197,7 @@ CREATE TABLE `DispatcherEntity` (
 
 LOCK TABLES `DispatcherEntity` WRITE;
 /*!40000 ALTER TABLE `DispatcherEntity` DISABLE KEYS */;
+INSERT INTO `DispatcherEntity` VALUES (1,2,'tareq','tareq','123-123-123',NULL),(2,3,'asdfasdf','asdfasdfa','123-41-123','sdfasdfasdf'),(3,5,'qweqwe','qweqwe','123-132-123','qweqwe'),(4,6,'asdfasdf','asdfasdf','2018-06-06','adfasdfasdfasdf');
 /*!40000 ALTER TABLE `DispatcherEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -315,6 +346,33 @@ LOCK TABLES `HistoricalStatusEntity` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `HospitalEntity`
+--
+
+DROP TABLE IF EXISTS `HospitalEntity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `HospitalEntity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `latitude` double DEFAULT NULL,
+  `longitude` double DEFAULT NULL,
+  `geographicalAreaId` int(11) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `HospitalEntity_GeographicalAreaEntity_FK` FOREIGN KEY (`id`) REFERENCES `GeographicalAreaEntity` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `HospitalEntity`
+--
+
+LOCK TABLES `HospitalEntity` WRITE;
+/*!40000 ALTER TABLE `HospitalEntity` DISABLE KEYS */;
+/*!40000 ALTER TABLE `HospitalEntity` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `JurisdictionEntity`
 --
 
@@ -356,13 +414,13 @@ CREATE TABLE `NotificationEntity` (
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL,
   `wasHandled` bit(1) DEFAULT NULL,
-  `handledTimestamp` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `timeStamp` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   `dispatchOrderId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `NotificationEntity_APIUserEntity_FK` (`apiUser`),
   KEY `NotificationEntity_DispatcherEntity_FK` (`dispatcherId`),
   KEY `NotificationEntity_CurrentDispatchOrderEntity_FK` (`dispatchOrderId`),
-  CONSTRAINT `NotificationEntity_APIUserEntity_FK` FOREIGN KEY (`apiUser`) REFERENCES `APIUserEntity` (`id`),
+  CONSTRAINT `NotificationEntity_APIUserEntity_FK` FOREIGN KEY (`apiUser`) REFERENCES `ApiUserEntity` (`id`),
   CONSTRAINT `NotificationEntity_CurrentDispatchOrderEntity_FK` FOREIGN KEY (`dispatchOrderId`) REFERENCES `CurrentDispatchOrderEntity` (`id`),
   CONSTRAINT `NotificationEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -392,7 +450,7 @@ CREATE TABLE `UserEntity` (
   `level` int(11) DEFAULT '1',
   `timeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,7 +459,7 @@ CREATE TABLE `UserEntity` (
 
 LOCK TABLES `UserEntity` WRITE;
 /*!40000 ALTER TABLE `UserEntity` DISABLE KEYS */;
-INSERT INTO `UserEntity` VALUES (1,'admin','admin','e7fa3d52-9a94-469c-ad3e-1b4be54fa66d',4,'2018-05-06 08:47:43');
+INSERT INTO `UserEntity` VALUES (1,'admin','admin','701a9307-60f8-430a-a9ec-9b1afca94d5a',4,'2018-06-07 10:03:10'),(2,'tareq','tareq',NULL,3,'2018-06-07 07:45:58'),(3,'KHd4quhV','wqujVAxlWgYjKi1N',NULL,2,'2018-06-07 07:53:31'),(4,'s1nGRUSK','2HjfXg72gJJLkVbf',NULL,2,'2018-06-07 08:00:17'),(5,'PUn5jGUG','dydbOmmdPeyYRlSh',NULL,2,'2018-06-07 08:00:28'),(6,'1YwkEZ1w','7eNXdNzKCH3N3vXV',NULL,2,'2018-06-07 10:01:01');
 /*!40000 ALTER TABLE `UserEntity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -442,4 +500,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-17 11:51:18
+-- Dump completed on 2018-06-07 13:44:43

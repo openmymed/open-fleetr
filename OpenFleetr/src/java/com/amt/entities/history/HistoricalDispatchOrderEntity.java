@@ -7,6 +7,7 @@ package com.amt.entities.history;
 
 import com.tna.entities.BasicEntity;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -21,7 +22,10 @@ public class HistoricalDispatchOrderEntity  extends BasicEntity {
   Date creationDate;
   Date completionDate;
   long vehicleId;
+  long caseId;
   long status;
+  long destinationHospitalId;
+  long dispatcherId;
 
 }
 
