@@ -42,11 +42,11 @@ function drawHospitalsMap() {
     }).addTo(hospitalsMap);
 }
 
-function createDispatcher() {
+function createDispatcher(form) {
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/dispatcher/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: JSON.stringify($("#dispatchersForm").serializeObject()), //Data sent to the server
+        data: JSON.stringify($(form).serializeObject()), //Data sent to the server
         success: function (response) {
             fetchDispatchers();
         }, //on success, call updateLocationsSuccess
@@ -55,42 +55,44 @@ function createDispatcher() {
         }
     });
 }
-function createDriver() {
+function createDriver(form) {
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/driver/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: $("#driversForm").serialize(), //Data sent to the server
+        data: JSON.stringify($(form).serializeObject()), //Data sent to the server
         datatype: 'json',
         success: function (response) {
-            console.log(response);
+            fetchDrivers();
         }, //on success, call updateLocationsSuccess
         error: function (xhr, resp, text) {
             console.log(xhr, resp, text);
         }
     });
 }
-function createVehicle() {
+function createVehicle(form) {
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: $("#driversForm").serialize(), //Data sent to the server
+        data: JSON.stringify($(form).serializeObject()), //Data sent to the server
         datatype: 'json',
         success: function (response) {
             console.log(response);
+            fetchVehicles();
         }, //on success, call updateLocationsSuccess
         error: function (xhr, resp, text) {
             console.log(xhr, resp, text);
         }
     });
 }
-function createApiUser() {
+function createApiUser(form) {
+    console.log(JSON.stringify($(form).serializeObject()));
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/api/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: $("#driversForm").serialize(), //Data sent to the server
+        data: JSON.stringify($("#apiUsersForm").serializeObject()), //Data sent to the server
         datatype: 'json',
         success: function (response) {
-            console.log(response);
+            fetchApiUsers();
         },
         error: function (xhr, resp, text) {
             console.log(xhr, resp, text);
@@ -104,7 +106,6 @@ function fetchDispatchers() {
         datatype: 'json',
         success: function (response) {
             var html = ""
-            console.log(response);
             for (var item in response) {
                 html = html + "<tr>";
                 html = html + "<td>" + response[item].firstName + "</td>";
@@ -132,6 +133,19 @@ function fetchDrivers() {
         datatype: 'json',
         success: function (response) {
             console.log(response);
+            var html = ""
+            for (var item in response) {
+                html = html + "<tr>";
+                html = html + "<td>" + response[item].firstName + "</td>";
+                html = html + "<td>" + response[item].lastName + "</td>";
+                html = html + "<td>" + response[item].birthDate + "</td>";
+                html = html + "<td>" + response[item].phoneNumber + "</td>";
+                html = html + "<td>" + response[item].userName + "</td>";
+                html = html + "<td>" + response[item].password + "</td>";
+                html = html + "<td>" + "" + "</td>";
+                html = html + "</tr>";
+            }
+            $("#driversTable").html(html);
         },
         error: function (xhr, resp, text) {
         }
@@ -143,8 +157,16 @@ function fetchVehicles() {
         type: "GET", //HTTP request type get
         datatype: 'json',
         success: function (response) {
-            console.log("response");
-
+            console.log(response);
+            var html = "";
+            for (var item in response) {
+                html = html + "<tr>";
+                html = html + "<td>" + response[item].vehicleLicensePlate + "</td>";
+                html = html + "<td>" + response[item].vehicleDescription + "</td>";
+                html = html + "<td>" + "" + "</td>";
+                html = html + "</tr>";
+            }
+            $("#vehiclesTable").html(html);
         },
         error: function (xhr, resp, text) {
         }
@@ -180,7 +202,16 @@ function fetchApiUsers() {
         type: "GET", //HTTP request type get
         datatype: 'json',
         success: function (response) {
-            console.log(response);
+            var html = "";
+            for (var item in response) {
+                html = html + "<tr>";
+                html = html + "<td>" + response[item].applicationName + "</td>";
+                html = html + "<td>" + response[item].maintainerEmail + "</td>";
+                html = html + "<td>" + response[item].token + "</td>";
+                html = html + "<td>" + "" + "</td>";
+                html = html + "</tr>";
+            }
+            $("#apiUsersTable").html(html);
 
         },
         error: function (xhr, resp, text) {

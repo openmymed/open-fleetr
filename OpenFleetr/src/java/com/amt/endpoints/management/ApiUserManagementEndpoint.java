@@ -34,23 +34,28 @@ public class ApiUserManagementEndpoint extends AuthorisedEndpoint {
             entry.put("token", user.get("token"));
             readApiUsers.put(key, entry);
         }
+        System.out.println(readApiUsers);
+
         return readApiUsers;
     }
 
     @Override
     public JSONObject doCreate(JSONObject jsono, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
+        System.out.println(jsono);
+
         JSONObject userQuery = new JSONObject();
         userQuery.put("userName", Utils.getRandom(32));
         userQuery.put("password", Utils.getRandom(32));
         long createdUser = UserAccessControl.createNewUser(UserEntity.class, userQuery, 3);
-        
+
         JSONObject userDetails = UserAccessControl.login(UserEntity.class, userQuery);
         userQuery.put("userId", userDetails.get("id"));
         jsono.put("userId", userDetails.get("id"));
+        System.out.println(jsono);
         userQuery.put("token", userDetails.get("token"));
         userQuery.put("apiUserId", Persistence.create(ApiUserEntity.class, jsono).get("key"));
-        
+
         return userQuery;
     }
 
@@ -64,7 +69,7 @@ public class ApiUserManagementEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class, string, 4);
-        JSONObject readApiUser = Persistence.read(ApiUserEntity.class,l);
+        JSONObject readApiUser = Persistence.read(ApiUserEntity.class, l);
         JSONObject user = Persistence.read(UserEntity.class, (int) readApiUser.get("userId"));
         readApiUser.put("token", user.get("token"));
         return readApiUser;
@@ -72,10 +77,10 @@ public class ApiUserManagementEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doDelete(long l, String string) throws AccessError {
-        JSONObject readApiUser = doRead(l,string);
+        JSONObject readApiUser = doRead(l, string);
         Persistence.delete(UserEntity.class, (long) readApiUser.get("userId"));
         return Persistence.delete(ApiUserEntity.class, l);
-        
+
     }
 
 }

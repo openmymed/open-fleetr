@@ -22,7 +22,7 @@ import org.json.simple.JSONObject;
  * @author tareq
  */
 @WebServlet("/vehicle/manager/*")
-public class VehicleEndpoint extends AuthorisedEndpoint {
+public class VehicleManagementEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
@@ -33,13 +33,15 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class,token,4);
+        System.out.println(json);
         JSONObject createdVehicle = Persistence.create(VehicleEntity.class,json);
-        
+        System.out.println(createdVehicle);
+
         JSONObject statusQuery = new JSONObject();
         statusQuery.put("vehicleId",(long)createdVehicle.get("key"));
         statusQuery.put("driverId",null);
-        statusQuery.put("checkInDate","none");
-        statusQuery.put("checkOutDate","none");
+        statusQuery.put("checkInDate",null);
+        statusQuery.put("checkOutDate",null);
         statusQuery.put("status",1);
         statusQuery.put("notes","");
         Persistence.create(CurrentStatusEntity.class, statusQuery);
