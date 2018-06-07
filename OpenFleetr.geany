@@ -31,7 +31,7 @@ long_line_column=72
 current_page=2
 FILE_NAME_0=0;XML;0;EUTF-8;1;1;0;%2Fhome%2Ftareq%2FCode%2FOpen-Fleetr%2FOpenFleetr%2Fbuild.xml;0;4
 FILE_NAME_1=0;HTML;0;EUTF-8;1;1;0;%2Fhome%2Ftareq%2FCode%2FOpen-Fleetr%2FOpenFleetr%2Fweb%2Fapp.html;0;4
-FILE_NAME_2=14733;HTML;0;EUTF-8;1;1;0;%2Fhome%2Ftareq%2FCode%2FOpen-Fleetr%2FOpenFleetr%2Fweb%2Fadmin.html;0;4
+FILE_NAME_2=6162;HTML;0;EUTF-8;1;1;0;%2Fhome%2Ftareq%2FCode%2FOpen-Fleetr%2FOpenFleetr%2Fweb%2Fadmin.html;0;4
 FILE_NAME_3=0;XML;0;EUTF-8;1;1;0;%2Fhome%2Ftareq%2FCode%2FOpen-Fleetr%2FOpenFleetr%2Fnbproject%2Fbuild-impl.xml;0;4
 
 [VTE]
@@ -68,3 +68,6 @@ NF_02_WD=%p
 EX_00_LB=_Execute
 EX_00_CM=
 EX_00_WD=
+
+[Workbench]
+Dir1-BaseDir=../OpenFleetr
