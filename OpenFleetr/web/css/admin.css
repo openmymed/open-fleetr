@@ -12,22 +12,5 @@ and open the template in the editor.
 .table-condensed {
   font-size: 13px;
 }
-table{
-   margin: 0 auto
-}
 
 .top-buffer { margin-top:20px; }
-
-#app .nav-tabs .nav-item{
-    background-color: white ;
-    border :black 1px solid ;
-    border-bottom : 0px;
-    margin-right : 5px;
-    border-top-left-radius : 3px;
-    border-top-right-radius : 3px;
-}
-#app .tab-pane{
-    background-color:white;
-    border :black 1px solid ;
-
-}
