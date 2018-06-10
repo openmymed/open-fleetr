@@ -39,6 +39,7 @@ public class CurrentLocationEntityCacheManager implements Runnable {
             try {
                 JSONObject differentialList = Persistence.listNewerThan(CurrentLocationEntity.class, cacheTime);
                 if (differentialList != null) {
+                    System.out.println("something has changed!");
                     ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
                     Set<String> userTokenSet = AuthenticatedNotificationSessionManager.sessionsTokenSet();

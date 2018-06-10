@@ -98,7 +98,7 @@ public class NotificationsEndpoint {
             if (userSession.getUserSession().equals(session)) {
                 AuthenticatedNotificationSessionManager.lock(token);
                 try {
-                    userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Goodbye"));
+                    userSession.getUserSession().close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Goodbye"));
                 } catch (IOException ex) {
                     Logger.getLogger(NotificationsEndpoint.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {

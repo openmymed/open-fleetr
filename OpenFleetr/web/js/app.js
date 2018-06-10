@@ -372,19 +372,13 @@ function socketError(event) {
 }
 
 function socketConnect() {
-    clearTimeout()
-    if (notificationSocket !== undefined) {
-        notificationSocket.close();
-        notificationSocket = null;
-    }
-
-    var Socket = new WebSocket("wss://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
-    Socket.onopen = checkSocketInterval;
-    Socket.onmessage = parseSocketNotification;
-    Socket.onerror = socketError;
-    Socket.onclose = socketClose;
+    notificationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
+    notificationSocket.onopen = checkSocketInterval;
+    notificationSocket.onmessage = parseSocketNotification;
+    notificationSocket.onerror = socketError;
+    notificationSocket.onclose = socketClose;
     websocket = true;
-    notificationSocket = Socket;
+    clearTimeout();
 }
 
 function getDispatcher() {
