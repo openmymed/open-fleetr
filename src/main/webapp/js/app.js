@@ -76,9 +76,11 @@ function hospitalsListControl() {
     }
 }
 
-function jurisdictionsToggleControl() {}
+function jurisdictionsToggleControl(event) {
+
+}
+
 function parseSocketNotification(event) {
-    console.log(event.data);
     var json = JSON.parse(event.data);
     console.log(json);
     switch (json.type) {
@@ -103,11 +105,11 @@ function parseSocketNotification(event) {
 }
 
 function fetchStatus(vehicleId){
-    console.log(vehicleId);
+;
 }
 
 function fetchDispatchOrder(orderId){
-    console.log(orderId);
+ 
 }
 
 function handleRecomendations(json) {
@@ -138,10 +140,8 @@ function checkSocketInterval(event) {
 }
 
 function socketPing() {
-
     if (websocket === true) {
         notificationSocket.send('');
-
     }
     checkSocketInterval();
 
@@ -209,9 +209,6 @@ function fetchLocation(vehicleId) {
 
 function fetchLocationSuccess(location) {
     if (!vehicles.hasOwnProperty(location.vehicleId.toString())) {
-        console.log(location.latitude);
-        console.log(location.longitude);
-        console.log(vehicleMap);
         vehicles[location.vehicleId.toString()] = L.marker([location.latitude, location.longitude]).addTo(vehicleMap);
     } else {
         vehicles[location.vehicleId.toString()].setLatLng([location.latitude, location.longitude]).update();
@@ -351,17 +348,14 @@ function loadMap() {
 
 function socketClose(event) {
     websocket = false;
-    console.log(event);
     switch (event.code) {
         case 1000 :
             alert("You have been logged out");
             localStorage.removeItem("token"); //delete the user token from storage
             window.history.back();
             break;
-        case 1001:
-            fallbackPolling();
-            break;
         default :
+        		fallbackPolling();
             break;
     }
 }
@@ -395,7 +389,7 @@ function getDispatcherSuccess(data) {
     var dispatcher = data[0].firstName + " " + data[0].lastName;
 
     dispatcherName = dispatcher;
-    document.getElementById("dispatcherName").innerHTML = dispatcherName;
+    document.getElementById("#dispatcherName").innerHTML = dispatcherName;
 }
 
 function getDispatcherError(jqHXR, textStatus, errorThrown) {
@@ -462,43 +456,15 @@ function fetchNotificationSuccess() {
 }
 
 function fetchNotificationSuccess(data) {
-    //	for (var i in data) {
-    //var json = JSON.parse(data[i]);
-    //	}	currently function is in test()
+
 }
 
 function test() {
-    var arr = ["bob", "12.1231", "12.2312"]
-    let notifBox = document.createElement("li");
-    notifBox.className = "notification-box";
-    notifBox.setAttribute("onlcick", "notifcationCreateCase()");
-    let col1 = document.createElement("div");
-    col1.className = "col-lg-1 col-sm-1 col-1 text-center";
-    let col2 = document.createElement("div");
-    col2.className = "col-lg-8 col-sm-8 col-8";
-    let name = document.createElement("strong");
-    name.className = "text-info";
-    name.innerHTML = "" + arr[0];
-    let div = document.createElement("div");
-    div.innerHTML = "An emergency notification has been posted";
-    let location = document.createElement("small");
-    location.className = "text-warning";
-    location.innerHTML = "Location: " + arr[1].toString() + ", " + arr[2].toString();
-    col2.appendChild(name);
-    col2.appendChild(div);
-    col2.appendChild(location);
-    notifBox.appendChild(col1);
-    notifBox.appendChild(col2);
-    var ul = document.getElementById("notis");
-    ul.insertBefore(notifBox, ul.children[ul.children.length - 1]);
+   
 }
 
-function notificationCreateCase() {
-    $(document).ready(function () {
-        $("li").click(function () {
-            $(this).hide();
-        });
-    });
+function notificationCreateCase(event) {
+
 }
 
 
@@ -507,11 +473,10 @@ function getLatLng(event) {
         $("#latitude").val(event.latlng.lat);
         $("#longitude").val(event.latlng.lng)
         getReccomendations();
-        console.log($("#latitude").val());
-        console.log($("#longitude").val());
     }
 
 }
+
 
 function getReccomendations() {
     if (websocket === true) {

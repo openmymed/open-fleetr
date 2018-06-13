@@ -3,6 +3,7 @@
 OpenFleetr/build/
 /OpenFleetr/build/
 /build/
+*.geany
 =======
 /build/
 /OpenFleetr/nbproject/private/

@@ -33,9 +33,7 @@ public class VehicleManagementEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         UserAccessControl.authOperation(UserEntity.class,token,4);
-        System.out.println(json);
         JSONObject createdVehicle = Persistence.create(VehicleEntity.class,json);
-        System.out.println(createdVehicle);
 
         JSONObject statusQuery = new JSONObject();
         statusQuery.put("vehicleId",(long)createdVehicle.get("key"));
