@@ -13,8 +13,8 @@ import com.tna.entities.BasicEntity;
  */
 public class Hospital extends BasicEntity {
     
-    double latitude;
-    double longitude;
-    String name;
+    public double latitude;
+    public double longitude;
+    public String name;
     
 }

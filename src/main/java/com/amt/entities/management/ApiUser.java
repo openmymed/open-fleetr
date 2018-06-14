@@ -13,9 +13,9 @@ import com.tna.entities.BasicEntity;
  */
 public class ApiUser extends BasicEntity{
    
-    long userId;
-    String applicationName;
-    String maintainerEmail;
+    public long userId;
+    public String applicationName;
+    public String maintainerEmail;
     
     
 }

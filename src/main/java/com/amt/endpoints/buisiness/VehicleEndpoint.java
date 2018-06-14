@@ -12,12 +12,14 @@ import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import javax.servlet.annotation.WebServlet;
 import org.json.simple.JSONObject;
 
 /**
  *
  * @author tareq
  */
+@WebServlet("/vehicle/*")
 public class VehicleEndpoint extends AuthorisedEndpoint {
 
     @Override

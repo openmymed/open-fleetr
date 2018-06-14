@@ -15,18 +15,18 @@ import java.sql.Timestamp;
  */
 public class DispatchOrder extends BasicEntity {
 
-    double startLatitude;
-    double startLongitude;
-    Date creationDate;
-    Date startDate;
-    Date completionDate;
-    long vehicleId;
-    String firstName;
-    String lastName;
-    String phoneNumber;
-    String notes;
-    long status;
-    long destinationHospitalId;
-    long dispatcherId;
+    public double startLatitude;
+    public double startLongitude;
+    public Date creationDate;
+    public Date startDate;
+    public Date completionDate;
+    public long vehicleId;
+    public String firstName;
+    public String lastName;
+    public String phoneNumber;
+    public String notes;
+    public long status;
+    public long destinationHospitalId;
+    public long dispatcherId;
 
 }
