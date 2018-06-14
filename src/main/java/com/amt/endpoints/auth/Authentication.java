@@ -5,7 +5,7 @@
  */
 package com.amt.endpoints.auth;
 
-import com.amt.entities.auth.UserEntity;
+import com.amt.entities.auth.User;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.endpoints.AuthenticationEndpoint;
@@ -21,7 +21,7 @@ public class Authentication extends AuthenticationEndpoint {
 
     @Override
     public JSONObject login(JSONObject obj) throws AccessError{
-       return  UserAccessControl.login(UserEntity.class, obj);
+       return  UserAccessControl.login(User.class, obj);
     }
     
 }

@@ -5,8 +5,8 @@
  */
 package com.amt.endpoints.buisiness;
 
-import com.amt.entities.auth.UserEntity;
-import com.amt.entities.management.HospitalEntity;
+import com.amt.entities.auth.User;
+import com.amt.entities.buisiness.Hospital;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -24,8 +24,8 @@ public class HospitalEndpoint  extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doList(String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 3);
-        return Persistence.list(HospitalEntity.class);
+        UserAccessControl.authOperation(User.class, string, 3);
+        return Persistence.list(Hospital.class);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class HospitalEndpoint  extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 3);
-        return Persistence.read(HospitalEntity.class,l);    
+        UserAccessControl.authOperation(User.class, string, 3);
+        return Persistence.read(Hospital.class,l);    
     }
 
     @Override

@@ -5,10 +5,8 @@
  */
 package com.amt.endpoints.management;
 
-import com.amt.entities.buisiness.CurrentLocationEntity;
-import com.amt.entities.auth.UserEntity;
-import com.amt.entities.management.VehicleEntity;
-import com.amt.entities.buisiness.CurrentStatusEntity;
+import com.amt.entities.auth.User;
+import com.amt.entities.buisiness.Vehicle;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
@@ -26,59 +24,37 @@ public class VehicleManagementEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-      UserAccessControl.authOperation(UserEntity.class,token,3);
-      return Persistence.list(VehicleEntity.class);
+      UserAccessControl.authOperation(User.class,token,3);
+      return Persistence.list(Vehicle.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class,token,4);
-        JSONObject createdVehicle = Persistence.create(VehicleEntity.class,json);
-
-        JSONObject statusQuery = new JSONObject();
-        statusQuery.put("vehicleId",(long)createdVehicle.get("key"));
-        statusQuery.put("driverId",null);
-        statusQuery.put("checkInDate",null);
-        statusQuery.put("checkOutDate",null);
-        statusQuery.put("status",1);
-        statusQuery.put("notes","");
-        Persistence.create(CurrentStatusEntity.class, statusQuery);
-        
-        JSONObject locationQuery = new JSONObject();
-        locationQuery.put("vehicleId",(long)createdVehicle.get("key"));
-        locationQuery.put("longitude", 0.0);
-        locationQuery.put("latitude", 0.0);
-        locationQuery.put("timeStamp",new Date().toString());
-        Persistence.create(CurrentLocationEntity.class,locationQuery);
-        return createdVehicle;
-        
+        UserAccessControl.authOperation(User.class,token,4);
+        json.put("driver",null);
+        json.put("status",0);
+        json.put("latitude",0.0);
+        json.put("longitude",0.0);
+        return Persistence.create(Vehicle.class,json);        
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class,token,4);
-        return Persistence.update(VehicleEntity.class,resource,json);
+        UserAccessControl.authOperation(User.class,token,4);
+        return Persistence.update(Vehicle.class,resource,json);
     }
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class,token,3);
-        return Persistence.read(VehicleEntity.class,resource);
+        UserAccessControl.authOperation(User.class,token,3);
+        return Persistence.read(Vehicle.class,resource);
     }
 
     @Override
     public JSONObject doDelete(long resource, String token) throws AccessError {
         
-        UserAccessControl.authOperation(UserEntity.class,token,4);
-        JSONObject query = new JSONObject();
-        query.put("vehicleId",resource);
-        JSONObject readStatus = Persistence.readByProperties(CurrentStatusEntity.class, query);
-        Persistence.delete(CurrentStatusEntity.class, (long) readStatus.get("id"));
-        
-        JSONObject readLocation = Persistence.readByProperties(CurrentLocationEntity.class, query);
-        Persistence.delete(CurrentLocationEntity.class,(long)readLocation.get("id"));
-        
-        return Persistence.delete(VehicleEntity.class,resource);
+        UserAccessControl.authOperation(User.class,token,4);
+        return Persistence.delete(Vehicle.class,resource);
         
     }
     

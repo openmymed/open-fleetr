@@ -5,8 +5,8 @@
  */
 package com.amt.endpoints.buisiness;
 
-import com.amt.entities.management.DriverEntity;
-import com.amt.entities.auth.UserEntity;
+import com.amt.entities.management.Driver;
+import com.amt.entities.auth.User;
 import com.amt.utils.Utils;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
@@ -25,8 +25,8 @@ public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
-        return Persistence.list(DriverEntity.class);
+        UserAccessControl.authOperation(User.class, token, 3);
+        return Persistence.list(Driver.class);
 
     }
 
@@ -45,8 +45,8 @@ public class DriverEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 3);
-        return Persistence.read(DriverEntity.class,resource);
+        UserAccessControl.authOperation(User.class, token, 3);
+        return Persistence.read(Driver.class,resource);
     }
 
     @Override

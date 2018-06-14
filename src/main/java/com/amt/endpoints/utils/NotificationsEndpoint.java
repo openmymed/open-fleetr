@@ -8,12 +8,11 @@ package com.amt.endpoints.utils;
 import com.amt.common.cache.NotificationEntityCache;
 import com.amt.common.data.GEOSql;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
-import com.amt.entities.auth.UserEntity;
+import com.amt.entities.auth.User;
 import com.amt.common.sessions.UserSession;
-import com.amt.entities.buisiness.CurrentLocationEntity;
-import com.amt.entities.management.DispatcherEntity;
-import com.amt.entities.management.JurisdictionEntity;
-import com.amt.entities.management.VehicleEntity;
+import com.amt.entities.management.Dispatcher;
+import com.amt.entities.management.Jurisdiction;
+import com.amt.entities.buisiness.Vehicle;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -47,7 +46,7 @@ public class NotificationsEndpoint {
     public void open(@PathParam("token") String token, Session session) {
         JSONObject user;
         try {
-            user = UserAccessControl.fetchUserByToken(UserEntity.class, token);
+            user = UserAccessControl.fetchUserByToken(User.class, token);
             long level = (long) user.get("level");
             if (level > 2) {
                 UserSession userSession = new UserSession(token, (long) user.get("id"), (long) user.get("level"), session);
@@ -55,11 +54,11 @@ public class NotificationsEndpoint {
 
                 JSONObject query1 = new JSONObject();
                 query1.put("userId", user.get("id"));
-                JSONObject dispatcher = Persistence.readByProperties(DispatcherEntity.class, query1);
+                JSONObject dispatcher = Persistence.readByProperties(Dispatcher.class, query1);
 
                 JSONObject query2 = new JSONObject();
                 query2.put("dispatcherId", dispatcher.get("id"));
-                JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query2);
+                JSONObject jurisdictions = Persistence.listByProperties(Jurisdiction.class, query2);
 
                 for (Object key : jurisdictions.keySet()) {
                     JSONObject jurisdiction = (JSONObject) jurisdictions.get(key);
@@ -137,7 +136,7 @@ public class NotificationsEndpoint {
                 json = (JSONObject) new JSONParser().parse(message);
                 JSONObject response = new JSONObject();
                 response.put("type", "recommendation");
-                response.put("array",GEOSql.fetchNearestVehicles(CurrentLocationEntity.class, json));
+                response.put("array",GEOSql.fetchNearestVehicles(Vehicle.class, json));
                 Set<String> tokens = AuthenticatedNotificationSessionManager.sessionsTokenSet();
                 for (String token : tokens) {
                     UserSession userSession = AuthenticatedNotificationSessionManager.get(token);

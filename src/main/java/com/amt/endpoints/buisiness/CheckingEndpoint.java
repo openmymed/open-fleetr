@@ -5,10 +5,10 @@
  */
 package com.amt.endpoints.buisiness;
 
-import com.amt.entities.buisiness.CurrentStatusEntity;
-import com.amt.entities.management.DriverEntity;
-import com.amt.entities.history.HistoricalStatusEntity;
-import com.amt.entities.auth.UserEntity;
+import com.amt.entities.management.Driver;
+import com.amt.entities.history.StatusHistory;
+import com.amt.entities.auth.User;
+import com.amt.entities.buisiness.Vehicle;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -32,77 +32,75 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, token, 1);
-        long UserId = (long)UserAccessControl.fetchUserByToken(UserEntity.class, token).get("id");
-
-        JSONObject query1 = new JSONObject();
-        query1.put("userId", UserId);
-        JSONObject readDriver = Persistence.readByProperties(DriverEntity.class, query1);
-
-        JSONObject query2 = new JSONObject();
-        query2.put("driverId", readDriver.get("id"));
-        JSONObject readStatus = Persistence.readByProperties(CurrentStatusEntity.class, query2);
-
-        if (readStatus == null) {
-            throw new AccessError(ERROR_TYPE.ENTITY_NOT_FOUND);
-
-        }
-
-        if ((int) readStatus.get("status") != 2) {
-            throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
-        }
-        String date  = new Date().toString();
-        readStatus.put("checkInDate", date);
-        readStatus.put("timeStamp",date);
-        Persistence.create(HistoricalStatusEntity.class, readStatus);
-
-        JSONObject query = new JSONObject();
-        query.put("driverId", -1);
-        query.put("status", 1);
-        query.put("checkOutDate", "");
-        query.put("checkInDate", "");
-        query.put("notes", "");
-
-        return Persistence.update(CurrentStatusEntity.class, (int) readStatus.get("id"), query);
+        throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
 
     }
 
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
-        
-        UserAccessControl.authOperation(UserEntity.class, token, 1); 
-        long DriverId = (long)UserAccessControl.fetchUserByToken(UserEntity.class, token).get("id");
-        
-        JSONObject query1 = new JSONObject();
-        query1.put("driverId", DriverId);
-        if ( Persistence.readByProperties(CurrentStatusEntity.class, query1) != null) {
-            throw new AccessError(ERROR_TYPE.USER_NOT_ALLOWED);
-        }
 
-        JSONObject obj = new JSONObject();
-        obj.put("vehicleId", resource);
-        JSONObject readStatus = Persistence.readByProperties(CurrentStatusEntity.class, obj);
-        if (readStatus == null || (int) readStatus.get("status") != 1) {
-            throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
+        JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
+        if (user.get("level").equals(1)) {
+            JSONObject readVehicle = Persistence.read(Vehicle.class, resource);
+            if (readVehicle.get("status").equals(1)) {
+                JSONObject driverQuery = new JSONObject();
+                driverQuery.put("userId", user.get("id"));
 
+                JSONObject readDriver = Persistence.readByProperties(Driver.class, driverQuery);
+
+                if (readVehicle.get("driver").equals(readDriver.get("id"))) {
+                    JSONObject statusHistoryQuery = new JSONObject();
+                    statusHistoryQuery.put("vehicleId", readVehicle.get("id"));
+                    statusHistoryQuery.put("userId", user.get("id"));
+                    statusHistoryQuery.put("from", readVehicle.get("status"));
+                    statusHistoryQuery.put("to", 0);
+
+                    readVehicle.put("driver", null);
+                    readVehicle.put("status", 0);
+
+                    JSONObject response = Persistence.update(Vehicle.class, resource, readVehicle);
+                    Persistence.create(StatusHistory.class, statusHistoryQuery);
+                    return response;
+                } else {
+                    throw new AccessError(ERROR_TYPE.USER_NOT_ALLOWED);
+                }
+            } else {
+                throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
+            }
         } else {
-            JSONObject query3 = new JSONObject();
-            JSONObject query4 = new JSONObject();
-            query3.put("userId", DriverId);
-            
-            query4.put("checkOutDate", new Date().toString());
-            query4.put("status", 2);      
-            query4.put("driverId", Persistence.readByProperties(DriverEntity.class, query3).get("id"));
-            
-            readStatus.put("timeStamp", new Date().toString());
-            Persistence.create(HistoricalStatusEntity.class,readStatus);
-            return Persistence.update(CurrentStatusEntity.class, (int) readStatus.get("id"), query4);
+            throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
         }
     }
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        throw new AccessError(AccessError.ERROR_TYPE.OPERATION_FAILED);
+        JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
+        if (user.get("level").equals(1)) {
+            JSONObject readVehicle = Persistence.read(Vehicle.class, resource);
+            if (readVehicle.get("status").equals(0)) {
+                JSONObject driverQuery = new JSONObject();
+                driverQuery.put("userId", user.get("id"));
+
+                JSONObject readDriver = Persistence.readByProperties(Driver.class, driverQuery);
+
+                JSONObject statusHistoryQuery = new JSONObject();
+                statusHistoryQuery.put("vehicleId", readVehicle.get("id"));
+                statusHistoryQuery.put("userId", user.get("id"));
+                statusHistoryQuery.put("from", readVehicle.get("status"));
+                statusHistoryQuery.put("to", 1);
+
+                readVehicle.put("driver", readDriver.get("id"));
+                readVehicle.put("status", 1);
+
+                JSONObject response = Persistence.update(Vehicle.class, resource, readVehicle);
+                Persistence.create(StatusHistory.class, statusHistoryQuery);
+                return response;
+            } else {
+                throw new AccessError(ERROR_TYPE.ENTITY_UNAVAILABLE);
+            }
+        } else {
+            throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
+        }
 
     }
 

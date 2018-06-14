@@ -5,12 +5,12 @@
  */
 package com.amt.endpoints.buisiness;
 
-import com.amt.entities.auth.UserEntity;
+import com.amt.entities.auth.User;
 import com.amt.entities.buisiness.NotificationEntity;
-import com.amt.entities.management.GeographicalAreaEntity;
+import com.amt.entities.management.GeographicalArea;
 import com.amt.common.data.GEOSql;
-import com.amt.entities.management.ApiUserEntity;
-import com.amt.entities.management.JurisdictionEntity;
+import com.amt.entities.management.ApiUser;
+import com.amt.entities.management.Jurisdiction;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
@@ -28,11 +28,11 @@ public class DispatcherNotificationsEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 3);
+        UserAccessControl.authOperation(User.class, string, 3);
 
         JSONObject query1 = new JSONObject();
-        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
-        JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query1);
+        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(User.class, string).get("id"));
+        JSONObject jurisdictions = Persistence.listByProperties(Jurisdiction.class, query1);
 
         JSONObject orQuery = new JSONObject();
         for (Object key : jurisdictions.keySet()) {
@@ -57,11 +57,11 @@ public class DispatcherNotificationsEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 3);
+        UserAccessControl.authOperation(User.class, string, 3);
         JSONObject query1 = new JSONObject();
-        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
+        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(User.class, string).get("id"));
         query1.put("id", l);
-        JSONObject notification = Persistence.readByProperties(JurisdictionEntity.class, query1);
+        JSONObject notification = Persistence.readByProperties(Jurisdiction.class, query1);
         if (notification != null) {
             JSONObject update = new JSONObject();
             Object dispatchOrderId = jsono.get("dispatchOrderId");
@@ -82,11 +82,11 @@ public class DispatcherNotificationsEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 3);
+        UserAccessControl.authOperation(User.class, string, 3);
         JSONObject query1 = new JSONObject();
         query1.put("geographicalAreaId", l);
-        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(UserEntity.class, string).get("id"));
-        JSONObject jurisdictions = Persistence.listByProperties(JurisdictionEntity.class, query1);
+        query1.put("dispatcherId", UserAccessControl.fetchUserByToken(User.class, string).get("id"));
+        JSONObject jurisdictions = Persistence.listByProperties(Jurisdiction.class, query1);
         if (jurisdictions != null) {
             JSONObject query2 = new JSONObject();
             query2.put("geographicalAreaId", l);

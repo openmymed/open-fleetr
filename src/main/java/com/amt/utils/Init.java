@@ -5,9 +5,8 @@
  */
 package com.amt.utils;
 
-import com.amt.common.cachemanager.CurrentDispatchOrderEntityCacheManager;
-import com.amt.common.cachemanager.CurrentLocationEntityCacheManager;
-import com.amt.common.cachemanager.CurrentStatusEntityCacheManager;
+import com.amt.common.cachemanager.DispatchOrderCacheManager;
+import com.amt.common.cachemanager.VehicleCacheManager;
 import com.amt.common.cachemanager.NotificationThread;
 import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
 import com.tna.data.Access;
@@ -21,8 +20,7 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class Init extends Initialization {
 
-    Thread locationPoll;
-    Thread statusPoll;
+    Thread vehiclePoll;
     Thread dispatchPoll;
     Thread notificationThread;
 
@@ -33,9 +31,8 @@ public class Init extends Initialization {
         Access.setUsername("app_user");
         Access.setPassword("app_password");
         Access.pool.initialize(5);
-        locationPoll = (new Thread(new CurrentLocationEntityCacheManager()));
-        statusPoll = (new Thread(new CurrentStatusEntityCacheManager()));
-        dispatchPoll = (new Thread(new CurrentDispatchOrderEntityCacheManager()));
+        vehiclePoll = (new Thread(new VehicleCacheManager()));
+        dispatchPoll = (new Thread(new DispatchOrderCacheManager()));
         notificationThread = (new Thread(new NotificationThread()));
         startThreads();
     }
@@ -47,16 +44,14 @@ public class Init extends Initialization {
     }
 
     public void startThreads() {
-        locationPoll.start();
-        statusPoll.start();
+        vehiclePoll.start();
         dispatchPoll.start();
         notificationThread.start();
 
     }
 
     public void stopThreads() {
-        locationPoll.interrupt();
-        statusPoll.interrupt();
+        vehiclePoll.interrupt();
         dispatchPoll.interrupt();
         notificationThread.interrupt();
     }

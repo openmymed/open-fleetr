@@ -6,9 +6,9 @@
 package com.amt.endpoints.management;
 
 import com.amt.common.data.GEOSql;
-import com.amt.entities.auth.UserEntity;
-import com.amt.entities.management.GeographicalAreaEntity;
-import com.amt.entities.management.HospitalEntity;
+import com.amt.entities.auth.User;
+import com.amt.entities.management.GeographicalArea;
+import com.amt.entities.buisiness.Hospital;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
@@ -25,39 +25,39 @@ public class HospitalManagementEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 3);
-        return Persistence.list(HospitalEntity.class);
+        UserAccessControl.authOperation(User.class, string, 3);
+        return Persistence.list(Hospital.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject jsono, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 4);
-        long jurisdiction = GEOSql.liesWithinPolygon(GeographicalAreaEntity.class, jsono);
+        UserAccessControl.authOperation(User.class, string, 4);
+        long jurisdiction = GEOSql.liesWithinPolygon(GeographicalArea.class, jsono);
         jsono.put("geographicalAreaId", jurisdiction);
-        return Persistence.create(HospitalEntity.class,jsono);
+        return Persistence.create(Hospital.class,jsono);
 
     }
 
     @Override
     public JSONObject doUpdate(JSONObject jsono, long l, String string) throws AccessError {
-   UserAccessControl.authOperation(UserEntity.class, string, 4);
-        long jurisdiction = GEOSql.liesWithinPolygon(GeographicalAreaEntity.class, jsono);
+   UserAccessControl.authOperation(User.class, string, 4);
+        long jurisdiction = GEOSql.liesWithinPolygon(GeographicalArea.class, jsono);
         if (jsono.containsKey("latitude") && jsono.containsKey("longitude")){
         jsono.put("geographicalAreaId", jurisdiction);
     }
-        return Persistence.update(HospitalEntity.class,l,jsono);
+        return Persistence.update(Hospital.class,l,jsono);
     }
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-  UserAccessControl.authOperation(UserEntity.class, string, 3);
-        return Persistence.read(HospitalEntity.class,l);    
+  UserAccessControl.authOperation(User.class, string, 3);
+        return Persistence.read(Hospital.class,l);    
     }
 
     @Override
     public JSONObject doDelete(long l, String string) throws AccessError {
-    UserAccessControl.authOperation(UserEntity.class, string, 4);
-    return Persistence.delete(HospitalEntity.class,l);    
+    UserAccessControl.authOperation(User.class, string, 4);
+    return Persistence.delete(Hospital.class,l);    
     }
     
 }

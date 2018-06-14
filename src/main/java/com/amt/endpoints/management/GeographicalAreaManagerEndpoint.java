@@ -6,8 +6,8 @@
 package com.amt.endpoints.management;
 
 import com.amt.common.data.GEOSql;
-import com.amt.entities.auth.UserEntity;
-import com.amt.entities.management.GeographicalAreaEntity;
+import com.amt.entities.auth.User;
+import com.amt.entities.management.GeographicalArea;
 import com.tna.common.AccessError;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
@@ -24,14 +24,14 @@ public class GeographicalAreaManagerEndpoint extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doList(String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 4);
-        return Persistence.list(GeographicalAreaEntity.class);
+        UserAccessControl.authOperation(User.class, string, 4);
+        return Persistence.list(GeographicalArea.class);
     }
 
     @Override
     public JSONObject doCreate(JSONObject jsono, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 4);
-        return GEOSql.writePolygon(UserEntity.class, jsono);
+        UserAccessControl.authOperation(User.class, string, 4);
+        return GEOSql.writePolygon(User.class, jsono);
     }
 
     @Override
@@ -41,17 +41,17 @@ public class GeographicalAreaManagerEndpoint extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 4);
+        UserAccessControl.authOperation(User.class, string, 4);
         JSONObject response = new JSONObject();
         response.put("id",l);
-        response.put("coordinates",GEOSql.readPolygon(GeographicalAreaEntity.class, l));
+        response.put("coordinates",GEOSql.readPolygon(GeographicalArea.class, l));
         return response;
     }
 
     @Override
     public JSONObject doDelete(long l, String string) throws AccessError {
-        UserAccessControl.authOperation(UserEntity.class, string, 4);
-        return Persistence.delete(GeographicalAreaEntity.class,l);    
+        UserAccessControl.authOperation(User.class, string, 4);
+        return Persistence.delete(GeographicalArea.class,l);    
     
     }
     
