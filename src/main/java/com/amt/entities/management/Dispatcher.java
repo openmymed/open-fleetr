@@ -14,10 +14,10 @@ import java.util.Date;
  */
 public class Dispatcher extends BasicEntity {
 
-    long userId;
-    String firstName;
-    String lastName;
-    Date birthDate;
-    String phoneNumber;
+    public long userId;
+    public String firstName;
+    public String lastName;
+    public String birthDate;
+    public String phoneNumber;
 
 }

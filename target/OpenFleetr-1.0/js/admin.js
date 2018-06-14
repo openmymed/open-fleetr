@@ -2,11 +2,18 @@ var expanded = false;
 var areaMap;
 var hospitalsMap;
 
-$(document).ready(main);
-
-function main() {
+$(document).ready(function(){
     $('#hospitalsTab').click(drawHospitalsMap);
     $('#areasTab').click(drawAreaMap);
+    $('#createNewApiUserFormButton').click(createApiUser);
+    $('#createNewDriverFormButton').click(createDriver);
+    $('#createNewVehicleFormButton').click(createVehicle);
+    $('#createNewDispatcherFormButton').click(createDispatcher);
+
+    main();
+});
+
+function main() {
     fetchApiUsers();
     fetchDispatchers();
     fetchDrivers();
@@ -42,11 +49,14 @@ function drawHospitalsMap() {
     }).addTo(hospitalsMap);
 }
 
-function createDispatcher(form) {
+function createDispatcher(event) {
+    console.log(event);
+
+    console.log($("#dispatchersForm").serializeObject());
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/dispatcher/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: JSON.stringify($(form).serializeObject()), //Data sent to the server
+        data: JSON.stringify($("#dispatchersForm").serializeObject()), //Data sent to the server
         success: function (response) {
             fetchDispatchers();
         }, //on success, call updateLocationsSuccess
@@ -55,11 +65,14 @@ function createDispatcher(form) {
         }
     });
 }
-function createDriver(form) {
+function createDriver(event) {
+    console.log(event);
+
+    console.log($("#driversForm").serializeObject());
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/driver/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: JSON.stringify($(form).serializeObject()), //Data sent to the server
+        data: JSON.stringify($("#driversForm").serializeObject()), //Data sent to the server
         datatype: 'json',
         success: function (response) {
             fetchDrivers();
@@ -69,11 +82,14 @@ function createDriver(form) {
         }
     });
 }
-function createVehicle(form) {
+function createVehicle(event) {
+    console.log(event);
+
+    console.log($("#vehiclesForm").serializeObject());
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
-        data: JSON.stringify($(form).serializeObject()), //Data sent to the server
+        data: JSON.stringify($("#vehiclesForm").serializeObject()), //Data sent to the server
         datatype: 'json',
         success: function (response) {
             console.log(response);
@@ -84,8 +100,9 @@ function createVehicle(form) {
         }
     });
 }
-function createApiUser(form) {
-    console.log(JSON.stringify($(form).serializeObject()));
+function createApiUser(event) {
+    console.log(event);
+    console.log($("#apiUsersForm").serializeObject());
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/api/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get

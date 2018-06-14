@@ -28,7 +28,7 @@ public class GEOSql {
     private static final String READ_POLYGON_SQL = "SELECT ST_AsText(polygon) FROM %s where id=?";
     private static final String LIES_WITHIN_SQL = "SELECT vehicleId FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
     private static final String DELETE_WITHIN_SQL = "DELETE FROM %s WHERE ST_CONTAINS(polygon,ST_GEOMFROMTEXT('POINT(? ?)'))";
-    private static final String CALCULATE_DISTANCES_SQL = "SELECT Vehicle.id  FROM Vehicle WHERE   Vehicle.status >= 1 ORDER BY((ST_Distance(POINT(?,?), POINT(latitude, longitude)))) LIMIT 5";
+    private static final String CALCULATE_DISTANCES_SQL = "SELECT Vehicle.id  FROM Vehicle WHERE Vehicle.status != 2 ORDER BY((ST_Distance(POINT(?,?), POINT(latitude, longitude)))) LIMIT 5";
 
     public static String readPolygon(Class geoEntity, long l) throws AccessError {
         String result = null;
@@ -109,17 +109,15 @@ public class GEOSql {
         return result;
     }
 
-    public static ArrayList<Integer> fetchNearestVehicles(Class vehicle, JSONObject coords) throws AccessError {
+    public static ArrayList<Integer> fetchNearestVehicles(JSONObject coords) throws AccessError {
         ArrayList<Integer> array = new ArrayList();
-        String vehicleClassName = vehicle.getSimpleName();
         Connection conn = Access.pool.checkOut();
         try (PreparedStatement pstmt = conn.prepareStatement(CALCULATE_DISTANCES_SQL)) {
             pstmt.setObject(1, coords.get("latitude"));
             pstmt.setObject(2, coords.get("longitude"));
-
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    array.add(rs.getInt("vehicleId"));
+                    array.add(rs.getInt("id"));
                 }
 
             }

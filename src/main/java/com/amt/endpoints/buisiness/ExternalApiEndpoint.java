@@ -50,7 +50,7 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
             json.put("creationDate", new Date().toString());
             json.put("status", 0);
             json.put("userId", user.get("id"));
-
+            json.put("vehicleId",GEOSql.fetchNearestVehicles(json).get(0));
             return Persistence.create(DispatchOrder.class, json);
 
         } else {

@@ -121,7 +121,7 @@ public class NotificationsEndpoint {
                 json = (JSONObject) new JSONParser().parse(message);
                 JSONObject response = new JSONObject();
                 response.put("type", "recommendation");
-                response.put("array",GEOSql.fetchNearestVehicles(Vehicle.class, json));
+                response.put("array",GEOSql.fetchNearestVehicles(json));
                 Set<String> tokens = SessionManager.sessionsTokenSet();
                 for (String token : tokens) {
                     UserSession userSession = SessionManager.get(token);
