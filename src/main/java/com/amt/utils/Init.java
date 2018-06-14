@@ -7,8 +7,7 @@ package com.amt.utils;
 
 import com.amt.common.cachemanager.DispatchOrderCacheManager;
 import com.amt.common.cachemanager.VehicleCacheManager;
-import com.amt.common.cachemanager.NotificationThread;
-import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
+import com.amt.common.sessions.SessionManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
 import javax.servlet.annotation.WebListener;
@@ -22,7 +21,6 @@ public class Init extends Initialization {
 
     Thread vehiclePoll;
     Thread dispatchPoll;
-    Thread notificationThread;
 
     @Override
     public void onInit() {
@@ -33,26 +31,23 @@ public class Init extends Initialization {
         Access.pool.initialize(5);
         vehiclePoll = (new Thread(new VehicleCacheManager()));
         dispatchPoll = (new Thread(new DispatchOrderCacheManager()));
-        notificationThread = (new Thread(new NotificationThread()));
         startThreads();
     }
 
     @Override
     public void onDestroy() {
         stopThreads();
-        AuthenticatedNotificationSessionManager.closeAllSessions();
+        SessionManager.closeAllSessions();
     }
 
     public void startThreads() {
         vehiclePoll.start();
         dispatchPoll.start();
-        notificationThread.start();
 
     }
 
     public void stopThreads() {
         vehiclePoll.interrupt();
         dispatchPoll.interrupt();
-        notificationThread.interrupt();
     }
 }

@@ -38,13 +38,10 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
         if (user.get("level").equals(3)) {
-            JSONObject dispatcherQuery = new JSONObject();
-            dispatcherQuery.put("userId", user.get("id"));
-            JSONObject readDispatcher = Persistence.readByProperties(Dispatcher.class, dispatcherQuery);
-
+            
             json.put("creationDate", new Date().toString());
             json.put("status", 0);
-            json.put("dispatcherId", readDispatcher.get("id"));
+            json.put("userId", user.get("id"));
                     
             return Persistence.create(DispatchOrder.class, json);
 

@@ -15,7 +15,6 @@ public class Hospital extends BasicEntity {
     
     double latitude;
     double longitude;
-    long geographicalAreaId;
     String name;
     
 }

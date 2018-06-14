@@ -6,7 +6,7 @@
 package com.amt.common.cachemanager;
 
 import com.amt.common.cache.VehicleCache;
-import com.amt.common.sessions.AuthenticatedNotificationSessionManager;
+import com.amt.common.sessions.SessionManager;
 import com.amt.entities.buisiness.Vehicle;
 import com.tna.common.AccessError;
 import com.tna.data.Persistence;
@@ -41,7 +41,7 @@ public class VehicleCacheManager implements Runnable {
                 if (differentialList != null) {
                     ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
-                    Set<String> userTokenSet = AuthenticatedNotificationSessionManager.sessionsTokenSet();
+                    Set<String> userTokenSet = SessionManager.sessionsTokenSet();
                     for (Object key : keySet) {
                         JSONObject listItem = (JSONObject) differentialList.get(key);
                         long vehicleId = (int) listItem.get("id");
@@ -58,14 +58,14 @@ public class VehicleCacheManager implements Runnable {
                     resp.put("array",changedVehicleIds);
                     for (String token : userTokenSet) {
                         new Thread(() -> {
-                            AuthenticatedNotificationSessionManager.lock(token);
+                            SessionManager.lock(token);
                             try {
-                                Session userSession = AuthenticatedNotificationSessionManager.get(token).getUserSession();
+                                Session userSession = SessionManager.get(token).getUserSession();
                                 userSession.getBasicRemote().sendText(resp.toJSONString());
                             } catch (IOException ex) {
                                 Logger.getLogger(VehicleCacheManager.class.getName()).log(Level.SEVERE, null, ex);
                             } finally {
-                                AuthenticatedNotificationSessionManager.unlock(token);
+                                SessionManager.unlock(token);
                             }
                         }).start();
                     }
