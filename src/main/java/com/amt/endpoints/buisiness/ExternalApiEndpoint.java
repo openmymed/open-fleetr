@@ -8,14 +8,13 @@ package com.amt.endpoints.buisiness;
 import com.amt.common.data.GEOSql;
 import com.amt.entities.auth.User;
 import com.amt.entities.buisiness.DispatchOrder;
-import com.amt.entities.buisiness.NotificationEntity;
 import com.amt.entities.management.ApiUser;
-import com.amt.entities.management.GeographicalArea;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
 import com.tna.data.Persistence;
 import com.tna.endpoints.AuthorisedEndpoint;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.annotation.WebServlet;
@@ -30,22 +29,33 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String string) throws AccessError {
-        long apiUser = getApiUser(string);
-        JSONObject andQuery = new JSONObject();
-        andQuery.put("wasHandled", false);
-        andQuery.put("apiUser", apiUser);
-        return Persistence.readByProperties(NotificationEntity.class, andQuery);
+        JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
+        System.out.println((long)user.get("level") == 2);
+        if ((long)user.get("level") == 2) {
+            boolean complete = false;
+            JSONObject query = new JSONObject();
+            query.put("userId", user.get("id"));
+            query.put("status !", 2);
+            return Persistence.listByProperties(DispatchOrder.class, query);
+        } else {
+            throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
+        }
     }
 
     @Override
-    public JSONObject doCreate(JSONObject jsono, String string) throws AccessError {
-        long apiUser = getApiUser(string);
-        jsono.put("apiUser", apiUser);
-        jsono.put("wasSeen", false);
-        jsono.put("wasHandled", false);
-        JSONObject query = new JSONObject();
-        query.put("geographicalAreaId", GEOSql.liesWithinPolygon(GeographicalArea.class, jsono));
-        return Persistence.create(NotificationEntity.class, jsono);
+    public JSONObject doCreate(JSONObject json, String string) throws AccessError {
+        JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
+        if ((long)user.get("level") == 2) {
+
+            json.put("creationDate", new Date().toString());
+            json.put("status", 0);
+            json.put("userId", user.get("id"));
+
+            return Persistence.create(DispatchOrder.class, json);
+
+        } else {
+            throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
+        }
     }
 
     @Override
@@ -55,25 +65,17 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-        long apiUser = getApiUser(string);
-        boolean complete = false;
-        JSONObject query = new JSONObject();
-        query.put("apiUser", apiUser);
-        query.put("id", l);
-        JSONObject response = new JSONObject();
-        JSONObject notification = Persistence.readByProperties(NotificationEntity.class, query);
-        if (notification != null) {
-            if ((boolean) (notification.get("wasHandled")) == true) {
-                response = Persistence.read(DispatchOrder.class, (long) notification.get("dispatchOrderId"));
-                response.put("status", "processed");
-
-            } else {
-                response.put("status", "processing");
-            }
+        JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
+        if ((long)user.get("level") == 2) {
+            boolean complete = false;
+            JSONObject query = new JSONObject();
+            query.put("id", l);
+            query.put("userId", user.get("id"));
+            query.put("status !", 2);
+            return Persistence.listByProperties(DispatchOrder.class, query);
         } else {
-            throw new AccessError(ERROR_TYPE.ENTITY_NOT_FOUND);
+            throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
         }
-        return response;
     }
 
     @Override

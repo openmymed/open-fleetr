@@ -16,475 +16,273 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `ApiUserEntity`
+-- Table structure for table `ApiUser`
 --
 
-DROP TABLE IF EXISTS `ApiUserEntity`;
+DROP TABLE IF EXISTS `ApiUser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ApiUserEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `applicationName` varchar(45) DEFAULT NULL,
-  `maintainerEmail` varchar(60) DEFAULT NULL,
+CREATE TABLE `ApiUser` (
   `userId` int(11) DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `applicationName` varchar(100) DEFAULT NULL,
+  `maintainerEmail` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `APIUserEntity_UserEntity_FK` (`userId`),
-  CONSTRAINT `APIUserEntity_UserEntity_FK` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `ApiUser_User_FK` (`userId`),
+  CONSTRAINT `ApiUser_User_FK` FOREIGN KEY (`userId`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ApiUserEntity`
+-- Dumping data for table `ApiUser`
 --
 
-LOCK TABLES `ApiUserEntity` WRITE;
-/*!40000 ALTER TABLE `ApiUserEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ApiUserEntity` ENABLE KEYS */;
+LOCK TABLES `ApiUser` WRITE;
+/*!40000 ALTER TABLE `ApiUser` DISABLE KEYS */;
+INSERT INTO `ApiUser` VALUES (3,1,'helthcareapp','hamzeh@somemai.com');
+/*!40000 ALTER TABLE `ApiUser` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `CaseEntity`
+-- Table structure for table `DispatchOrder`
 --
 
-DROP TABLE IF EXISTS `CaseEntity`;
+DROP TABLE IF EXISTS `DispatchOrder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `CaseEntity` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `DispatchOrder` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `startLatitude` double DEFAULT NULL,
+  `startLongitude` double DEFAULT NULL,
+  `creationDate` varchar(100) DEFAULT NULL,
+  `startDate` varchar(100) DEFAULT NULL,
+  `completionDate` varchar(100) DEFAULT NULL,
+  `vehicleId` int(11) NOT NULL,
   `firstName` varchar(100) DEFAULT NULL,
   `lastName` varchar(100) DEFAULT NULL,
   `phoneNumber` varchar(100) DEFAULT NULL,
   `notes` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `status` int(11) NOT NULL,
+  `destinationHospitalId` int(11) NOT NULL,
+  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `userId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `DispatchOrder_Vehicle_FK` (`vehicleId`),
+  KEY `DispatchOrder_Hospital_FK` (`destinationHospitalId`),
+  KEY `DispatchOrder_User_FK` (`userId`),
+  CONSTRAINT `DispatchOrder_Hospital_FK` FOREIGN KEY (`destinationHospitalId`) REFERENCES `Hospital` (`id`),
+  CONSTRAINT `DispatchOrder_User_FK` FOREIGN KEY (`userId`) REFERENCES `User` (`id`),
+  CONSTRAINT `DispatchOrder_Vehicle_FK` FOREIGN KEY (`vehicleId`) REFERENCES `Vehicle` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `CaseEntity`
+-- Dumping data for table `DispatchOrder`
 --
 
-LOCK TABLES `CaseEntity` WRITE;
-/*!40000 ALTER TABLE `CaseEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CaseEntity` ENABLE KEYS */;
+LOCK TABLES `DispatchOrder` WRITE;
+/*!40000 ALTER TABLE `DispatchOrder` DISABLE KEYS */;
+/*!40000 ALTER TABLE `DispatchOrder` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `CurrentDispatchOrderEntity`
+-- Table structure for table `Dispatcher`
 --
 
-DROP TABLE IF EXISTS `CurrentDispatchOrderEntity`;
+DROP TABLE IF EXISTS `Dispatcher`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `CurrentDispatchOrderEntity` (
+CREATE TABLE `Dispatcher` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `startLatitude` double DEFAULT NULL,
-  `startLongitude` double DEFAULT NULL,
-  `destinationLatitude` double DEFAULT NULL,
-  `destinationLongitude` double DEFAULT NULL,
-  `creationDate` date DEFAULT NULL,
-  `completionDate` date DEFAULT NULL,
-  `vehicleId` int(11) DEFAULT NULL,
-  `caseId` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  `destinationHospitalId` int(11) DEFAULT NULL,
-  `dispatcherId` int(11) DEFAULT NULL,
-  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  PRIMARY KEY (`id`),
-  KEY `CurrentDispatchOrderEntity_VehicleEntity_FK` (`vehicleId`),
-  KEY `CurrentDispatchOrderEntity_DispatcherEntity_FK` (`dispatcherId`),
-  CONSTRAINT `CurrentDispatchOrderEntity_CaseEntity_FK` FOREIGN KEY (`id`) REFERENCES `CaseEntity` (`id`),
-  CONSTRAINT `CurrentDispatchOrderEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`),
-  CONSTRAINT `CurrentDispatchOrderEntity_VehicleEntity_FK` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CurrentDispatchOrderEntity`
---
-
-LOCK TABLES `CurrentDispatchOrderEntity` WRITE;
-/*!40000 ALTER TABLE `CurrentDispatchOrderEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CurrentDispatchOrderEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `CurrentLocationEntity`
---
-
-DROP TABLE IF EXISTS `CurrentLocationEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `CurrentLocationEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicleId` int(11) DEFAULT NULL,
-  `longitude` double DEFAULT NULL,
-  `latitude` double DEFAULT NULL,
-  `geographicalAreaId` int(11) DEFAULT NULL,
-  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  PRIMARY KEY (`id`),
-  KEY `fk_CurrentLocationEntity_1_idx` (`vehicleId`),
-  KEY `CurrentLocationEntity_GeographicalAreaEntity_FK` (`geographicalAreaId`),
-  CONSTRAINT `CurrentLocationEntity_GeographicalAreaEntity_FK` FOREIGN KEY (`geographicalAreaId`) REFERENCES `GeographicalAreaEntity` (`id`),
-  CONSTRAINT `fk_CurrentLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CurrentLocationEntity`
---
-
-LOCK TABLES `CurrentLocationEntity` WRITE;
-/*!40000 ALTER TABLE `CurrentLocationEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CurrentLocationEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `CurrentStatusEntity`
---
-
-DROP TABLE IF EXISTS `CurrentStatusEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `CurrentStatusEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicleId` int(11) DEFAULT NULL,
-  `driverId` int(11) DEFAULT NULL,
-  `checkOutDate` datetime DEFAULT NULL,
-  `checkInDate` datetime DEFAULT NULL,
-  `status` int(11) DEFAULT '1',
-  `notes` varchar(45) DEFAULT NULL,
-  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  PRIMARY KEY (`id`),
-  KEY `fk_CurrentStatusEntity_1_idx` (`vehicleId`),
-  KEY `CurrentStatusEntity_DriverEntity_FK` (`driverId`),
-  CONSTRAINT `CurrentStatusEntity_DriverEntity_FK` FOREIGN KEY (`driverId`) REFERENCES `DriverEntity` (`id`),
-  CONSTRAINT `fk_CurrentStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `CurrentStatusEntity`
---
-
-LOCK TABLES `CurrentStatusEntity` WRITE;
-/*!40000 ALTER TABLE `CurrentStatusEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CurrentStatusEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `DispatcherEntity`
---
-
-DROP TABLE IF EXISTS `DispatcherEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DispatcherEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(100) DEFAULT NULL,
+  `lastName` varchar(100) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
-  `firstName` varchar(45) DEFAULT NULL,
-  `lastName` varchar(45) DEFAULT NULL,
-  `birthdate` varchar(40) DEFAULT NULL,
-  `phoneNumber` varchar(20) DEFAULT NULL,
+  `birthDate` varchar(100) DEFAULT NULL,
+  `phoneNumber` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `DispatcherEntity_UserEntity_FK` (`userId`),
-  CONSTRAINT `DispatcherEntity_UserEntity_FK` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+  KEY `Dispatcher_User_FK` (`userId`),
+  CONSTRAINT `Dispatcher_User_FK` FOREIGN KEY (`userId`) REFERENCES `User` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DispatcherEntity`
+-- Dumping data for table `Dispatcher`
 --
 
-LOCK TABLES `DispatcherEntity` WRITE;
-/*!40000 ALTER TABLE `DispatcherEntity` DISABLE KEYS */;
-INSERT INTO `DispatcherEntity` VALUES (1,2,'tareq','tareq','123-123-123',NULL),(2,3,'asdfasdf','asdfasdfa','123-41-123','sdfasdfasdf'),(3,5,'qweqwe','qweqwe','123-132-123','qweqwe'),(4,6,'asdfasdf','asdfasdf','2018-06-06','adfasdfasdfasdf');
-/*!40000 ALTER TABLE `DispatcherEntity` ENABLE KEYS */;
+LOCK TABLES `Dispatcher` WRITE;
+/*!40000 ALTER TABLE `Dispatcher` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Dispatcher` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `DriverEntity`
+-- Table structure for table `Driver`
 --
 
-DROP TABLE IF EXISTS `DriverEntity`;
+DROP TABLE IF EXISTS `Driver`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `DriverEntity` (
+CREATE TABLE `Driver` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(100) DEFAULT NULL,
+  `lastName` varchar(100) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
-  `firstName` varchar(45) DEFAULT NULL,
-  `lastName` varchar(45) DEFAULT NULL,
-  `birthDate` varchar(45) DEFAULT NULL,
-  `phoneNumber` varchar(45) DEFAULT NULL,
-  `timeStamp` varchar(45) DEFAULT 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+  `birthDate` varchar(100) DEFAULT NULL,
+  `phoneNumber` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_DriverEntity_1_idx` (`userId`),
-  CONSTRAINT `fk_DriverEntity_1` FOREIGN KEY (`userId`) REFERENCES `UserEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `Driver_User_FK` (`userId`),
+  CONSTRAINT `Driver_User_FK` FOREIGN KEY (`userId`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `DriverEntity`
+-- Dumping data for table `Driver`
 --
 
-LOCK TABLES `DriverEntity` WRITE;
-/*!40000 ALTER TABLE `DriverEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `DriverEntity` ENABLE KEYS */;
+LOCK TABLES `Driver` WRITE;
+/*!40000 ALTER TABLE `Driver` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Driver` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `GeographicalAreaEntity`
+-- Table structure for table `Hospital`
 --
 
-DROP TABLE IF EXISTS `GeographicalAreaEntity`;
+DROP TABLE IF EXISTS `Hospital`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `GeographicalAreaEntity` (
+CREATE TABLE `Hospital` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(40) DEFAULT NULL,
-  `polygon` geometry DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `GeographicalAreaEntity`
---
-
-LOCK TABLES `GeographicalAreaEntity` WRITE;
-/*!40000 ALTER TABLE `GeographicalAreaEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `GeographicalAreaEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `HistoricalDispatchOrderEntity`
---
-
-DROP TABLE IF EXISTS `HistoricalDispatchOrderEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `HistoricalDispatchOrderEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `startLatitude` double DEFAULT NULL,
-  `startLongitude` double DEFAULT NULL,
-  `destinationLatitude` double DEFAULT NULL,
-  `destinationLongitude` double DEFAULT NULL,
-  `vehicleId` int(11) DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  `completionDate` datetime DEFAULT NULL,
-  `timeStamp` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `HistoricalDispatchOrderEntity`
---
-
-LOCK TABLES `HistoricalDispatchOrderEntity` WRITE;
-/*!40000 ALTER TABLE `HistoricalDispatchOrderEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `HistoricalDispatchOrderEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `HistoricalLocationEntity`
---
-
-DROP TABLE IF EXISTS `HistoricalLocationEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `HistoricalLocationEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicleId` int(11) DEFAULT NULL,
-  `longitude` double DEFAULT NULL,
-  `latitude` double DEFAULT NULL,
-  `timeStamp` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_HistoricalLocationEntity_1_idx` (`vehicleId`),
-  CONSTRAINT `fk_HistoricalLocationEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `HistoricalLocationEntity`
---
-
-LOCK TABLES `HistoricalLocationEntity` WRITE;
-/*!40000 ALTER TABLE `HistoricalLocationEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `HistoricalLocationEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `HistoricalStatusEntity`
---
-
-DROP TABLE IF EXISTS `HistoricalStatusEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `HistoricalStatusEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicleId` int(11) DEFAULT NULL,
-  `driverId` int(11) DEFAULT NULL,
-  `checkOutDate` varchar(45) DEFAULT NULL,
-  `checkInDate` varchar(45) DEFAULT NULL,
-  `status` int(11) DEFAULT '1',
-  `notes` varchar(45) DEFAULT NULL,
-  `timeStamp` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_HistoricalStatusEntity_1_idx` (`vehicleId`),
-  CONSTRAINT `fk_HistoricalStatusEntity_1` FOREIGN KEY (`vehicleId`) REFERENCES `VehicleEntity` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `HistoricalStatusEntity`
---
-
-LOCK TABLES `HistoricalStatusEntity` WRITE;
-/*!40000 ALTER TABLE `HistoricalStatusEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `HistoricalStatusEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `HospitalEntity`
---
-
-DROP TABLE IF EXISTS `HospitalEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `HospitalEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `latitude` double DEFAULT NULL,
-  `longitude` double DEFAULT NULL,
-  `geographicalAreaId` int(11) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `HospitalEntity_GeographicalAreaEntity_FK` FOREIGN KEY (`id`) REFERENCES `GeographicalAreaEntity` (`id`)
+  `latitude` varchar(100) DEFAULT NULL,
+  `longitude` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `HospitalEntity`
+-- Dumping data for table `Hospital`
 --
 
-LOCK TABLES `HospitalEntity` WRITE;
-/*!40000 ALTER TABLE `HospitalEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `HospitalEntity` ENABLE KEYS */;
+LOCK TABLES `Hospital` WRITE;
+/*!40000 ALTER TABLE `Hospital` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Hospital` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `JurisdictionEntity`
+-- Table structure for table `LocationHistory`
 --
 
-DROP TABLE IF EXISTS `JurisdictionEntity`;
+DROP TABLE IF EXISTS `LocationHistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `JurisdictionEntity` (
+CREATE TABLE `LocationHistory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dispatcherId` int(11) DEFAULT NULL,
-  `geographicalAreaId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `JurisdictionEntity_DispatcherEntity_FK` (`dispatcherId`),
-  KEY `JurisdictionEntity_GeographicalAreaEntity_FK` (`geographicalAreaId`),
-  CONSTRAINT `JurisdictionEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`),
-  CONSTRAINT `JurisdictionEntity_GeographicalAreaEntity_FK` FOREIGN KEY (`geographicalAreaId`) REFERENCES `GeographicalAreaEntity` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `JurisdictionEntity`
---
-
-LOCK TABLES `JurisdictionEntity` WRITE;
-/*!40000 ALTER TABLE `JurisdictionEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `JurisdictionEntity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `NotificationEntity`
---
-
-DROP TABLE IF EXISTS `NotificationEntity`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `NotificationEntity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `apiUser` int(11) DEFAULT NULL,
-  `dispatcherId` int(11) DEFAULT NULL,
+  `vehicleId` int(11) DEFAULT NULL,
   `latitude` double DEFAULT NULL,
   `longitude` double DEFAULT NULL,
-  `wasHandled` bit(1) DEFAULT NULL,
-  `timeStamp` timestamp(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
-  `dispatchOrderId` int(11) DEFAULT NULL,
+  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
   PRIMARY KEY (`id`),
-  KEY `NotificationEntity_APIUserEntity_FK` (`apiUser`),
-  KEY `NotificationEntity_DispatcherEntity_FK` (`dispatcherId`),
-  KEY `NotificationEntity_CurrentDispatchOrderEntity_FK` (`dispatchOrderId`),
-  CONSTRAINT `NotificationEntity_APIUserEntity_FK` FOREIGN KEY (`apiUser`) REFERENCES `ApiUserEntity` (`id`),
-  CONSTRAINT `NotificationEntity_CurrentDispatchOrderEntity_FK` FOREIGN KEY (`dispatchOrderId`) REFERENCES `CurrentDispatchOrderEntity` (`id`),
-  CONSTRAINT `NotificationEntity_DispatcherEntity_FK` FOREIGN KEY (`dispatcherId`) REFERENCES `DispatcherEntity` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  KEY `LocationHistory_Vehicle_FK` (`vehicleId`),
+  CONSTRAINT `LocationHistory_Vehicle_FK` FOREIGN KEY (`vehicleId`) REFERENCES `Vehicle` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `NotificationEntity`
+-- Dumping data for table `LocationHistory`
 --
 
-LOCK TABLES `NotificationEntity` WRITE;
-/*!40000 ALTER TABLE `NotificationEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `NotificationEntity` ENABLE KEYS */;
+LOCK TABLES `LocationHistory` WRITE;
+/*!40000 ALTER TABLE `LocationHistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `LocationHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `UserEntity`
+-- Table structure for table `StatusHistory`
 --
 
-DROP TABLE IF EXISTS `UserEntity`;
+DROP TABLE IF EXISTS `StatusHistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `UserEntity` (
+CREATE TABLE `StatusHistory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `userName` varchar(45) DEFAULT NULL,
-  `password` varchar(45) DEFAULT NULL,
-  `token` varchar(45) DEFAULT NULL,
-  `level` int(11) DEFAULT '1',
-  `timeStamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  `vehicleId` int(11) DEFAULT NULL,
+  `userId` int(11) DEFAULT NULL,
+  `from` int(11) NOT NULL,
+  `to` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `StatusHistory_User_FK` (`userId`),
+  KEY `StatusHistory_Vehicle_FK` (`vehicleId`),
+  CONSTRAINT `StatusHistory_User_FK` FOREIGN KEY (`userId`) REFERENCES `User` (`id`),
+  CONSTRAINT `StatusHistory_Vehicle_FK` FOREIGN KEY (`vehicleId`) REFERENCES `Vehicle` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `UserEntity`
+-- Dumping data for table `StatusHistory`
 --
 
-LOCK TABLES `UserEntity` WRITE;
-/*!40000 ALTER TABLE `UserEntity` DISABLE KEYS */;
-INSERT INTO `UserEntity` VALUES (1,'admin','admin','701a9307-60f8-430a-a9ec-9b1afca94d5a',4,'2018-06-07 10:03:10'),(2,'tareq','tareq',NULL,3,'2018-06-07 07:45:58'),(3,'KHd4quhV','wqujVAxlWgYjKi1N',NULL,2,'2018-06-07 07:53:31'),(4,'s1nGRUSK','2HjfXg72gJJLkVbf',NULL,2,'2018-06-07 08:00:17'),(5,'PUn5jGUG','dydbOmmdPeyYRlSh',NULL,2,'2018-06-07 08:00:28'),(6,'1YwkEZ1w','7eNXdNzKCH3N3vXV',NULL,2,'2018-06-07 10:01:01');
-/*!40000 ALTER TABLE `UserEntity` ENABLE KEYS */;
+LOCK TABLES `StatusHistory` WRITE;
+/*!40000 ALTER TABLE `StatusHistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StatusHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `VehicleEntity`
+-- Table structure for table `User`
 --
 
-DROP TABLE IF EXISTS `VehicleEntity`;
+DROP TABLE IF EXISTS `User`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `VehicleEntity` (
+CREATE TABLE `User` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vehicleType` varchar(45) DEFAULT NULL,
-  `timeStamp` timestamp NULL DEFAULT NULL,
+  `userName` varchar(100) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
+  `token` varchar(100) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `VehicleEntity`
+-- Dumping data for table `User`
 --
 
-LOCK TABLES `VehicleEntity` WRITE;
-/*!40000 ALTER TABLE `VehicleEntity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `VehicleEntity` ENABLE KEYS */;
+LOCK TABLES `User` WRITE;
+/*!40000 ALTER TABLE `User` DISABLE KEYS */;
+INSERT INTO `User` VALUES (1,'admin','admin','e440d585-6e87-4608-9a31-101a4c89e678',4),(2,'dispatcher','dispatcher',NULL,3),(3,'apiUser','apiUser',NULL,2);
+/*!40000 ALTER TABLE `User` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Vehicle`
+--
+
+DROP TABLE IF EXISTS `Vehicle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Vehicle` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timeStamp` timestamp(3) NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `vehicleDescription` varchar(100) DEFAULT NULL,
+  `vehicleLicensePlate` varchar(100) DEFAULT NULL,
+  `driver` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `latitude` int(11) DEFAULT NULL,
+  `longitude` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Vehicle_UN` (`driver`),
+  KEY `Vehicle_driver_IDX` (`driver`) USING BTREE,
+  CONSTRAINT `Vehicle_Driver_FK` FOREIGN KEY (`driver`) REFERENCES `Driver` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Vehicle`
+--
+
+LOCK TABLES `Vehicle` WRITE;
+/*!40000 ALTER TABLE `Vehicle` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Vehicle` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -500,4 +298,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-07 13:44:43
+-- Dump completed on 2018-06-14 18:27:41
