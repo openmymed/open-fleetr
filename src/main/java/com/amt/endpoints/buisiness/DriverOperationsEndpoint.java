@@ -28,7 +28,7 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doList(String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(1)) {
+        if ((long)user.get("level") == 1) {
 
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));
@@ -57,7 +57,7 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject data, long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(1)) {
+        if ((long)user.get("level") == 1) {
 
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));
@@ -93,7 +93,7 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(1)) {
+        if ((long)user.get("level") == 1) {
 
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));

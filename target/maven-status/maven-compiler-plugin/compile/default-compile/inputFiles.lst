@@ -3,6 +3,7 @@
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/utils/Utils.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/common/cache/VehicleCache.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/entities/history/LocationHistory.java
+/home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/buisiness/VehicleEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/buisiness/ExternalApiEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/management/HospitalManagementEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/common/data/GEOSql.java

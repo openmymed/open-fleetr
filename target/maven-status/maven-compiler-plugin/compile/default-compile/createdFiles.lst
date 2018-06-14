@@ -18,6 +18,7 @@ com/amt/endpoints/buisiness/CheckingEndpoint.class
 com/amt/common/cache/VehicleCache.class
 com/amt/common/cachemanager/VehicleCacheManager.class
 com/amt/common/sessions/SessionManager.class
+com/amt/endpoints/buisiness/VehicleEndpoint.class
 com/amt/endpoints/management/ApiUserManagementEndpoint.class
 com/amt/endpoints/buisiness/HospitalEndpoint.class
 com/amt/entities/buisiness/Vehicle.class

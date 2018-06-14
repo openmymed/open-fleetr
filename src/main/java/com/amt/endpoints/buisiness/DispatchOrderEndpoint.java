@@ -37,7 +37,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(3)) {
+        if ((long)user.get("level") == 3) {
             
             json.put("creationDate", new Date().toString());
             json.put("status", 0);
@@ -54,7 +54,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(3)) {
+        if ((long)user.get("level") == 3) {
             return Persistence.update(DispatchOrder.class, resource, json);
         } else {
             throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
@@ -63,7 +63,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 3);
+        UserAccessControl.authOperation(User.class, token, 2);
         JSONObject result = DispatchOrderCache.retreive((long) resource);
         if (result == null) {
             JSONObject obj = new JSONObject();

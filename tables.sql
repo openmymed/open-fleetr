@@ -30,7 +30,7 @@ CREATE TABLE `ApiUser` (
   PRIMARY KEY (`id`),
   KEY `ApiUser_User_FK` (`userId`),
   CONSTRAINT `ApiUser_User_FK` FOREIGN KEY (`userId`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +39,7 @@ CREATE TABLE `ApiUser` (
 
 LOCK TABLES `ApiUser` WRITE;
 /*!40000 ALTER TABLE `ApiUser` DISABLE KEYS */;
+INSERT INTO `ApiUser` VALUES (3,1,'helthcareapp','hamzeh@somemai.com');
 /*!40000 ALTER TABLE `ApiUser` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +240,7 @@ CREATE TABLE `User` (
   `token` varchar(100) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,7 +249,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'admin','admin','e440d585-6e87-4608-9a31-101a4c89e678',4),(2,'dispatcher','dispatcher',NULL,3);
+INSERT INTO `User` VALUES (1,'admin','admin','e440d585-6e87-4608-9a31-101a4c89e678',4),(2,'dispatcher','dispatcher',NULL,3),(3,'apiUser','apiUser',NULL,2);
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -297,4 +298,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-14 15:51:44
+-- Dump completed on 2018-06-14 18:27:41

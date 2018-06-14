@@ -30,7 +30,8 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doList(String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
-        if (user.get("level").equals(2)) {
+        System.out.println((long)user.get("level") == 2);
+        if ((long)user.get("level") == 2) {
             boolean complete = false;
             JSONObject query = new JSONObject();
             query.put("userId", user.get("id"));
@@ -44,7 +45,7 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doCreate(JSONObject json, String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
-        if (user.get("level").equals(2)) {
+        if ((long)user.get("level") == 2) {
 
             json.put("creationDate", new Date().toString());
             json.put("status", 0);
@@ -65,7 +66,7 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
-        if (user.get("level").equals(2)) {
+        if ((long)user.get("level") == 2) {
             boolean complete = false;
             JSONObject query = new JSONObject();
             query.put("id", l);

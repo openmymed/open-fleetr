@@ -3,11 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.amt</groupId>
-    <artifactId>Open-Fleetr</artifactId>
-    <version>1.0</version>
+    <artifactId>OpenFleetr</artifactId>
     <packaging>war</packaging>
-
-    <name>Open-Fleetr</name>
+    <version>1.0</version>
+    <name>OpenFleetr</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>

@@ -40,7 +40,7 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
 
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(1)) {
+        if ((long)user.get("level") == 1) {
             JSONObject readVehicle = Persistence.read(Vehicle.class, resource);
             if (readVehicle.get("status").equals(1)) {
                 JSONObject driverQuery = new JSONObject();
@@ -75,7 +75,7 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if (user.get("level").equals(1)) {
+        if ((long)user.get("level") == 1) {
             JSONObject readVehicle = Persistence.read(Vehicle.class, resource);
             if (readVehicle.get("status").equals(0)) {
                 JSONObject driverQuery = new JSONObject();
