@@ -10,7 +10,6 @@
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/common/data/GEOSql.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/entities/management/Dispatcher.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/common/cachemanager/NotificationThread.java
-/home/tareq/Code/Open-Fleetr/src/main/java/com/amt/entities/buisiness/Case.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/management/ApiUserManagementEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/utils/NotificationsEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/buisiness/HospitalEndpoint.java
@@ -23,6 +22,7 @@
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/entities/management/ApiUser.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/management/DriverManagementEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/utils/Init.java
+/home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/buisiness/DriverOperationsEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/common/sessions/AuthenticatedNotificationSessionManager.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/endpoints/management/DispatcherManagementEndpoint.java
 /home/tareq/Code/Open-Fleetr/src/main/java/com/amt/entities/management/Jurisdiction.java

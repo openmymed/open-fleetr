@@ -16,10 +16,10 @@ com/amt/utils/Init.class
 com/amt/entities/management/GeographicalArea.class
 com/amt/endpoints/buisiness/ExternalApiEndpoint.class
 com/amt/common/cachemanager/DispatchOrderCacheManager.class
+com/amt/endpoints/buisiness/DriverOperationsEndpoint.class
 com/amt/endpoints/management/VehicleManagementEndpoint.class
 com/amt/endpoints/buisiness/CheckingEndpoint.class
 com/amt/entities/buisiness/NotificationEntity.class
-com/amt/entities/buisiness/Case.class
 com/amt/common/cache/VehicleCache.class
 com/amt/common/cachemanager/VehicleCacheManager.class
 com/amt/common/sessions/AuthenticatedNotificationSessionManager.class
