@@ -14,9 +14,9 @@ function login() {
         alert("Please fill all fields...!!!!!!");
     } else {
         $.ajax({
-            url: "/OpenFleetr/user/auth", 
-            type: "POST", 
-            data: JSON.stringify(postData), 
+            url: "/OpenFleetr/user/auth",
+            type: "POST",
+            data: JSON.stringify(postData),
             dataType: "json",
             success: loginSuccess,
             error: loginError
@@ -27,10 +27,14 @@ function login() {
 function loginSuccess(data) {
     localStorage.removeItem("token");
     localStorage.setItem("token", data.token);
-    if (data.level > 3) {
+    if (data.level === 4) {
         $(location).attr('href', '/OpenFleetr/admin.html');
-    } else {
+    } else if (data.level === 3) {
         $(location).attr('href', '/OpenFleetr/app.html');
+    } else if (data.level === 2) {
+        $(location).attr('href', '/OpenFleetr/help.html');
+    } else if (data.level === 1) {
+        $(location).attr('href', '/OpenFleetr/driver.html');
     }
 }
 
