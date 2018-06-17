@@ -40,7 +40,7 @@ public class VehicleEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 3);
+        UserAccessControl.authOperation(User.class, token, 2);
         return Persistence.read(Vehicle.class, resource);
     }
 

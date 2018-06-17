@@ -1,12 +1,15 @@
+com/amt/common/sessions/DispatcherSession.class
 com/amt/common/data/GEOSql.class
-com/amt/endpoints/buisiness/DriverEndpoint.class
+com/amt/endpoints/utils/DriverApplicationEndpoint.class
 com/amt/entities/history/StatusHistory.class
+com/amt/endpoints/utils/DispatcherApplicationEndpoint.class
 com/amt/endpoints/management/HospitalManagementEndpoint.class
 com/amt/endpoints/buisiness/DispatchOrderEndpoint.class
 com/amt/entities/buisiness/DispatchOrder.class
 com/amt/common/cache/NotificationEntityCache.class
 com/amt/entities/management/Driver.class
 com/amt/utils/Utils.class
+com/amt/common/sessions/DispatcherSessionManager.class
 com/amt/entities/history/LocationHistory.class
 com/amt/endpoints/management/DriverManagementEndpoint.class
 com/amt/utils/Init.class
@@ -17,7 +20,6 @@ com/amt/endpoints/management/VehicleManagementEndpoint.class
 com/amt/endpoints/buisiness/CheckingEndpoint.class
 com/amt/common/cache/VehicleCache.class
 com/amt/common/cachemanager/VehicleCacheManager.class
-com/amt/common/sessions/SessionManager.class
 com/amt/endpoints/buisiness/VehicleEndpoint.class
 com/amt/endpoints/management/ApiUserManagementEndpoint.class
 com/amt/endpoints/buisiness/HospitalEndpoint.class
@@ -25,10 +27,10 @@ com/amt/entities/buisiness/Vehicle.class
 com/amt/endpoints/auth/Authentication.class
 com/amt/entities/management/ApiUser.class
 com/amt/entities/buisiness/Hospital.class
-com/amt/common/sessions/UserSession.class
+com/amt/common/sessions/DriverSession.class
 com/amt/endpoints/management/DispatcherManagementEndpoint.class
+com/amt/common/sessions/DriverSessionManager.class
 com/amt/endpoints/buisiness/DispatcherEndpoint.class
 com/amt/common/cache/DispatchOrderCache.class
 com/amt/entities/auth/User.class
-com/amt/endpoints/utils/NotificationsEndpoint.class
 com/amt/entities/management/Dispatcher.class

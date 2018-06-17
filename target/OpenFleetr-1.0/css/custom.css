@@ -10,6 +10,8 @@
   padding-bottom: 0px;
   padding: 0px;
 }
+.top-buffer { margin-top:20px; }
+
 .dropdown-menu:before{
   content: "";
   position: absolute;

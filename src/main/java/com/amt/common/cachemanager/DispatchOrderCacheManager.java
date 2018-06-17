@@ -6,7 +6,9 @@
 package com.amt.common.cachemanager;
 
 import com.amt.common.cache.DispatchOrderCache;
-import com.amt.common.sessions.SessionManager;
+import com.amt.common.sessions.DispatcherSessionManager;
+import com.amt.common.sessions.DriverSession;
+import com.amt.common.sessions.DriverSessionManager;
 import com.amt.entities.buisiness.DispatchOrder;
 import com.tna.common.AccessError;
 import com.tna.data.Persistence;
@@ -28,6 +30,9 @@ import org.json.simple.JSONObject;
  */
 public class DispatchOrderCacheManager implements Runnable {
 
+    private static String HOSTNAME = "unknown";
+    private static final String RESPONSE_TYPE = "dispatchOrder";
+
     @Override
     public void run() {
         while (!Thread.interrupted()) {
@@ -41,42 +46,50 @@ public class DispatchOrderCacheManager implements Runnable {
                 if (differentialList != null) {
                     ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
-                    Set<String> userTokenSet = SessionManager.sessionsTokenSet();
+                    Set<Long> vehicleIdSet = DriverSessionManager.getVehiclesKeyset();
 
                     for (Object key : keySet) {
-                        JSONObject listItem = (JSONObject) differentialList.get(key);
-                        long vehicleId = (int) listItem.get("vehicleId");
-                        changedVehicleIds.add(vehicleId);
-                        DispatchOrderCache.cache(vehicleId, listItem);
 
+                        JSONObject dispatchOrder = (JSONObject) differentialList.get(key);
+                        long id = (long) dispatchOrder.get("id");
+                        if (((long) dispatchOrder.get("status")) == 2) {
+                            DispatchOrderCache.clear(id);
+                            continue;
+                        }
+                        DispatchOrderCache.cache(id, dispatchOrder);
                     }
-                    JSONObject resp = new JSONObject();
-                    try {
-                        resp.put("server",InetAddress.getLocalHost().getHostName());
-                    } catch (UnknownHostException ex) {
-                        Logger.getLogger(DispatchOrderCacheManager.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    resp.put("type","dispatchOrder");
-                    resp.put("array",changedVehicleIds);
-                    for (String token : userTokenSet) {
-                        new Thread(() -> {
-                            SessionManager.lock(token);
-                            try {
-                                Session userSession = SessionManager.get(token).getUserSession();
-                                userSession.getBasicRemote().sendText(resp.toJSONString());
-                            } catch (IOException ex) {
-                                Logger.getLogger(DispatchOrderCacheManager.class.getName()).log(Level.SEVERE, null, ex);
-                            } finally {
-                                SessionManager.unlock(token);
-                            }
-                        }).start();
+
+                    for (JSONObject dispatchOrder : DispatchOrderCache.getValues()) {
+
+                        long vehicleId = (long) dispatchOrder.get("vehicleId");
+
+                        JSONObject resp = new JSONObject();
+                        resp.put("server", DispatchOrderCacheManager.HOSTNAME);
+                        resp.put("type", DispatchOrderCacheManager.RESPONSE_TYPE);
+                        resp.put("value", dispatchOrder);
+                        if (vehicleIdSet.contains(vehicleId)) {
+                            new Thread(() -> {
+                                DriverSessionManager.lock(vehicleId);
+                                try {
+                                    DriverSession driverSession = DriverSessionManager.getDriverSession(vehicleId);
+                                    if (driverSession.isAvailable()) {
+                                        driverSession.getUserSession().getBasicRemote().sendText(resp.toJSONString());
+                                        DispatchOrderCache.clear(vehicleId);
+                                    }
+                                } catch (IOException ex) {
+                                    Logger.getLogger(DispatchOrderCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+                                } finally {
+                                    DispatcherSessionManager.unlock(vehicleId);
+                                }
+                            }).start();
+                        }
                     }
                 }
             } catch (AccessError ex) {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     break;
                 }
@@ -89,6 +102,12 @@ public class DispatchOrderCacheManager implements Runnable {
     }
 
     public DispatchOrderCacheManager() {
+        try {
+            DispatchOrderCacheManager.HOSTNAME = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException ex) {
+            DispatchOrderCacheManager.HOSTNAME = "unknown";
+            Logger.getLogger(DispatchOrderCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DispatchOrderCache.getInstance();
     }
 }

@@ -2,7 +2,7 @@ var vehicles = [];
 var vehicleMap;
 var driversCache = [];
 var dipsatcherName;
-var notificationSocket;
+var applicationSocket;
 var websocket = false;
 var updateDriversTimeout;
 var updateLocationsTimeout;
@@ -139,7 +139,7 @@ function checkSocketInterval(event) {
 
 function socketPing() {
     if (websocket === true) {
-        notificationSocket.send('');
+        applicationSocket.send('');
     }
     checkSocketInterval();
 
@@ -322,11 +322,11 @@ function socketError(event) {
 }
 
 function socketConnect() {
-    notificationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/notifications/" + localStorage.getItem("token"));
-    notificationSocket.onopen = checkSocketInterval;
-    notificationSocket.onmessage = parseSocketNotification;
-    notificationSocket.onerror = socketError;
-    notificationSocket.onclose = socketClose;
+    applicationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/app/dispatcher" + localStorage.getItem("token"));
+    applicationSocket.onopen = checkSocketInterval;
+    applicationSocket.onmessage = parseSocketNotification;
+    applicationSocket.onerror = socketError;
+    applicationSocket.onclose = socketClose;
     websocket = true;
     clearTimeout();
 }
@@ -419,7 +419,7 @@ function getLatLng(event) {
 
 function getReccomendations() {
     if (websocket === true) {
-        notificationSocket.send(JSON.stringify({
+        applicationSocket.send(JSON.stringify({
             latitude: $("#latitude").val(),
             longitude: $("#longitude").val()
         }));
