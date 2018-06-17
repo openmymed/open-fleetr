@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Driver Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/bootstrap.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="css/leaflet.css"/>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="js/leaflet.js"></script>
+        <script type="text/javascript" src="js/jquery.serializeObject.min.js"></script>
+        <script type="text/javascript" src="js/driver.js"></script>
+        <link rel="stylesheet" href="css/custom.css"/>
+
+    </head>
+    <body style="background:white;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Open Fleetr</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li id="mapTab" class="nav-item ">
+                        <a role="tab" class="nav-link active" data-toggle="tab" href="#mapDiv"><i class="fa fa-map"></i> Map </a>
+                    </li>  
+                    <li id="orderTab" class="nav-item ">
+                        <a role="tab" class="nav-link" data-toggle="tab" href="#orderDiv"><i class="fa fa-plus"></i> Order </a>
+                    </li>  
+                    <li id="checkingTab" class="nav-item">
+                        <a role="tab" class="nav-link" data-toggle="tab" href="#checkingDiv"><i class="fa fa-ambulance"></i> Checking </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <main>
+            <div class="tab-content">
+                <div id="mapDiv" class="tab-pane show active fade text-center" role="tabpanel">
+                    <div id="map" class="p-0 m-0" style="height:65vh;">
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <button class="col-4 offset-4 btn-primary" id="statusButton" style="height:10vh;">adsfasdf</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="orderDiv"  class="tab-pane show fade" role="tabpanel">
+                    <table id="orderTable" class=" top-buffer table table-condensed table-bordered table-striped volumes">
+                        
+                        
+                    </table>
+                </div>
+                <div id="checkingDiv" class="tab-pane show fade" role="tabpanel">
+                    <div class="row top-buffer">
+                        <select class="col-8 offset-2"  id="availableVehicles">
+
+                        </select>
+                    </div>                        
+                    <div class="row top-buffer">
+                        <button class="col-4 offset-4 btn-primary disabled top-buffer" id="checkoutButton" style="height:10vh;">Check Out</button>
+                        <button class="col-4 offset-4 btn-primary disabled top-buffer" id="checkinButton" style="height:10vh;">Check In</button>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

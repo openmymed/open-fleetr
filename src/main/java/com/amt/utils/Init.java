@@ -7,7 +7,7 @@ package com.amt.utils;
 
 import com.amt.common.cachemanager.DispatchOrderCacheManager;
 import com.amt.common.cachemanager.VehicleCacheManager;
-import com.amt.common.sessions.SessionManager;
+import com.amt.common.sessions.DispatcherSessionManager;
 import com.tna.data.Access;
 import com.tna.utils.Initialization;
 import javax.servlet.annotation.WebListener;
@@ -37,7 +37,7 @@ public class Init extends Initialization {
     @Override
     public void onDestroy() {
         stopThreads();
-        SessionManager.closeAllSessions();
+        DispatcherSessionManager.closeAllSessions();
     }
 
     public void startThreads() {

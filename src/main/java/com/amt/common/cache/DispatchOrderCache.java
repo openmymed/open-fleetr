@@ -7,6 +7,8 @@ package com.amt.common.cache;
 
 import com.tna.common.ObjectCache;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 import org.json.simple.JSONObject;
 
@@ -41,10 +43,7 @@ public class DispatchOrderCache {
     public static void cache(Long key, JSONObject value) {
         lock.lock();
         try {
-            JSONObject values = DispatchOrderCache.getInstance().cache.retreive(key);
-            values.put(value.get("id"), value);
-            DispatchOrderCache.getInstance().cache.cache(key,values);
-            
+            DispatchOrderCache.getInstance().cache.cache(key, value);
         } finally {
             lock.unlock();
         }
@@ -55,17 +54,18 @@ public class DispatchOrderCache {
         retreive = DispatchOrderCache.getInstance().cache.retreive(key);
         return retreive;
     }
-    
-    public static void clear(Long key, JSONObject value){
+
+    public static void clear(Long key) {
         lock.lock();
         try {
-            JSONObject values = DispatchOrderCache.getInstance().cache.retreive(key);
-            values.remove(value.get("id"));
-            DispatchOrderCache.getInstance().cache.cache(key,values);
-            
+            DispatchOrderCache.getInstance().cache.remove(key);
         } finally {
             lock.unlock();
         }
+    }
+
+    public static Collection<JSONObject> getValues() {
+        return DispatchOrderCache.getInstance().cache.getValues();
     }
 
     public static void setTimeStamp(Timestamp time) {
