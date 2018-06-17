@@ -49,6 +49,38 @@ function socketClose(event) {
     }
 }
 
+function checkOut(){
+    
+}
+
+function checkIn(){
+    
+}
+
+function getAvailableAmbulances(){
+    
+}
+
+function pickedUp(){
+    
+}
+
+function delivered(){
+    
+}
+
+function getHospitalName(){
+    
+}
+
+function getDriverName(){
+    
+}
+
+function updateLocation(coords){
+    
+}
+
 function socketError(event) {
     console.log(event);
     fallbackPolling();
