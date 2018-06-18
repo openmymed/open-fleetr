@@ -43,6 +43,18 @@ public class DriverSessionManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public static DriverSession getDriverSession(Session session) {
+        DriverSessionManager.getInstance().lock();
+        try {
+            Long sessionId = DriverSessionManager.getInstance().sessionVehicleIds.get(session);
+            DriverSession driverSession = DriverSessionManager.getInstance().vehicleDriverSessions.get(sessionId);
+            return driverSession;
+        } finally {
+            DriverSessionManager.getInstance().unlock();
+        }
+
+    }
+
     private DriverSessionManager() {
         DriverSessionManager.sessionVehicleIds = new HashMap();
         DriverSessionManager.vehicleDriverSessions = new HashMap();
@@ -57,6 +69,18 @@ public class DriverSessionManager {
             driverSession.setAvailable(state);
         } finally {
             DriverSessionManager.getInstance().vehicleDriverSessions.put(sessionId, driverSession);
+
+            driverSession.unlock();
+        }
+    }
+
+    public static void setAvailable(long vehicleId, boolean state) {
+        DriverSession driverSession = DriverSessionManager.getInstance().vehicleDriverSessions.get(vehicleId);
+        driverSession.lock();
+        try {
+            driverSession.setAvailable(state);
+        } finally {
+            DriverSessionManager.getInstance().vehicleDriverSessions.put(vehicleId, driverSession);
 
             driverSession.unlock();
         }
@@ -97,30 +121,30 @@ public class DriverSessionManager {
             DriverSessionManager.getInstance().unlock();
         }
     }
-    
-    public static Set<Long> getVehiclesKeyset(){
+
+    public static Set<Long> getVehiclesKeyset() {
         return DriverSessionManager.getInstance().vehicleDriverSessions.keySet();
     }
-    
-    public static DriverSession getDriverSession(Long vehicleId){
+
+    public static DriverSession getDriverSession(Long vehicleId) {
         return DriverSessionManager.getInstance().vehicleDriverSessions.get(vehicleId);
     }
-    
-    public static DriverSession getDriverSession(String token){
+
+    public static DriverSession getDriverSession(String token) {
         for (DriverSession session : DriverSessionManager.getInstance().vehicleDriverSessions.values()) {
-            if(session.getToken().equals(token)){
+            if (session.getToken().equals(token)) {
                 return session;
             }
         }
         return null;
     }
-    
-    public static void putDriverSession(DriverSession session){
+
+    public static void putDriverSession(DriverSession session) {
         DriverSessionManager.getInstance().lock();
-        try{
+        try {
             DriverSessionManager.getInstance().vehicleDriverSessions.put(session.getVehicleId(), session);
-            DriverSessionManager.getInstance().sessionVehicleIds.put(session.getUserSession(),session.getVehicleId());
-        }finally{
+            DriverSessionManager.getInstance().sessionVehicleIds.put(session.getUserSession(), session.getVehicleId());
+        } finally {
             DriverSessionManager.getInstance().unlock();
         }
     }

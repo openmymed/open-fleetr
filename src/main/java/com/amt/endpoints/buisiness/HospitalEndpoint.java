@@ -24,7 +24,7 @@ public class HospitalEndpoint  extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doList(String string) throws AccessError {
-        UserAccessControl.authOperation(User.class, string, 3);
+        UserAccessControl.authOperation(User.class, string, 2);
         return Persistence.list(Hospital.class);
     }
 
@@ -40,7 +40,7 @@ public class HospitalEndpoint  extends AuthorisedEndpoint{
 
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
-        UserAccessControl.authOperation(User.class, string, 3);
+        UserAccessControl.authOperation(User.class, string, 2);
         return Persistence.read(Hospital.class,l);    
     }
 

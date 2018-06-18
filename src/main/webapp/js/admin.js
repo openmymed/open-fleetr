@@ -1,14 +1,15 @@
 var expanded = false;
-var areaMap;
 var hospitalsMap;
-
-$(document).ready(function(){
+var handling = false;
+var hospitalMarkers = [];
+$(document).ready(function () {
     $('#hospitalsTab').click(drawHospitalsMap);
-    $('#areasTab').click(drawAreaMap);
     $('#createNewApiUserFormButton').click(createApiUser);
     $('#createNewDriverFormButton').click(createDriver);
     $('#createNewVehicleFormButton').click(createVehicle);
     $('#createNewDispatcherFormButton').click(createDispatcher);
+    $('#addHospital').click(toggleHandling);
+    $('#createNewHospitalFormButton').click(createHospital);
 
     main();
 });
@@ -17,9 +18,11 @@ function main() {
     fetchApiUsers();
     fetchDispatchers();
     fetchDrivers();
-    fetchHospitals();
-    fetchAreas();
     fetchVehicles();
+}
+
+function toggleHandling(){
+    handling = !handling;
 }
 function showCheckboxes() {
     var checkboxes = document.getElementById("checkboxes");
@@ -32,27 +35,47 @@ function showCheckboxes() {
     }
 }
 
-function drawAreaMap() {
-    areaMap = L.map('areasMap', {
-        zoomControl: false
-    }).setView([31.7683, 35.2137], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(areaMap);
-
-}
-
 function drawHospitalsMap() {
     hospitalsMap = L.map('hospitalsMap', {zoomControl: false}).setView([31.7683, 35.2137], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(hospitalsMap);
+    hospitalsMap.on("click", getLatLng);
+    hospitalsMap.doubleClickZoom.disable();
+    fetchHospitals();
 }
 
-function createDispatcher(event) {
+function getLatLng(event) {
     console.log(event);
+    if (handling === true) {
+        hospitalLatitude = event.latlng.lat;
+        hospitalLongitude = event.latlng.lng;
+        toggleHandling();
+        $('#hospitalModal').modal('show');
+    }
 
-    console.log($("#dispatchersForm").serializeObject());
+}
+
+function createHospital(event) {
+    var postData = {
+        "latitude": hospitalLatitude,
+        "longitude": hospitalLongitude,
+        "name": $("#hospitalName").val()
+    };
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/hospital/manager?token=" + localStorage.getItem("token") + "", //to this url
+        type: "POST", //HTTP request type get
+        data: JSON.stringify(postData), //Data sent to the server
+        success: function (response) {
+            fetchHospitals();
+        }, //on success, call updateLocationsSuccess
+        error: function (xhr, resp, text) {
+            console.log(xhr, resp, text);
+        }
+    });
+    toggleHandling();
+}
+function createDispatcher(event) {
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/dispatcher/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
@@ -65,10 +88,8 @@ function createDispatcher(event) {
         }
     });
 }
-function createDriver(event) {
-    console.log(event);
 
-    console.log($("#driversForm").serializeObject());
+function createDriver(event) {
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/driver/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
@@ -82,10 +103,8 @@ function createDriver(event) {
         }
     });
 }
-function createVehicle(event) {
-    console.log(event);
 
-    console.log($("#vehiclesForm").serializeObject());
+function createVehicle(event) {
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
@@ -100,9 +119,8 @@ function createVehicle(event) {
         }
     });
 }
+
 function createApiUser(event) {
-    console.log(event);
-    console.log($("#apiUsersForm").serializeObject());
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/api/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
@@ -168,6 +186,7 @@ function fetchDrivers() {
         }
     });
 }
+
 function fetchVehicles() {
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
@@ -194,25 +213,35 @@ function fetchHospitals() {
         url: "/OpenFleetr/hospital/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
         datatype: 'json',
-        success: function (response) {
-            console.log(response);
-        },
+        success: fetchHospitalsSuccess,
         error: function (xhr, resp, text) {
         }
     });
+
 }
-function fetchAreas() {
-    $.ajax({//new ajax request
-        url: "/OpenFleetr/geographicalarea/manager" + "?token=" + localStorage.getItem("token") + "", //to this url
-        type: "GET", //HTTP request type get
-        datatype: 'json',
-        success: function (response) {
-            console.log(response);
-        },
-        error: function (xhr, resp, text) {
+
+function fetchHospitalsSuccess(json) {
+    for (var key in json) {
+        if (json.hasOwnProperty(key)) {
+            var response = json[key];
+            if (!hospitalMarkers.hasOwnProperty(response.id.toString())) {
+                hospitalMarkers[response.id.toString()] = L.marker([response.latitude, response.longitude]).addTo(hospitalsMap);
+            } else {
+                hospitalMarkers[response.id.toString()].setLatLng([response.latitude, response.longitude]).update();
+            }
+            hospitalMarkers[response.id.toString()].bindPopup(response.name);
+            hospitalMarkers[response.id.toString()].on('click', function (e) {
+                console.log(e.target);
+                console.log(getKeyByValue(hospitalMarkers,e.target));
+            });
         }
-    });
+    }
 }
+
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
+
 function fetchApiUsers() {
     $.ajax({//new ajax request
         url: "/OpenFleetr/user/api/manager/" + "?token=" + localStorage.getItem("token") + "", //to this url

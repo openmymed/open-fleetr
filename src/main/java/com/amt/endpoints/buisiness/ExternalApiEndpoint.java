@@ -30,13 +30,26 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doList(String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
-        System.out.println((long)user.get("level") == 2);
-        if ((long)user.get("level") == 2) {
+        if ((long) user.get("level") == 2) {
             boolean complete = false;
             JSONObject query = new JSONObject();
             query.put("userId", user.get("id"));
-            query.put("status !", 2);
-            return Persistence.listByProperties(DispatchOrder.class, query);
+
+            query.put("status", 0);
+            JSONObject response1 = Persistence.listByProperties(DispatchOrder.class, query);
+
+            query.put("status", 1);
+            JSONObject response2 = Persistence.listByProperties(DispatchOrder.class, query);
+
+            JSONObject response = new JSONObject();
+
+            if (response1 != null) {
+                response.putAll(response1);
+            }
+            if (response2 != null) {
+                response.putAll(response2);
+            }
+            return response;
         } else {
             throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
         }
@@ -45,12 +58,12 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doCreate(JSONObject json, String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
-        if ((long)user.get("level") == 2) {
-
+        if ((long) user.get("level") == 2) {
             json.put("creationDate", new Date().toString());
             json.put("status", 0);
             json.put("userId", user.get("id"));
-            json.put("vehicleId",GEOSql.fetchNearestVehicles(json).get(0));
+            json.put("vehicleId", GEOSql.fetchNearestVehicles(json).get(0));
+            json.put("destinationHospitalId",GEOSql.fetchNearestVehicles(json).get(0));
             return Persistence.create(DispatchOrder.class, json);
 
         } else {
@@ -66,13 +79,13 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long l, String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
-        if ((long)user.get("level") == 2) {
-            boolean complete = false;
-            JSONObject query = new JSONObject();
-            query.put("id", l);
-            query.put("userId", user.get("id"));
-            query.put("status !", 2);
-            return Persistence.listByProperties(DispatchOrder.class, query);
+        if ((long) user.get("level") == 2) {
+            JSONObject read = Persistence.read(DispatchOrder.class, l);
+            if ((int) read.get("userId") == (int) user.get("id")) {
+                return read;
+            } else {
+                throw new AccessError(ERROR_TYPE.USER_NOT_ALLOWED);
+            }
         } else {
             throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
         }

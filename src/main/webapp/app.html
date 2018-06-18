@@ -9,13 +9,17 @@
         <link rel="stylesheet" href="css/bootstrap.css"/>
         <link rel="stylesheet" href="css/style.css"/>
         <link rel="stylesheet" href="css/leaflet.css"/>
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
+        <link rel="stylesheet" href="css/leaflet.awesome-markers.css">
+        <link rel="stylesheet" href="css/custom.css"/>
+
         <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/popper.min.js"></script>
         <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript" src="js/leaflet.js"></script>
         <script type="text/javascript" src="js/jquery.serializeObject.min.js"></script>
+        <script src="js/leaflet.awesome-markers.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
-        <link rel="stylesheet" href="css/custom.css"/>
 
     </head>
     <body style="background:white;">
@@ -66,7 +70,7 @@
         </main>
 
         <div id="createCaseForm" class="sidebar-popper">
-            <form class="py-1 my-1">
+            <form id="createCaseFromValues" class="py-1 my-1">
                 <fieldset>
                     <div>
                         <div>
@@ -86,11 +90,19 @@
                                 </optgroup>
                             </select>
                         </div>
+                        <div>
+                            <select name="destinationHospitalId" id="destinationHospitalId" class="form-control input-md" required>
+                                <optgroup id="hospitalRecomendationList">
+                                </optgroup>
+                                <optgroup id="regularHospitals">
+                                </optgroup>
+                            </select>
+                        </div>
                         <div class="form-group">	
-                            <input id="latitude" name="latitude" type="text" class="hidden" style="display:none" required>
-                            <input id="longitude" name="longitude" type="text" class="hidden" style="display:none" required>
+                            <input id="startLatitude" name="latitude" type="text" class="hidden" style="display:none" required>
+                            <input id="startLongitude" name="longitude" type="text" class="hidden" style="display:none" required>
                             <button id="createCaseFormCloseButton" type="button" data-dissmiss class="py-1 my-1 btn btn-secondary alignleft">Close</button>
-                            <button id="createCaseFormConfirmBytton" type="submit" class="py-1 my-1 btn btn-primary alignright">Create</button>
+                            <button id="createCaseFormConfirmButton" type="button" class="py-1 my-1 btn btn-primary alignright">Create</button>
                         </div>
                 </fieldset>
                 <br/>

@@ -44,52 +44,40 @@ public class DispatchOrderCacheManager implements Runnable {
             try {
                 JSONObject differentialList = Persistence.listNewerThan(DispatchOrder.class, cacheTime);
                 if (differentialList != null) {
-                    ArrayList<Long> changedVehicleIds = new ArrayList();
                     Set keySet = differentialList.keySet();
-                    Set<Long> vehicleIdSet = DriverSessionManager.getVehiclesKeyset();
+                    Set<String> userTokenSet = DispatcherSessionManager.sessionsTokenSet();
+                    ArrayList<Long> changedOrders = new ArrayList();
 
                     for (Object key : keySet) {
 
                         JSONObject dispatchOrder = (JSONObject) differentialList.get(key);
-                        long id = (long) dispatchOrder.get("id");
-                        if (((long) dispatchOrder.get("status")) == 2) {
-                            DispatchOrderCache.clear(id);
-                            continue;
-                        }
-                        DispatchOrderCache.cache(id, dispatchOrder);
+                        long id = (int) dispatchOrder.get("id");
+                        changedOrders.add(id);
                     }
-
-                    for (JSONObject dispatchOrder : DispatchOrderCache.getValues()) {
-
-                        long vehicleId = (long) dispatchOrder.get("vehicleId");
-
-                        JSONObject resp = new JSONObject();
-                        resp.put("server", DispatchOrderCacheManager.HOSTNAME);
-                        resp.put("type", DispatchOrderCacheManager.RESPONSE_TYPE);
-                        resp.put("value", dispatchOrder);
-                        if (vehicleIdSet.contains(vehicleId)) {
-                            new Thread(() -> {
-                                DriverSessionManager.lock(vehicleId);
-                                try {
-                                    DriverSession driverSession = DriverSessionManager.getDriverSession(vehicleId);
-                                    if (driverSession.isAvailable()) {
-                                        driverSession.getUserSession().getBasicRemote().sendText(resp.toJSONString());
-                                        DispatchOrderCache.clear(vehicleId);
-                                    }
-                                } catch (IOException ex) {
-                                    Logger.getLogger(DispatchOrderCacheManager.class.getName()).log(Level.SEVERE, null, ex);
-                                } finally {
-                                    DispatcherSessionManager.unlock(vehicleId);
-                                }
-                            }).start();
-                        }
+                   
+                    JSONObject resp = new JSONObject();
+                    resp.put("server", DispatchOrderCacheManager.HOSTNAME);
+                    resp.put("type", DispatchOrderCacheManager.RESPONSE_TYPE);
+                    resp.put("array", changedOrders);
+                    for (String token : userTokenSet) {
+                        new Thread(() -> {
+                            DispatcherSessionManager.lock(token);
+                            try {
+                                Session userSession = DispatcherSessionManager.get(token).getUserSession();
+                                userSession.getBasicRemote().sendText(resp.toJSONString());
+                            } catch (IOException ex) {
+                                Logger.getLogger(VehicleCacheManager.class.getName()).log(Level.SEVERE, null, ex);
+                            } finally {
+                                DispatcherSessionManager.unlock(token);
+                            }
+                        }).start();
                     }
                 }
             } catch (AccessError ex) {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                 } catch (InterruptedException ex) {
                     break;
                 }

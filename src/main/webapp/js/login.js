@@ -7,16 +7,16 @@ function main() {
 function login() {
     var userName = $("#userName").val();
     var password = $("#password").val();
-    postData = {"userName": userName, "password": password};
+    var postData = {"userName": userName, "password": password};
     if (userName === '' || password === '') {
         $('input[type="text"],input[type="password"]').css("border", "2px solid red");
         $('input[type="text"],input[type="password"]').css("box-shadow", "0 0 3px red");
         alert("Please fill all fields...!!!!!!");
     } else {
         $.ajax({
-            url: "/OpenFleetr/user/auth", 
-            type: "POST", 
-            data: JSON.stringify(postData), 
+            url: "/OpenFleetr/user/auth",
+            type: "POST",
+            data: JSON.stringify(postData),
             dataType: "json",
             success: loginSuccess,
             error: loginError
@@ -27,10 +27,14 @@ function login() {
 function loginSuccess(data) {
     localStorage.removeItem("token");
     localStorage.setItem("token", data.token);
-    if (data.level > 3) {
+    if (data.level === 4) {
         $(location).attr('href', '/OpenFleetr/admin.html');
-    } else {
+    } else if (data.level === 3) {
         $(location).attr('href', '/OpenFleetr/app.html');
+    } else if (data.level === 2) {
+        $(location).attr('href', '/OpenFleetr/help.html');
+    } else if (data.level === 1) {
+        $(location).attr('href', '/OpenFleetr/driver.html');
     }
 }
 

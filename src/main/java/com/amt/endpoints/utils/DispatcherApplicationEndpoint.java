@@ -5,24 +5,18 @@
  */
 package com.amt.endpoints.utils;
 
-import com.amt.common.cache.NotificationEntityCache;
 import com.amt.common.data.GEOSql;
+import com.amt.common.sessions.DispatcherSession;
 import com.amt.common.sessions.DispatcherSessionManager;
 import com.amt.entities.auth.User;
-import com.amt.common.sessions.DispatcherSession;
-import com.amt.entities.management.Dispatcher;
-import com.amt.entities.buisiness.Vehicle;
 import com.tna.common.AccessError;
 import com.tna.common.AccessError.ERROR_TYPE;
 import com.tna.common.UserAccessControl;
-import com.tna.data.Persistence;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -43,11 +37,11 @@ public class DispatcherApplicationEndpoint {
 
     @OnOpen
     public void open(@PathParam("token") String token, Session session) {
-        JSONObject user;
         try {
-            user = UserAccessControl.fetchUserByToken(User.class, token);
+            JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
             long level = (long) user.get("level");
             if (level == 3) {
+                System.out.println(user);
                 DispatcherSession userSession = new DispatcherSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 DispatcherSessionManager.addUserSession(token, userSession);
             } else {
@@ -55,12 +49,11 @@ public class DispatcherApplicationEndpoint {
             }
         } catch (AccessError ex) {
             try {
-                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));
+                session.close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Goodbye"));
             } catch (IOException ex1) {
 
             }
         }
-
     }
 
     @OnClose
@@ -109,10 +102,6 @@ public class DispatcherApplicationEndpoint {
 
     }
 
-    public DispatcherApplicationEndpoint() {
-
-    }
-
     @OnMessage
     public void handleMessage(String message, Session session) {
         if (message != null && !"".equals(message)) {
@@ -121,7 +110,8 @@ public class DispatcherApplicationEndpoint {
                 json = (JSONObject) new JSONParser().parse(message);
                 JSONObject response = new JSONObject();
                 response.put("type", "recommendation");
-                response.put("array",GEOSql.fetchNearestVehicles(json));
+                response.put("array", GEOSql.fetchNearestVehicles(json));
+                response.put("hospitalsArray",GEOSql.fetchNearestHospitals(json));
                 Set<String> tokens = DispatcherSessionManager.sessionsTokenSet();
                 for (String token : tokens) {
                     DispatcherSession userSession = DispatcherSessionManager.get(token);

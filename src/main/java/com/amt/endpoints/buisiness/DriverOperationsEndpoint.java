@@ -5,6 +5,7 @@
  */
 package com.amt.endpoints.buisiness;
 
+import com.amt.common.sessions.DriverSessionManager;
 import com.amt.entities.auth.User;
 import com.amt.entities.buisiness.DispatchOrder;
 import com.amt.entities.buisiness.Vehicle;
@@ -28,7 +29,7 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doList(String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if ((long)user.get("level") == 1) {
+        if ((long) user.get("level") == 1) {
 
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));
@@ -51,13 +52,13 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doCreate(JSONObject data, String token) throws AccessError {
-            throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
+        throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
 
     @Override
     public JSONObject doUpdate(JSONObject data, long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if ((long)user.get("level") == 1) {
+        if ((long) user.get("level") == 1) {
 
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));
@@ -69,13 +70,18 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
             vehicleQuery.put("driver", driver.get("id"));
             JSONObject vehicle = Persistence.readByProperties(Vehicle.class, vehicleQuery);
 
-            if (readOrder.get("vehicleId").equals(vehicle.get("id"))) {
+            if ((long) readOrder.get("vehicleId") == (long) vehicle.get("id")) {
 
-                if (vehicle.get("status").equals(2) && readOrder.get("status").equals(1)) {
+                if ((long) vehicle.get("status") == 2 && (long) readOrder.get("status") == 1) {
 
                     JSONObject completion = new JSONObject();
                     completion.put("completionDate", new Date().toString());
                     completion.put("status", 2);
+
+                    vehicle.put("status", 1);
+                    Persistence.update(Vehicle.class, (long) vehicle.get("id"), vehicle);
+
+                    DriverSessionManager.setAvailable((long) vehicle.get("id"), true);
                     return Persistence.update(DispatchOrder.class, resource, completion);
 
                 } else {
@@ -93,7 +99,7 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if ((long)user.get("level") == 1) {
+        if ((long) user.get("level") == 1) {
 
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));
@@ -105,13 +111,18 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
             vehicleQuery.put("driver", driver.get("id"));
             JSONObject vehicle = Persistence.readByProperties(Vehicle.class, vehicleQuery);
 
-            if (readOrder.get("vehicleId").equals(vehicle.get("id"))) {
+            if ((long) readOrder.get("vehicleId") == (long) vehicle.get("id")) {
 
-                if (vehicle.get("status").equals(1) && readOrder.get("status").equals(0)) {
+                if ((long) vehicle.get("status") == 1 && (long) readOrder.get("status") == 0) {
 
                     JSONObject starting = new JSONObject();
                     starting.put("startDate", new Date().toString());
                     starting.put("status", 1);
+
+                    vehicle.put("status", 2);
+                    Persistence.update(Vehicle.class, (long) vehicle.get("id"), vehicle);
+
+                    DriverSessionManager.setAvailable((long) vehicle.get("id"), false);
                     return Persistence.update(DispatchOrder.class, resource, starting);
 
                 } else {
@@ -128,7 +139,7 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doDelete(long resource, String token) throws AccessError {
-            throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
+        throw new AccessError(ERROR_TYPE.OPERATION_FAILED);
     }
 
 }

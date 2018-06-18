@@ -10,20 +10,24 @@ var applicationSocket;
 var websocket = false;
 var socketCheckInterval;
 var socketAttemptInterval;
-
+var checkedOut = false;
 $(document).ready(main);
 
 function main() {
 
+    $("#checkOutButton").click(checkOut);
+    $("#checkInButton").click(checkIn);
+    getAvailableAmbulances();
     loadMap();
+
 
 }
 function start() {
-    socketConnect();
+
 }
 
 function socketConnect() {
-    applicationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/app/driver" + localStorage.getItem("token"));
+    applicationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/app/driver/" + localStorage.getItem("token"));
     applicationSocket.onopen = checkSocketInterval;
     applicationSocket.onmessage = parseSocketEvent;
     applicationSocket.onerror = socketError;
@@ -32,8 +36,8 @@ function socketConnect() {
     clearTimeout();
 }
 
-function parseSocketEvent(event){
-    
+function parseSocketEvent(event) {
+
 }
 function socketClose(event) {
     websocket = false;
@@ -43,10 +47,115 @@ function socketClose(event) {
             localStorage.removeItem("token"); //delete the user token from storage
             window.history.back();
             break;
+        case 4000 :
+            alert("Connection to server gracefully terminated");
+            break;
         default :
             fallbackPolling();
             break;
     }
+}
+
+function checkOut(event) {
+    console.log(event, $(event));
+    console.log($("#availableVehicles").val());
+    $.ajax({
+        url: "/OpenFleetr/vehicle/checking/" + $("#availableVehicles").val() + "?token=" + localStorage.getItem("token") + "",
+        type: "GET",
+        dataType: "json",
+        success: handleCheckOut,
+        error: genericError
+
+    });
+
+}
+
+function checkIn(event) {
+    console.log(event, $(event));
+    $.ajax({
+        url: "/OpenFleetr/vehicle/checking/1?token=" + localStorage.getItem("token") + "",
+        type: "PUT",
+        data: JSON.stringify({"something": "i know"}),
+        dataType: "json",
+        success: handleCheckIn,
+        error: genericError
+
+    });
+}
+
+function handleCheckOut(json) {
+    console.log(json);
+    checkedOut = true;
+    socketConnect();
+}
+
+function handleCheckIn(json) {
+    console.log(json);
+    checkedOut = false;
+    applicationSocket.close(4000);
+}
+function getAvailableAmbulances() {
+    $.ajax({
+        url: "/OpenFleetr/vehicle/checking?token=" + localStorage.getItem("token") + "",
+        type: "GET",
+        dataType: "json",
+        success: handleAvailbleAmbulances,
+        error: genericError
+
+    });
+}
+
+function handleAvailbleAmbulances(json) {
+    var htmlString = "";
+    for(var item in json){
+        htmlString = htmlString + ('<option value ="' + item + '">Ambulance ' + item + '</option>\n');
+    }
+    $("#availableVehicles").html(htmlString);
+}
+
+function genericError(jqHXR, textStatus, errorThrown) {
+    console.log(jqHXR, textStatus, errorThrown);
+    if (jqHXR.status === 401 || jqHXR.status === 403) {
+        alert("Please log in !");
+        localStorage.removeItem("token");
+        $(location).attr('href', '/OpenFleetr');
+    } else {
+
+    }
+}
+function pickedUp() {
+
+}
+
+function delivered() {
+
+}
+
+function getHospitalName() {
+
+}
+
+function getDriverName() {
+
+}
+
+function updateLocation(coords) {
+    var latitude = coords.latitude;
+    var longitude = coords.longitude;
+    var postData = {"latitude": latitude ,"longitude": longitude};
+    console.log(postData);
+                
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/vehicle?token=" + localStorage.getItem("token") + "", //to this url
+        type: "POST", //HTTP request type get
+        data: JSON.stringify(postData),
+        datatype: 'json',
+        success: function (response) {
+            console.log(response);
+        }, //on success, call updateLocationsSuccess
+        error: genericError
+    });
+
 }
 
 function socketError(event) {
@@ -95,14 +204,9 @@ function geolocationSuccess(position) {
 }
 
 function geolocationError() {
-    vehicleMap = L.map('map', {
-        zoomControl: false
-    }).setView([31.7683, 35.2137], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(vehicleMap);
-    start();
-
+        alert("Geolocation Is nescarry for the functioning of this application, logging user out");
+        localStorage.removeItem("token");
+        $(location).attr('href', '/OpenFleetr');
 }
 
 function loadMap() {
@@ -112,15 +216,18 @@ function loadMap() {
         maximumAge: 0
     };
     navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, options);
-    id = navigator.geolocation.watchPosition(watchPositionSuccess, watchPositionError,options);
+    id = navigator.geolocation.watchPosition(watchPositionSuccess, watchPositionError, options);
 }
 
-function watchPositionSuccess(event){
-    console.log(event,event.coords);
+function watchPositionSuccess(event) {
+    if(checkedOut === true){
+    console.log(event);
+    updateLocation(event.coords);
+}
 }
 
 
-function watchPositionError(event){
+function watchPositionError(event) {
     console.log(event);
 }
 

@@ -15,10 +15,9 @@ import java.sql.Timestamp;
  */
 public class StatusHistory extends BasicEntity {
     
-    public Timestamp timeStamp;
     public long vehicleId;
     public long userId;
-    public long from;
-    public long to;
+    public long fromValue;
+    public long toValue;
     
 }

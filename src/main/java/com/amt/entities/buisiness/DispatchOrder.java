@@ -17,6 +17,7 @@ public class DispatchOrder extends BasicEntity {
 
     public double startLatitude;
     public double startLongitude;
+    public long userId;
     public Date creationDate;
     public Date startDate;
     public Date completionDate;
@@ -27,6 +28,5 @@ public class DispatchOrder extends BasicEntity {
     public String notes;
     public long status;
     public long destinationHospitalId;
-    public long dispatcherId;
 
 }
