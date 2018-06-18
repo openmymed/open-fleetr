@@ -31,18 +31,33 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doList(String token) throws AccessError {
         UserAccessControl.authOperation(User.class, token, 3);
-        return Persistence.list(DispatchOrder.class);
+        JSONObject query = new JSONObject();
+        query.put("status", 0);
+        JSONObject response1 = Persistence.listByProperties(DispatchOrder.class, query);
+
+        query.put("status", 1);
+        JSONObject response2 = Persistence.listByProperties(DispatchOrder.class, query);
+
+        JSONObject response = new JSONObject();
+
+        if (response1 != null) {
+            response.putAll(response1);
+        }
+        if (response2 != null) {
+            response.putAll(response2);
+        }
+        return response;
     }
 
     @Override
     public JSONObject doCreate(JSONObject json, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if ((long)user.get("level") == 3) {
-            
+        if ((long) user.get("level") == 3) {
+
             json.put("creationDate", new Date().toString());
             json.put("status", 0);
             json.put("userId", user.get("id"));
-                    
+
             return Persistence.create(DispatchOrder.class, json);
 
         } else {
@@ -54,7 +69,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doUpdate(JSONObject json, long resource, String token) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
-        if ((long)user.get("level") == 3) {
+        if ((long) user.get("level") == 3) {
             return Persistence.update(DispatchOrder.class, resource, json);
         } else {
             throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
@@ -64,13 +79,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
         UserAccessControl.authOperation(User.class, token, 2);
-        JSONObject result = DispatchOrderCache.retreive((long) resource);
-        if (result == null) {
-            JSONObject obj = new JSONObject();
-            obj.put("vehicleId", resource);
-            result = Persistence.listByProperties(DispatchOrder.class, obj);
-        }
-        return result;
+        return Persistence.read(DispatchOrder.class, resource);
     }
 
     @Override

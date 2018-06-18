@@ -43,6 +43,7 @@ and open the template in the editor.
                 </div>
             </nav>
         </header>
+
         <main>
             <div id="app" class="container-fluid top-buffer">
                 <ul class="nav nav-tabs" role="tablist">
@@ -54,9 +55,6 @@ and open the template in the editor.
                     </li>
                     <li id="vehiclesTab" class="nav-item">
                         <a role="tab" class="nav-link" data-toggle="tab" href="#vehicles"><i class="fa fa-ambulance"></i> Vehicles </a>
-                    </li>
-                    <li id="areasTab" class="nav-item">
-                        <a role="tab" class="nav-link" data-toggle="tab" href="#areas"><i class="fa fa-map"></i> Areas </a>
                     </li>
                     <li id="hospitalsTab" class="nav-item">
                         <a role="tab" class="nav-link" data-toggle="tab" href="#hospitals"><i class="fa fa-h-square"></i> Hospitals </a>
@@ -194,62 +192,73 @@ and open the template in the editor.
                             </table>
                         </div>
                     </div>
-                    <div id="areas" class="tab-pane fade" role="tabpanel">
-                        <div id="areasMap" style="height:75vh;">
-                            <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
-                                <button id="addArea" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Area</button>
-
-                                <button id="deleteArea" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete an Area</button>
+                    <div id="hospitals" class="tab-pane fade container-fluid" role="tabpanel">
+                        <div class="btn-group">
+                            <button id="addHospital" type="button" class="btn btn-primary">Add new Hospital</button>
+                            <button id="removeHospital" type="button" class="btn btn-secondary">Delete a Hospital</button>
+                        </div>
+                        <div id="hospitalsMap" style="height:70vh;">
+                        </div>
+                        <div class="modal fade" id="hospitalModal" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Hospital Details</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" name="hospitalName" id="hospitalName" placeholder="Hospital Name">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="createNewHospitalFormButton" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="hospitals" class="tab-pane fade" role="tabpanel">
-                        <div id="hospitalsMap" style="height:75vh;">
-                            <div class="btn-group-vertical" style="position:relative;left:3vh;top:3vh;z-index: 9999">
-                                <button id="addHospital" type="button" class="my-3 btn btn-default btn-sm fa fa-plus">&nbsp;Add new Hospital</button>
 
-                                <button id="deleteHospital" type="button" class="my-3 btn btn-default btn-sm fa fa-minus">&nbsp;Delete a Hospital</button>
-                            </div>
-                        </div>
-                        <br/>
                     </div>
-                    <div id="apiUsers" class="tab-pane fade text-center" role="tabpanel">
-                        <div class="table-responsive">
-                            <table class="table table-condensed table-bordered table-striped volumes table-">
-                                <thead>
-                                    <tr>
-                                        <th>Application Name</th>
-                                        <th>Maintainer Email</th>
-                                        <th>Token</th>
-                                        <th> </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="apiUsersTable">
-                                </tbody>
-                                <tfoot>
-                                <form id="apiUsersForm">
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="applicationName" id="applicationName" placeholder="Application Name">
-                                        </td>
-                                        <td>
-                                            <input type="email" name="maintainerEmail" id="maintainerEmail" placeholder="Maintainer Email">
-                                        </td>
-                                        <td class="mx-auto justify-content-center"> --- </td>
-                                        <td>
-                                            <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus"></button>
-                                        </td>
-                                    </tr>
-                                </form>
-                                </tfoot>
-                            </table>
-                        </div>
+                </div>
+                <div id="apiUsers" class="tab-pane fade text-center" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-bordered table-striped volumes table-">
+                            <thead>
+                                <tr>
+                                    <th>Application Name</th>
+                                    <th>Maintainer Email</th>
+                                    <th>Token</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody id="apiUsersTable">
+                            </tbody>
+                            <tfoot>
+                            <form id="apiUsersForm">
+                                <tr>
+                                    <td>
+                                        <input type="text" name="applicationName" id="applicationName" placeholder="Application Name">
+                                    </td>
+                                    <td>
+                                        <input type="email" name="maintainerEmail" id="maintainerEmail" placeholder="Maintainer Email">
+                                    </td>
+                                    <td class="mx-auto justify-content-center"> --- </td>
+                                    <td>
+                                        <button id="createNewApiUserFormButton" type="button" class="btn btn-default btn-sm fa fa-plus"></button>
+                                    </td>
+                                </tr>
+                            </form>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
-        </main>
-        <footer class="top-buffer">
-        </footer>
-    </body>
+        </div>
+
+    </main>
+    <footer class="top-buffer">
+    </footer>
+</body>
 
 </html>

@@ -65,7 +65,12 @@ public class DispatchOrderCache {
     }
 
     public static Collection<JSONObject> getValues() {
-        return DispatchOrderCache.getInstance().cache.getValues();
+        lock.lock();
+        try {
+            return DispatchOrderCache.getInstance().cache.getValues();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static void setTimeStamp(Timestamp time) {
@@ -76,6 +81,7 @@ public class DispatchOrderCache {
             lock.unlock();
         }
     }
+    
 
     public static Timestamp getTimeStamp() {
         Timestamp timeStamp;

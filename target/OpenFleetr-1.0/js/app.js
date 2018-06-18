@@ -10,6 +10,23 @@ var updateStatusesTimeout;
 var handling = false;
 var socketCheckInterval;
 var socketAttemptInterval;
+var hospitalMarkers = [];
+var dispatchOrderMarkers = [];
+var ambulanceMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'ambulance',
+    markerColor: 'blue'
+});
+var hospitalMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'h-square',
+    markerColor: 'green'
+});
+var caseMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'plus',
+    markerColor: 'red'
+});
 
 $(document).ready(main);
 
@@ -44,6 +61,8 @@ function start() {
     updateDrivers();
     updateVehicles(); //start refreshing the vehicle locations
     getDispatcher();
+    fetchHospitals();
+    fetchDispatchOrders();
     socketConnect();
 }
 
@@ -81,19 +100,15 @@ function jurisdictionsToggleControl(event) {
 
 function parseSocketNotification(event) {
     var json = JSON.parse(event.data);
-    console.log(json);
     switch (json.type) {
-        case "location":
-            json.array.forEach(fetchVehicle);
-            break;
-        case "status":
-            json.array.forEach(fetchStatus);
+        case "vehicle":
+            json.array.forEach(getVehicle);
             break;
         case "dispatchOrder":
-            json.array.forEach(fetchDispatchOrder);
+            json.array.forEach(getDispatchOrder);
             break;
         case "notification":
-            fetchNotification();
+            fetchNotifications();
             break;
         case  "recommendation":
             handleRecomendations(json);
@@ -103,20 +118,19 @@ function parseSocketNotification(event) {
     }
 }
 
-function fetchStatus(vehicleId) {
-    ;
-}
-
-function fetchDispatchOrder(orderId) {
-
-}
-
 function handleRecomendations(json) {
-    var htmlString = "";
+    var ambulanceSelectHTML = "";
     json.array.forEach(function (item) {
-        htmlString = htmlString + ('<option value ="' + item + '">Ambulance ' + item + '</option>\n');
+        ambulanceSelectHTML = ambulanceSelectHTML + ('<option value ="' + item + '">Ambulance ' + item + '</option>\n');
     });
-    $("#recomendationList").html(htmlString);
+    $("#recomendationList").html(ambulanceSelectHTML);
+
+    var hospitalSelectHTML = "";
+    json.hospitalsArray.forEach(function (item) {
+        hospitalSelectHTML = hospitalSelectHTML + ('<option value ="' + item + '">Hospital ' + item + '</option>\n');
+    });
+    $("#hospitalRecomendationList").html(hospitalSelectHTML);
+
 }
 function fallbackPolling() {
     websocket = false;
@@ -193,7 +207,7 @@ function updateVehiclesSuccess(data) {
     }
 }
 
-function fetchVehicle(vehicleId) {
+function getVehicle(vehicleId) {
     $.ajax({
         url: "/OpenFleetr/vehicle/" + vehicleId + "?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET",
@@ -213,7 +227,7 @@ function fetchVehicleError(jqHXR, textStatus, errorThrown) {
 }
 function fetchVehicleSuccess(response) {
     if (!vehicles.hasOwnProperty(response.id.toString())) {
-        vehicles[response.id.toString()] = L.marker([response.latitude, response.longitude]).addTo(vehicleMap);
+        vehicles[response.id.toString()] = L.marker([response.latitude, response.longitude], {icon: ambulanceMarker}).addTo(vehicleMap);
     } else {
         vehicles[response.id.toString()].setLatLng([response.latitude, response.longitude]).update();
     }
@@ -317,12 +331,11 @@ function socketClose(event) {
 }
 
 function socketError(event) {
-    console.log(event);
     fallbackPolling();
 }
 
 function socketConnect() {
-    applicationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/app/dispatcher" + localStorage.getItem("token"));
+    applicationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/app/dispatcher/" + localStorage.getItem("token"));
     applicationSocket.onopen = checkSocketInterval;
     applicationSocket.onmessage = parseSocketNotification;
     applicationSocket.onerror = socketError;
@@ -386,7 +399,7 @@ function createCaseFromClose() {
 
 }
 
-function fetchNotification() {
+function fetchNotifications() {
     $.ajax({
         url: "/OpenFleetr/user/driver?token=" + localStorage.getItem("token") + "",
         type: "GET",
@@ -426,5 +439,103 @@ function getReccomendations() {
     } else {
         fallbackPolling();
     }
+}
+function fetchHospitals() {
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/hospital?token=" + localStorage.getItem("token") + "", //to this url
+        type: "GET", //HTTP request type get
+        datatype: 'json',
+        success: fetchHospitalsSuccess,
+        error: function (xhr, resp, text) {
+        }
+    });
+
+}
+
+function fetchHospitalsSuccess(json) {
+    for (var key in json) {
+        if (json.hasOwnProperty(key)) {
+            var response = json[key];
+            if (!hospitalMarkers.hasOwnProperty(response.id.toString())) {
+                hospitalMarkers[response.id.toString()] = L.marker([response.latitude, response.longitude], {icon: hospitalMarker}).addTo(vehicleMap);
+            } else {
+                hospitalMarkers[response.id.toString()].setLatLng([response.latitude, response.longitude]).update();
+            }
+            hospitalMarkers[response.id.toString()].bindPopup(response.name);
+            hospitalMarkers[response.id.toString()].on('click', function (e) {
+                console.log(getKeyByValue(hospitalMarkers, e.target));
+            });
+        }
+    }
+}
+
+function fetchDispatchOrders() {
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/vehicle/dispatch/?token=" + localStorage.getItem("token") + "", //to this url
+        type: "GET", //HTTP request type get
+        datatype: 'json',
+        success: fetchDispatchOrdersSuccess,
+        error: function (xhr, resp, text) {
+        }
+    });
+
+}
+function getDispatchOrder(orderId) {
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/vehicle/dispatch/" + orderId + "?token=" + localStorage.getItem("token") + "", //to this url
+        type: "GET", //HTTP request type get
+        datatype: 'json',
+        success: getDispatchOrderSuccess,
+        error: function (xhr, resp, text) {
+        }
+    });
+}
+
+function fetchDispatchOrdersSuccess(json) {
+    for (var key in json) {
+        getDispatchOrderSuccess(json[key]);
+    }
+
+}
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
+
+function getDispatchOrderSuccess(json) {
+    if (json.status !== 2) {
+        if (!dispatchOrderMarkers.hasOwnProperty(json.id.toString())) {
+            dispatchOrderMarkers[json.id.toString()] = L.marker([json.startLatitude, json.startLongitude], {icon: caseMarker}).addTo(vehicleMap);
+        } else {
+            dispatchOrderMarkers[json.id.toString()].setLatLng([json.startLatitude, json.startLongitude]).update();
+        }
+        dispatchOrderMarkers[json.id.toString()].on('click', function (e) {
+            console.log(getKeyByValue(dispatchOrderMarkers, e.target));
+        });
+        var statusText = "";
+        switch (json.status) {
+            case 0 :
+                statusText = "Waiting";
+                dispatchOrderMarkers[json.id.toString()].bindPopup(statusText);
+                break;
+            case 1 :
+                statusText = "Enroute";
+                dispatchOrderMarkers[json.id.toString()].bindPopup(statusText);
+                break;
+            default :
+                statusText = "Unavailable";
+                dispatchOrderMarkers[json.id.toString()].bindPopup(statusText);
+                break;
+        }
+    } else {
+        if (dispatchOrderMarkers.hasOwnProperty(json.id.toString())) {
+            var index = dispatchOrderMarkers.indexOf(dispatchOrderMarkers[json.id.toString()]);
+            var marker = dispatchOrderMarkers[index];
+            vehicleMap.removeLayer(marker);
+            delete dispatchOrderMarkers[index];            
+        }
+    }
+
+
+
 }
 

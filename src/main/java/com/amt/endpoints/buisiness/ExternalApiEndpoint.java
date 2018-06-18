@@ -63,6 +63,7 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
             json.put("status", 0);
             json.put("userId", user.get("id"));
             json.put("vehicleId", GEOSql.fetchNearestVehicles(json).get(0));
+            json.put("destinationHospitalId",GEOSql.fetchNearestVehicles(json).get(0));
             return Persistence.create(DispatchOrder.class, json);
 
         } else {
@@ -79,11 +80,12 @@ public class ExternalApiEndpoint extends AuthorisedEndpoint {
     public JSONObject doRead(long l, String string) throws AccessError {
         JSONObject user = UserAccessControl.fetchUserByToken(User.class, string);
         if ((long) user.get("level") == 2) {
-            boolean complete = false;
-            JSONObject query = new JSONObject();
-            query.put("id", l);
-            query.put("userId", user.get("id"));
-            return Persistence.listByProperties(DispatchOrder.class, query);
+            JSONObject read = Persistence.read(DispatchOrder.class, l);
+            if ((int) read.get("userId") == (int) user.get("id")) {
+                return read;
+            } else {
+                throw new AccessError(ERROR_TYPE.USER_NOT_ALLOWED);
+            }
         } else {
             throw new AccessError(ERROR_TYPE.USER_NOT_AUTHORISED);
         }

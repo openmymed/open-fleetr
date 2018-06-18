@@ -16,8 +16,8 @@ public class Vehicle extends BasicEntity{
     public String vehicleLicensePlate;
     public long driver;
     public long status;
-    public long latitude;
-    public long longitude;
+    public double latitude;
+    public double longitude;
     
     
     

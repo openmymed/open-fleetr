@@ -7,7 +7,7 @@ function main() {
 function login() {
     var userName = $("#userName").val();
     var password = $("#password").val();
-    postData = {"userName": userName, "password": password};
+    var postData = {"userName": userName, "password": password};
     if (userName === '' || password === '') {
         $('input[type="text"],input[type="password"]').css("border", "2px solid red");
         $('input[type="text"],input[type="password"]').css("box-shadow", "0 0 3px red");

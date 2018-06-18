@@ -1,7 +1,7 @@
 package com.amt.endpoints.utils;
 
-import com.amt.common.sessions.DispatcherSessionManager;
 import com.amt.common.sessions.DispatcherSession;
+import com.amt.common.sessions.DispatcherSessionManager;
 import com.amt.common.sessions.DriverSession;
 import com.amt.common.sessions.DriverSessionManager;
 import com.amt.entities.auth.User;
@@ -24,38 +24,39 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import org.json.simple.JSONObject;
 
+
 @ServerEndpoint("/app/driver/{token}")
 public class DriverApplicationEndpoint {
 
     @OnOpen
     public void open(@PathParam("token") String token, Session session) {
-        JSONObject user;
+        System.out.println("connecting driver");
+
         try {
-            user = UserAccessControl.fetchUserByToken(User.class, token);
+            JSONObject user  = UserAccessControl.fetchUserByToken(User.class, token);
 
             long level = (long) user.get("level");
             if (level == 1) {
 
                 JSONObject driverQuery = new JSONObject();
                 driverQuery.put("userId", user.get("id"));
-                JSONObject readDriver = Persistence.readByProperties(Driver.class, driverQuery);
-
+                JSONObject readDriver = Persistence.readByProperties(Driver.class, driverQuery);             
                 JSONObject vehicleQuery = new JSONObject();
                 vehicleQuery.put("driver", readDriver.get("id"));
                 JSONObject readVehicle = Persistence.readByProperties(Vehicle.class, vehicleQuery);
-
-                DriverSession driverSession = new DriverSession(token, session, (long) readVehicle.get("id"));
+                DriverSession driverSession = new DriverSession(token, session, (int) readVehicle.get("id"));
                 DriverSessionManager.putDriverSession(driverSession);
             } else {
                 throw new AccessError(AccessError.ERROR_TYPE.USER_NOT_AUTHORISED);
             }
         } catch (AccessError ex) {
             try {
-                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Goodbye"));
+                session.close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Goodbye"));
             } catch (IOException ex1) {
 
             }
         }
+        System.out.println("connected driver");
 
     }
 
@@ -92,10 +93,6 @@ public class DriverApplicationEndpoint {
         } finally {
             DriverSessionManager.unsubscribeDriver(userSession.getUserSession());
         }
-
-    }
-
-    public DriverApplicationEndpoint() {
 
     }
 
