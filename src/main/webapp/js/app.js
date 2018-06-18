@@ -12,20 +12,28 @@ var socketCheckInterval;
 var socketAttemptInterval;
 var hospitalMarkers = [];
 var dispatchOrderMarkers = [];
-var ambulanceMarker = L.AwesomeMarkers.icon({
+var tempCaseMarker = undefined;
+
+var blueAmbulanceMarker = L.AwesomeMarkers.icon({
     prefix: 'fa',
     icon: 'ambulance',
     markerColor: 'blue'
 });
-var hospitalMarker = L.AwesomeMarkers.icon({
+var greenHospitalMarker = L.AwesomeMarkers.icon({
     prefix: 'fa',
     icon: 'h-square',
     markerColor: 'green'
 });
-var caseMarker = L.AwesomeMarkers.icon({
+var redCaseMarker = L.AwesomeMarkers.icon({
     prefix: 'fa',
     icon: 'plus',
     markerColor: 'red'
+});
+
+var orangeCaseMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'plus',
+    markerColor: 'orange'
 });
 
 $(document).ready(main);
@@ -48,8 +56,8 @@ function main() {
     $('#ambulanceStatusesButton').click(ambulancesListControl);
     $('#hospitalsButton').click(hospitalsListControl);
     $('#jurisdictionsToggle').click(jurisdictionsToggleControl);
-    $("#latitude").on("change", getReccomendations);
-    $("#longitude").on("change", getReccomendations);
+    $("#startLatitude").on("change", getReccomendations);
+    $("#startLongitude").on("change", getReccomendations);
 
     loadMap();
 
@@ -227,7 +235,7 @@ function fetchVehicleError(jqHXR, textStatus, errorThrown) {
 }
 function fetchVehicleSuccess(response) {
     if (!vehicles.hasOwnProperty(response.id.toString())) {
-        vehicles[response.id.toString()] = L.marker([response.latitude, response.longitude], {icon: ambulanceMarker}).addTo(vehicleMap);
+        vehicles[response.id.toString()] = L.marker([response.latitude, response.longitude], {icon: blueAmbulanceMarker}).addTo(vehicleMap);
     } else {
         vehicles[response.id.toString()].setLatLng([response.latitude, response.longitude]).update();
     }
@@ -383,11 +391,40 @@ function createCaseFormDisplayControl() {
 }
 
 function createCase() {
-    return "ok";
+    var name = $("#fullName").val().split(" ");
+    var postData = {
+        "startLatitude": $("#startLatitude").val(),
+        "startLongitude": $("#startLongitude").val(),
+        "firstName": name[0],
+        "lastName": name[1],
+        "phoneNumber": $("#phoneNumber").val(),
+        "notes": $("#notes").val(),
+        "vehicleId": $("#vehicleId").val(),
+        "destinationHospitalId": $("#destinationHospitalId").val()
+
+    };
+    $.ajax({
+        url: "/OpenFleetr/vehicle/dispatch?token=" + localStorage.getItem("token") + "",
+        type: "POST",
+        data: JSON.stringify(postData),
+        dataType: "json",
+        success: function (e) {
+            getDispatchOrder(e.key);
+        },
+        error: function (a, b, c) {
+            console.log(a, b, c);
+        }
+    });
+    vehicleMap.removeLayer(tempCaseMarker);
+    tempCaseMarker = undefined;
+    createCaseFormDisplayControl();
+    
 }
 
 function createCaseFromClose() {
     if (handling == true) {
+        vehicleMap.removeLayer(tempCaseMarker);
+        tempCaseMarker = undefined;
         $('#fullName').val("");
         $('#phoneNumber').val("");
         $('#notes').val("");
@@ -422,8 +459,15 @@ function notificationCreateCase(event) {
 
 function getLatLng(event) {
     if (handling == true) {
-        $("#latitude").val(event.latlng.lat);
-        $("#longitude").val(event.latlng.lng)
+        $("#startLatitude").val(event.latlng.lat);
+        $("#startLongitude").val(event.latlng.lng);
+        if (tempCaseMarker !== undefined) {
+            vehicleMap.removeLayer(tempCaseMarker);
+            tempCaseMarker = undefined;
+
+        }
+        tempCaseMarker = L.marker([event.latlng.lat, event.latlng.lng], {icon: orangeCaseMarker}).addTo(vehicleMap);
+
         getReccomendations();
     }
 
@@ -433,8 +477,8 @@ function getLatLng(event) {
 function getReccomendations() {
     if (websocket === true) {
         applicationSocket.send(JSON.stringify({
-            latitude: $("#latitude").val(),
-            longitude: $("#longitude").val()
+            latitude: $("#startLatitude").val(),
+            longitude: $("#startLongitude").val()
         }));
     } else {
         fallbackPolling();
@@ -456,8 +500,9 @@ function fetchHospitalsSuccess(json) {
     for (var key in json) {
         if (json.hasOwnProperty(key)) {
             var response = json[key];
+            console.log(response);
             if (!hospitalMarkers.hasOwnProperty(response.id.toString())) {
-                hospitalMarkers[response.id.toString()] = L.marker([response.latitude, response.longitude], {icon: hospitalMarker}).addTo(vehicleMap);
+                hospitalMarkers[response.id.toString()] = L.marker([response.latitude, response.longitude], {icon: greenHospitalMarker}).addTo(vehicleMap);
             } else {
                 hospitalMarkers[response.id.toString()].setLatLng([response.latitude, response.longitude]).update();
             }
@@ -471,7 +516,7 @@ function fetchHospitalsSuccess(json) {
 
 function fetchDispatchOrders() {
     $.ajax({//new ajax request
-        url: "/OpenFleetr/vehicle/dispatch/?token=" + localStorage.getItem("token") + "", //to this url
+        url: "/OpenFleetr/vehicle/dispatch?token=" + localStorage.getItem("token") + "", //to this url
         type: "GET", //HTTP request type get
         datatype: 'json',
         success: fetchDispatchOrdersSuccess,
@@ -492,7 +537,9 @@ function getDispatchOrder(orderId) {
 }
 
 function fetchDispatchOrdersSuccess(json) {
+    console.log(json);
     for (var key in json) {
+        console.log("key : "+key);
         getDispatchOrderSuccess(json[key]);
     }
 
@@ -502,9 +549,10 @@ function getKeyByValue(object, value) {
 }
 
 function getDispatchOrderSuccess(json) {
-    if (json.status !== 2) {
+    if (json.status !== 2 && json.startLatitude!==null && json.startLongitude !==null) {
+        console.log(json);
         if (!dispatchOrderMarkers.hasOwnProperty(json.id.toString())) {
-            dispatchOrderMarkers[json.id.toString()] = L.marker([json.startLatitude, json.startLongitude], {icon: caseMarker}).addTo(vehicleMap);
+            dispatchOrderMarkers[json.id.toString()] = L.marker([json.startLatitude, json.startLongitude], {icon: redCaseMarker}).addTo(vehicleMap);
         } else {
             dispatchOrderMarkers[json.id.toString()].setLatLng([json.startLatitude, json.startLongitude]).update();
         }
@@ -531,11 +579,9 @@ function getDispatchOrderSuccess(json) {
             var index = dispatchOrderMarkers.indexOf(dispatchOrderMarkers[json.id.toString()]);
             var marker = dispatchOrderMarkers[index];
             vehicleMap.removeLayer(marker);
-            delete dispatchOrderMarkers[index];            
+            delete dispatchOrderMarkers[index];
         }
     }
-
-
 
 }
 
