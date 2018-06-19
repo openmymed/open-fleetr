@@ -41,7 +41,6 @@ public class DispatcherApplicationEndpoint {
             JSONObject user = UserAccessControl.fetchUserByToken(User.class, token);
             long level = (long) user.get("level");
             if (level == 3) {
-                System.out.println(user);
                 DispatcherSession userSession = new DispatcherSession(token, (long) user.get("id"), (long) user.get("level"), session);
                 DispatcherSessionManager.addUserSession(token, userSession);
             } else {

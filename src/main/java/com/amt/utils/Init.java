@@ -21,6 +21,7 @@ public class Init extends Initialization {
 
     Thread vehiclePoll;
     Thread dispatchPoll;
+    Thread driverPoll;
 
     @Override
     public void onInit() {
@@ -31,6 +32,7 @@ public class Init extends Initialization {
         Access.pool.initialize(5);
         vehiclePoll = (new Thread(new VehicleCacheManager()));
         dispatchPoll = (new Thread(new DispatchOrderCacheManager()));
+        driverPoll = (new Thread(new DriverNotificationsManager()));
         startThreads();
     }
 
@@ -43,11 +45,13 @@ public class Init extends Initialization {
     public void startThreads() {
         vehiclePoll.start();
         dispatchPoll.start();
+        driverPoll.start();
 
     }
 
     public void stopThreads() {
         vehiclePoll.interrupt();
         dispatchPoll.interrupt();
+        driverPoll.interrupt();
     }
 }

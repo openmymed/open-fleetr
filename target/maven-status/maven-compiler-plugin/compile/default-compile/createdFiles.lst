@@ -18,6 +18,7 @@ com/amt/common/cachemanager/DispatchOrderCacheManager.class
 com/amt/endpoints/buisiness/DriverOperationsEndpoint.class
 com/amt/endpoints/management/VehicleManagementEndpoint.class
 com/amt/endpoints/buisiness/CheckingEndpoint.class
+com/amt/utils/DriverNotificationsManager.class
 com/amt/common/cache/VehicleCache.class
 com/amt/common/cachemanager/VehicleCacheManager.class
 com/amt/endpoints/buisiness/VehicleEndpoint.class

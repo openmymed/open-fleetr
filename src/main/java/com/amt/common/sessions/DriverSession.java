@@ -5,6 +5,8 @@
  */
 package com.amt.common.sessions;
 
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.websocket.Session;
 
@@ -19,7 +21,7 @@ public class DriverSession {
     private long vehicleId;
     private boolean available;
     private Session userSession;
-
+    private LinkedList<Long> queue;
     public long getVehicleId() {
         return vehicleId;
     }
@@ -71,6 +73,47 @@ public class DriverSession {
         this.lock = new ReentrantLock();
         this.token = token;
         this.userSession = userSession;
+        this.queue = new LinkedList();
+    }
+
+    public void queue(long orderId) {
+        lock.lock();
+        try {
+            if(!queue.contains(orderId)){
+            queue.addLast(orderId);
+            }else{
+                System.out.println("duplicate!");
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Long top() {
+        lock.lock();
+        try {
+            return queue.getFirst();
+        }catch(NoSuchElementException ex){
+            return null;
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    public Long pop() {
+        lock.lock();
+        try {
+            return queue.removeFirst();
+        }catch(NoSuchElementException ex){
+            return null;
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+
+    public String listQueue() {
+        return this.queue.toString();
     }
     
 }

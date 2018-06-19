@@ -140,14 +140,13 @@ function fetchDispatchers() {
         type: "GET", //HTTP request type get
         datatype: 'json',
         success: function (response) {
-            var html = ""
+            var html = "";
             for (var item in response) {
                 html = html + "<tr>";
                 html = html + "<td>" + response[item].firstName + "</td>";
                 html = html + "<td>" + response[item].lastName + "</td>";
                 html = html + "<td>" + response[item].birthDate + "</td>";
                 html = html + "<td>" + response[item].phoneNumber + "</td>";
-                html = html + "<td>" + "" + "</td>";
                 html = html + "<td>" + response[item].userName + "</td>";
                 html = html + "<td>" + response[item].password + "</td>";
                 html = html + "<td>" + "" + "</td>";
