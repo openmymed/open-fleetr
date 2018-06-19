@@ -30,7 +30,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doList(String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 3);
+        UserAccessControl.authOperation(User.class, token, 1);
         JSONObject query = new JSONObject();
         query.put("status", 0);
         JSONObject response1 = Persistence.listByProperties(DispatchOrder.class, query);
@@ -78,7 +78,7 @@ public class DispatchOrderEndpoint extends AuthorisedEndpoint {
 
     @Override
     public JSONObject doRead(long resource, String token) throws AccessError {
-        UserAccessControl.authOperation(User.class, token, 2);
+        UserAccessControl.authOperation(User.class, token, 1);
         return Persistence.read(DispatchOrder.class, resource);
     }
 

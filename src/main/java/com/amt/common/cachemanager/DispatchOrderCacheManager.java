@@ -51,7 +51,15 @@ public class DispatchOrderCacheManager implements Runnable {
                     for (Object key : keySet) {
 
                         JSONObject dispatchOrder = (JSONObject) differentialList.get(key);
+                        long vehicleId = (int)dispatchOrder.get("vehicleId");
                         long id = (int) dispatchOrder.get("id");
+                        DriverSession ds = DriverSessionManager.getDriverSession(vehicleId);
+                        if(ds!=null){
+                            if ((int)dispatchOrder.get("status") !=2) {
+                                System.out.println("queing");
+                                ds.queue(id);
+                            }
+                        }
                         changedOrders.add(id);
                     }
                    
@@ -77,7 +85,7 @@ public class DispatchOrderCacheManager implements Runnable {
                 handleError(ex);
             } finally {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     break;
                 }

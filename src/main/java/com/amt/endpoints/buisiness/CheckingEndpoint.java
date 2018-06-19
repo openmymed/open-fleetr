@@ -5,6 +5,7 @@
  */
 package com.amt.endpoints.buisiness;
 
+import com.amt.common.sessions.DriverSessionManager;
 import com.amt.entities.management.Driver;
 import com.amt.entities.history.StatusHistory;
 import com.amt.entities.auth.User;
@@ -70,7 +71,7 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
                     query.put("driver", null);
                     query.put("status", 0);
 
-                    JSONObject response = Persistence.update(Vehicle.class, resource, query);
+                    JSONObject response = Persistence.update(Vehicle.class, (int)readVehicle.get("id"), query);
                     Persistence.create(StatusHistory.class, statusHistoryQuery);
                     return response;
                 } else {
@@ -99,8 +100,6 @@ public class CheckingEndpoint extends AuthorisedEndpoint {
                 statusHistoryQuery.put("userId", user.get("id"));
                 statusHistoryQuery.put("fromValue", readVehicle.get("status"));
                 statusHistoryQuery.put("toValue", 1);
-
-                System.out.println(statusHistoryQuery);
 
                 JSONObject vehicleQuery = new JSONObject();
                 vehicleQuery.put("driver", readDriver.get("id"));

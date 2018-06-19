@@ -70,18 +70,20 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
             vehicleQuery.put("driver", driver.get("id"));
             JSONObject vehicle = Persistence.readByProperties(Vehicle.class, vehicleQuery);
 
-            if ((long) readOrder.get("vehicleId") == (long) vehicle.get("id")) {
+            if ((int) readOrder.get("vehicleId") == (int) vehicle.get("id")) {
 
-                if ((long) vehicle.get("status") == 2 && (long) readOrder.get("status") == 1) {
+                if ((int) vehicle.get("status") == 2 && (int) readOrder.get("status") == 1) {
 
                     JSONObject completion = new JSONObject();
                     completion.put("completionDate", new Date().toString());
                     completion.put("status", 2);
+                    
+                    vehicleQuery = new JSONObject();
+                    vehicleQuery.put("status", 1);
+                    Persistence.update(Vehicle.class, (int) vehicle.get("id"), vehicleQuery);
 
-                    vehicle.put("status", 1);
-                    Persistence.update(Vehicle.class, (long) vehicle.get("id"), vehicle);
-
-                    DriverSessionManager.setAvailable((long) vehicle.get("id"), true);
+                    DriverSessionManager.getDriverSession((long)(int)vehicle.get("id")).pop();
+                    DriverSessionManager.setAvailable((int) vehicle.get("id"), true);
                     return Persistence.update(DispatchOrder.class, resource, completion);
 
                 } else {
@@ -104,25 +106,26 @@ public class DriverOperationsEndpoint extends AuthorisedEndpoint {
             JSONObject driverQuery = new JSONObject();
             driverQuery.put("userId", user.get("id"));
             JSONObject driver = Persistence.readByProperties(Driver.class, driverQuery);
-
+            
             JSONObject readOrder = Persistence.read(DispatchOrder.class, resource);
-
+            
             JSONObject vehicleQuery = new JSONObject();
             vehicleQuery.put("driver", driver.get("id"));
             JSONObject vehicle = Persistence.readByProperties(Vehicle.class, vehicleQuery);
 
-            if ((long) readOrder.get("vehicleId") == (long) vehicle.get("id")) {
+            if ((int) readOrder.get("vehicleId") == (int) vehicle.get("id")) {
 
-                if ((long) vehicle.get("status") == 1 && (long) readOrder.get("status") == 0) {
+                if ((int) vehicle.get("status") == 1 && (int) readOrder.get("status") == 0) {
 
                     JSONObject starting = new JSONObject();
                     starting.put("startDate", new Date().toString());
                     starting.put("status", 1);
 
-                    vehicle.put("status", 2);
-                    Persistence.update(Vehicle.class, (long) vehicle.get("id"), vehicle);
+                    vehicleQuery = new JSONObject();
+                    vehicleQuery.put("status",2);
+                    Persistence.update(Vehicle.class, (long)(int) vehicle.get("id"), vehicleQuery);
 
-                    DriverSessionManager.setAvailable((long) vehicle.get("id"), false);
+                    DriverSessionManager.setAvailable((int) vehicle.get("id"), false);
                     return Persistence.update(DispatchOrder.class, resource, starting);
 
                 } else {

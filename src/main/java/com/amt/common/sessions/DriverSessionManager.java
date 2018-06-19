@@ -39,8 +39,12 @@ public class DriverSessionManager {
         return DriverSessionManager.sessionManager;
     }
 
-    public static void lock(Long driverId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void lock(Long vehicleId) {
+        getDriverSession(vehicleId).lock();
+    }
+    
+    public static void unlock(Long vehicleId){
+        getDriverSession(vehicleId).unlock();
     }
 
     public static DriverSession getDriverSession(Session session) {
@@ -76,13 +80,17 @@ public class DriverSessionManager {
 
     public static void setAvailable(long vehicleId, boolean state) {
         DriverSession driverSession = DriverSessionManager.getInstance().vehicleDriverSessions.get(vehicleId);
-        driverSession.lock();
+        
+        if(driverSession != null){
+            driverSession.lock();
+        
         try {
             driverSession.setAvailable(state);
         } finally {
             DriverSessionManager.getInstance().vehicleDriverSessions.put(vehicleId, driverSession);
 
             driverSession.unlock();
+        }
         }
     }
 

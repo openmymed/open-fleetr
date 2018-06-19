@@ -5,6 +5,8 @@
  */
 package com.amt.common.sessions;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.websocket.Session;
 
@@ -58,5 +60,5 @@ public class DispatcherSession {
     public void setUserSession(Session userSession) {
         this.userSession = userSession;
     }
-    
+
 }

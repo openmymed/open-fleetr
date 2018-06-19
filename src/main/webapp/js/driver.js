@@ -11,12 +11,35 @@ var websocket = false;
 var socketCheckInterval;
 var socketAttemptInterval;
 var checkedOut = false;
+var currentOrder;
+var myLocationMarker = undefined;
+var caseMarker = undefined;
+var hospitalMarker = undefined;
 $(document).ready(main);
+
+var blueAmbulanceMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'ambulance',
+    markerColor: 'blue'
+});
+var greenHospitalMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'h-square',
+    markerColor: 'green'
+});
+var redCaseMarker = L.AwesomeMarkers.icon({
+    prefix: 'fa',
+    icon: 'plus',
+    markerColor: 'red'
+});
 
 function main() {
 
     $("#checkOutButton").click(checkOut);
     $("#checkInButton").click(checkIn);
+    $("#statusButton").html("No order");
+    $("#statusButton").off("click");
+
     getAvailableAmbulances();
     loadMap();
 
@@ -33,20 +56,31 @@ function socketConnect() {
     applicationSocket.onerror = socketError;
     applicationSocket.onclose = socketClose;
     websocket = true;
-    clearTimeout();
 }
 
 function parseSocketEvent(event) {
-
+    var json = JSON.parse(event.data);
+    switch(json.type){
+        case "dispatchOrder":
+            beginOrder(json.value);
+            break;
+        default :
+            break;
+    }
 }
+
+function beginOrder(orderId){
+    currentOrder = orderId;
+    getDispatchOrder(orderId);
+    $("#statusButton").off("click");
+    $("#statusButton").html("Picked Up");
+    $("#statusButton").click(pickedUp);
+}
+
+
 function socketClose(event) {
     websocket = false;
     switch (event.code) {
-        case 1000 :
-            alert("You have been logged out");
-            localStorage.removeItem("token"); //delete the user token from storage
-            window.history.back();
-            break;
         case 4000 :
             alert("Connection to server gracefully terminated");
             break;
@@ -57,8 +91,6 @@ function socketClose(event) {
 }
 
 function checkOut(event) {
-    console.log(event, $(event));
-    console.log($("#availableVehicles").val());
     $.ajax({
         url: "/OpenFleetr/vehicle/checking/" + $("#availableVehicles").val() + "?token=" + localStorage.getItem("token") + "",
         type: "GET",
@@ -71,7 +103,6 @@ function checkOut(event) {
 }
 
 function checkIn(event) {
-    console.log(event, $(event));
     $.ajax({
         url: "/OpenFleetr/vehicle/checking/1?token=" + localStorage.getItem("token") + "",
         type: "PUT",
@@ -84,13 +115,11 @@ function checkIn(event) {
 }
 
 function handleCheckOut(json) {
-    console.log(json);
     checkedOut = true;
     socketConnect();
 }
 
 function handleCheckIn(json) {
-    console.log(json);
     checkedOut = false;
     applicationSocket.close(4000);
 }
@@ -107,7 +136,7 @@ function getAvailableAmbulances() {
 
 function handleAvailbleAmbulances(json) {
     var htmlString = "";
-    for(var item in json){
+    for (var item in json) {
         htmlString = htmlString + ('<option value ="' + item + '">Ambulance ' + item + '</option>\n');
     }
     $("#availableVehicles").html(htmlString);
@@ -123,28 +152,53 @@ function genericError(jqHXR, textStatus, errorThrown) {
 
     }
 }
-function pickedUp() {
+function pickedUp(event) {
+    console.log(event);
+  $.ajax({
+        url: "/OpenFleetr/user/driver/dispatch/"+currentOrder+"?token=" + localStorage.getItem("token") + "",
+        type: "GET",
+        dataType: "json",
+        success:continueOrder,
+        error: genericError
+
+    });
+}
+
+function continueOrder(json){
+    
+    $("#statusButton").html("Delivered");
+    $("#statusButton").off("click");
+    $("#statusButton").click(delivered);
 
 }
 
-function delivered() {
+function delivered(event) {
+        console.log(event);
 
+ $.ajax({
+        url: "/OpenFleetr/user/driver/dispatch/"+currentOrder+"?token=" + localStorage.getItem("token") + "",
+        type: "PUT",
+        data: JSON.stringify({"something":"i know"}),
+        dataType: "json",
+        success: function(e){
+                $("#statusButton").off("click");
+                $("#statusButton").html("No order");
+                vehicleMap.removeLayer(hospitalMarker);
+                vehicleMap.removeLayer(caseMarker);
+                caseMarker = undefined;
+                hospitalMarker = undefined;
+        },
+        error: genericError
+
+    });
 }
 
-function getHospitalName() {
 
-}
-
-function getDriverName() {
-
-}
 
 function updateLocation(coords) {
     var latitude = coords.latitude;
     var longitude = coords.longitude;
-    var postData = {"latitude": latitude ,"longitude": longitude};
-    console.log(postData);
-                
+    var postData = {"latitude": latitude, "longitude": longitude};
     $.ajax({//new ajax request
         url: "/OpenFleetr/vehicle?token=" + localStorage.getItem("token") + "", //to this url
         type: "POST", //HTTP request type get
@@ -155,6 +209,7 @@ function updateLocation(coords) {
         }, //on success, call updateLocationsSuccess
         error: genericError
     });
+    myLocationMarker.setLatLng([latitude,longitude]).update();
 
 }
 
@@ -200,13 +255,15 @@ function geolocationSuccess(position) {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(vehicleMap);
     vehicleMap.doubleClickZoom.disable();
+    myLocationMarker = L.marker([latitude, longitude], {icon: blueAmbulanceMarker}).addTo(vehicleMap);
+
     start();
 }
 
 function geolocationError() {
-        alert("Geolocation Is nescarry for the functioning of this application, logging user out");
-        localStorage.removeItem("token");
-        $(location).attr('href', '/OpenFleetr');
+    alert("Geolocation Is nescarry for the functioning of this application, logging user out");
+    localStorage.removeItem("token");
+    $(location).attr('href', '/OpenFleetr');
 }
 
 function loadMap() {
@@ -220,14 +277,52 @@ function loadMap() {
 }
 
 function watchPositionSuccess(event) {
-    if(checkedOut === true){
-    console.log(event);
-    updateLocation(event.coords);
-}
+    if (checkedOut === true) {
+        updateLocation(event.coords);
+    }
 }
 
 
 function watchPositionError(event) {
-    console.log(event);
 }
 
+function getDispatchOrder(orderId){
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/vehicle/dispatch/" + orderId + "?token=" + localStorage.getItem("token") + "", //to this url
+        type: "GET", //HTTP request type get
+        datatype: 'json',
+        success: getDispatchOrderSuccess,
+        error: function (xhr, resp, text) {
+        }
+    });
+}
+
+function getDispatchOrderSuccess(json){
+    var latitude  = json.startLatitude;
+    var longitude = json.startLongitude;
+    caseMarker = L.marker([latitude, longitude], {icon: redCaseMarker}).addTo(vehicleMap);
+    getHospital(json.destinationHospitalId);
+
+}
+
+
+function getHospital(destinationHospitalId){
+    
+    $.ajax({//new ajax request
+        url: "/OpenFleetr/hospital/"+destinationHospitalId+"?token=" + localStorage.getItem("token") + "", //to this url
+        type: "GET", //HTTP request type get
+        datatype: 'json',
+        success: getHospitalSuccess,
+        error: function (xhr, resp, text) {
+            console.log(xhr,resp,text);
+        }
+    });
+
+}
+
+function getHospitalSuccess(json){
+    var latitude = json.latitude;
+    var longitude = json.longitude;
+    hospitalMarker = L.marker([latitude, longitude], {icon: greenHospitalMarker}).addTo(vehicleMap);
+    hospitalMarker.bindPopup(json.name);
+}

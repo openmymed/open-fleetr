@@ -156,6 +156,7 @@ function attemptSocketInterval() {
 }
 
 function checkSocketInterval(event) {
+    clearTimeout(socketAttemptInterval);
     socketCheckInterval = setTimeout(socketPing, 10000);
 }
 
@@ -343,7 +344,7 @@ function socketError(event) {
 }
 
 function socketConnect() {
-    applicationSocket = new WebSocket("ws://" + location.host + "/OpenFleetr/app/dispatcher/" + localStorage.getItem("token"));
+    applicationSocket = new WebSocket("wss://" + location.host + "/OpenFleetr/app/dispatcher/" + localStorage.getItem("token"));
     applicationSocket.onopen = checkSocketInterval;
     applicationSocket.onmessage = parseSocketNotification;
     applicationSocket.onerror = socketError;
